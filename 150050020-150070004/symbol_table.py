@@ -3,8 +3,8 @@ CEND = '\033[0m'
 
 type_width = {
 	'int' : 4,
-	'float' : 4,
-	'pointer' : 8
+	'float' : 8,
+	'pointer' : 4
 }
 
 class variable:
@@ -102,6 +102,13 @@ class Symbol_table:
 		
 	def insert_variable(self,var):
 		self.variables.append(var)
+		if not var.get_flag():
+			var.set_scope('local')
+			self.size += var.get_width()
+
+
+	def insert_parameters(self,var):
+		self.variables.append(var)
 		if not var.get_flag():	
 			self.size += var.get_width()		
 
@@ -117,7 +124,7 @@ class Symbol_table:
 				print(CRED+ "Error: "+CEND+'argument identifier already present')
 			else:	
 				arg_set.add(arg[0])
-				self.insert_variable(var)	
+				self.insert_parameters(var)	
 			
 	def get_variables(self):
 		return self.variables

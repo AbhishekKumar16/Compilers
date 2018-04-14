@@ -477,8 +477,10 @@ def print_cfg(root,f):
 				f.write("goto <bb " + str(lchild.get_index()) + ">\n")
 
 		f.write('\n')
-	# f.write("<bb "+ str(len(cfg_buckets)+1) + ">\n")
-	# f.write("End\n")
+
+
+
+
 
 
 

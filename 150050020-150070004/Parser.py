@@ -6,6 +6,7 @@ import ply.yacc as yacc
 from cfg import *
 from ast import *
 from symbol_table import *
+from assembly import *
 
 CRED    = '\33[31m'
 CEND = '\033[0m'
@@ -42,6 +43,9 @@ t_AND = r'&&'
 t_OR = r'\|\|'
 
 arithmetic_operators = ['+','-','*','/']
+comparison_operators = ['!=','==','>=','<=','>','<']
+
+binary_operators = arithmetic_operators + comparison_operators
 
 reserved = {
 	'if' : 'IF',
@@ -919,4 +923,7 @@ if __name__ == "__main__":
 
 	with open(sys.argv[1]+'.sym1','w') as f:
 		print_symbol_table(global_symbol_table,f)
+
+	with open(sys.argv[1]+'.s1','w') as f:
+		print_assembly_code(global_symbol_table,rt,f)
 	# global_symbol_table.print_symbol_table()

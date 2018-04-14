@@ -1,0 +1,113 @@
+FUNCTION f
+PARAMS (int a,int b,int k11,int k12)
+RETURNS *int
+RETURN 
+(
+	VAR(c)
+)
+
+
+
+Function Main
+PARAMS() 
+RETURNS void
+	ASGN
+	(
+		VAR(px)
+		,
+		UMINUS
+		(
+			UMINUS
+			(
+				VAR(px)
+			)
+		)
+	)
+	IF
+	(
+		NOT
+		(
+			LE
+			(
+				DEREF
+				(
+					VAR(px)
+				)
+				,
+				PLUS
+				(
+					PLUS
+					(
+						DEREF
+						(
+							VAR(px)
+						)
+						,
+						DEREF
+						(
+							VAR(px)
+						)
+					)
+					,
+					CONST(3)
+				)
+			)
+			,
+		)
+		,
+		ASGN
+		(
+			DEREF
+			(
+				VAR(px)
+			)
+			,
+			DEREF
+			(
+				VAR(px)
+			)
+		)
+
+	)
+	ASGN
+	(
+		VAR(px)
+		,
+		CALL f( 
+			PLUS
+			(
+				DEREF
+				(
+					VAR(px)
+				)
+				,
+				MUL
+				(
+					DEREF
+					(
+						VAR(px)
+					)
+					,
+					DEREF
+					(
+						VAR(px)
+					)
+				)
+			)
+			,
+			DEREF
+			(
+				VAR(px)
+			)
+			,
+			DEREF
+			(
+				VAR(px)
+			)
+			,
+			DEREF
+			(
+				VAR(px)
+			)
+		 )
+	)
