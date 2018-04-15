@@ -6,108 +6,15 @@ RETURN
 	VAR(c)
 )
 
-
-
 Function Main
 PARAMS() 
 RETURNS void
 	ASGN
 	(
-		VAR(px)
+		VAR(fx)
 		,
 		UMINUS
 		(
-			UMINUS
-			(
-				VAR(px)
-			)
+			VAR(d)
 		)
-	)
-	IF
-	(
-		NOT
-		(
-			LE
-			(
-				DEREF
-				(
-					VAR(px)
-				)
-				,
-				PLUS
-				(
-					PLUS
-					(
-						DEREF
-						(
-							VAR(px)
-						)
-						,
-						DEREF
-						(
-							VAR(px)
-						)
-					)
-					,
-					CONST(3)
-				)
-			)
-			,
-		)
-		,
-		ASGN
-		(
-			DEREF
-			(
-				VAR(px)
-			)
-			,
-			DEREF
-			(
-				VAR(px)
-			)
-		)
-
-	)
-	ASGN
-	(
-		VAR(px)
-		,
-		CALL f( 
-			PLUS
-			(
-				DEREF
-				(
-					VAR(px)
-				)
-				,
-				MUL
-				(
-					DEREF
-					(
-						VAR(px)
-					)
-					,
-					DEREF
-					(
-						VAR(px)
-					)
-				)
-			)
-			,
-			DEREF
-			(
-				VAR(px)
-			)
-			,
-			DEREF
-			(
-				VAR(px)
-			)
-			,
-			DEREF
-			(
-				VAR(px)
-			)
-		 )
 	)

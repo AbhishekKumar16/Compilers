@@ -1,13 +1,13 @@
 FUNCTION f
-PARAMS (int a, int b, int k11, int k12)
+PARAMS (int a,int b,int k11,int k12)
 RETURNS *int
-	RETURN
-	(
-		VAR(c)
-	)
+RETURN 
+(
+	VAR(c)
+)
 
-FUNCTION main
-PARAMS ()
+Function Main
+PARAMS() 
 RETURNS void
 	ASGN
 	(
@@ -26,5 +26,3 @@ RETURNS void
 			CONST(3)
 		)
 	)
-
-	

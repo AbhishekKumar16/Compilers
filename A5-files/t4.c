@@ -1,3 +1,4 @@
+float *d;
 int* f(int a, int b,int k11,int k12)
 
 {
@@ -14,14 +15,10 @@ int* f(int a, int b,int k11,int k12)
 
 void main(){
 
-	int *px,x;
+	int *px,x, **pxx;
+	float *fx;
 
-    px = --px;
-
-    if (!(*px <= *px + *px + 3))
-    	*px = *px;
-
-	px = f(*px+*px**px,*px,*px,*px);
+    fx = -d;
 
 }
 

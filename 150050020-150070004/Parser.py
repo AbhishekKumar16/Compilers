@@ -357,13 +357,11 @@ def p_fn_call(p):
 	return_type = fn_return_type(p[1])
 	leaf = Leaf_Node(p[1],'FUNCTION_CALL')
 	leaf.set_type(return_type[0],return_type[1])
-	# print("fn_call_ASTs", fn_call_ASTs)
 	leaf.set_args_list(list(reversed(fn_call_ASTs)))
 	leaf.set_fn_name(p[1])
 	p[0]=leaf			# For Symbol Table
 
 	p[3].reverse()
-
 	fn_call_ASTs = []
 
 	#get arguments from symbol table
@@ -925,5 +923,8 @@ if __name__ == "__main__":
 		print_symbol_table(global_symbol_table,f)
 
 	with open(sys.argv[1]+'.s1','w') as f:
+		f.write('\n')
+		f.write('\t .data\n')
+		f.write('\n')
 		print_assembly_code(global_symbol_table,rt,f)
 	# global_symbol_table.print_symbol_table()

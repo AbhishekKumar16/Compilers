@@ -453,7 +453,6 @@ def print_cfg(root,f):
 						current_index = idx
 					for exp in e:
 						f.write(exp + "\n")
-					#f.write("return " + traverse(lchild)+'\n')
 					f.write("return " + var +'\n')
 				else:
 					f.write("return "+'\n')

@@ -7,12 +7,15 @@ Variable table :-
 -----------------------------------------------------------------
 Name	|	Scope		|	Base Type  |  Derived Type
 -----------------------------------------------------------------
-b		|	procedure f	|	int	   |	
-k11		|	procedure f	|	int	   |	
-k12		|	procedure f	|	int	   |	
+d		|	global		|	float	   |	*
 c		|	procedure f	|	int	   |	*
+k12		|	procedure f	|	int	   |	
 a		|	procedure f	|	int	   |	
+k11		|	procedure f	|	int	   |	
+b		|	procedure f	|	int	   |	
+pxx		|	procedure main	|	int	   |	**
 px		|	procedure main	|	int	   |	*
 x		|	procedure main	|	int	   |	
+fx		|	procedure main	|	float	   |	*
 -----------------------------------------------------------------
 -----------------------------------------------------------------

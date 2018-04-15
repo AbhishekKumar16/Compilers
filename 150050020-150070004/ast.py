@@ -335,8 +335,7 @@ def print_AST_fn(tree, f, tabs):
 	
 	if name=='main':
 		fn_is_main = True
-		# print("hello")
-	# print(tree)	
+	
 	for t in tree[1]:
 		print_AST(t, f, tabs)
 		f.write('\n')
