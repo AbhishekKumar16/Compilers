@@ -1,9 +1,12 @@
 FUNCTION f
-PARAMS (int a,int b,int k11,int k12)
-RETURNS *int
+PARAMS (int a,int b)
+RETURNS int
 RETURN 
 (
-	VAR(c)
+	DEREF
+	(
+		VAR(c)
+	)
 )
 
 Function Main
@@ -11,10 +14,31 @@ PARAMS()
 RETURNS void
 	ASGN
 	(
-		VAR(fx)
-		,
-		UMINUS
+		DEREF
 		(
-			VAR(d)
+			VAR(px)
+		)
+		,
+		PLUS
+		(
+			CALL f( 
+				DEREF
+				(
+					VAR(px)
+				)
+				,
+				DEREF
+				(
+					VAR(px)
+				)
+			 )
+			,
+			DEREF
+			(
+				DEREF
+				(
+					VAR(pxx)
+				)
+			)
 		)
 	)

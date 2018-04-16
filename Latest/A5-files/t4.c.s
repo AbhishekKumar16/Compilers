@@ -12,6 +12,8 @@ f:
 # Prologue ends
 label0:
 	lw $s0, 4($sp)
+	lw $s1, 0($s0)
+	move $s0, $s1
 	move $v1, $s0 # move return value to $v1
 	j epilogue_f
 
@@ -32,21 +34,6 @@ main:
 	sub $sp, $sp, 20	# Make space for the locals
 # Prologue ends
 label1:
-	lw $s0, 4($sp)
+	lw $s0, 8($sp)
 	lw $s1, 0($s0)
-	li $s0, 3
-	add $s2, $s1, $s0
-	move $s0, $s2
-	lw $s1, 4($sp)
-	sw $s0, 0($s1)
-	j label2
-label2:
-	j epilogue_main
-
-# Epilogue begins
-epilogue_main:
-	add $sp, $sp, 20
-	lw $fp, -4($sp)
-	lw $ra, 0($sp)
-	jr $ra	# Jump back to the called procedure
-# Epilogue ends
+	lw $s0, 0($s1)

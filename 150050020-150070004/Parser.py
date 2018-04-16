@@ -347,6 +347,9 @@ def fn_return_type(f_id):
 		sys.exit()
 		return ['type_error',None]	
 
+
+
+	
 fn_call_ASTs = []
 
 def p_fn_call(p):
@@ -922,7 +925,7 @@ if __name__ == "__main__":
 	with open(sys.argv[1]+'.sym1','w') as f:
 		print_symbol_table(global_symbol_table,f)
 
-	with open(sys.argv[1]+'.s1','w') as f:
+	with open(sys.argv[1]+'.s','w') as f:
 		f.write('\n')
 		f.write('\t .data\n')
 		f.write('\n')

@@ -8,10 +8,10 @@ assembly_symbol_table = None
 global_vars = set()
 
 def print_fn_epilogue(fn_name,f, is_return,return_reg):
-	global free_registers
+	
 	if is_return:
 		f.write("\t move $v1, " + return_reg + " # move return value to $v1\n")
-		free_registers.add(return_reg)
+
 	f.write("\t j epilogue_" + fn_name+"\n")
 	f.write("\n# Epilogue begins\n")
 	f.write("epilogue_" + fn_name+":\n")
@@ -132,20 +132,11 @@ def print_assembly_code(g_table,root,f):
 				if lchild is not None:
 					# if it would be required to express AST in the three variable form (t0, t1, t2, etc) then this has to be changed 
 					[reg_used, type_passed, indirection] = break_assembly(lchild, f)
+					print_fn_epilogue(fn_name,f, True,reg_used)
+					free_registers.add(reg_used)
 					
-					if type_passed == 'CONSTANT':
-						reg= handle_constant(reg_used,indirection)										
-					elif type_passed == 'IDENTIFIER':
-						identifier = reg_used
-						reg = handle_identifier(identifier,indirection)										
-					elif type_passed == 'FUNCTION_CALL':
-						reg = handle_function_call(reg_used,indirection)
-					else:	
-						reg = reg_used
-
-					print_fn_epilogue(fn_name,f, True,reg)
-					free_registers.add(reg_used)					
 				else:
+					# f.write('return '+'\n')
 					print_fn_epilogue(fn_name,f, False,None)
 				continue
 
@@ -453,48 +444,49 @@ def handle_function_call(fn_AST,indirection):
 	global free_registers,f
 	[fn_name,_,return_type,_,arg_list] = fn_AST.get_fn_leaf_details() 
 	arg_width = get_width_fn_arguments(fn_name)
-	f.write("\t # setting up activation record for called function \n")
-
-	arg_offset_on_stack = sum(arg_width)	
-	i = 0	
-
+	arg_registers = [] #each element is a tuple (constant/identifier(0 depth),value/register_number)
 	for arg_AST in arg_list:
-		
+		[reg_arg,type_passed_arg,indirection_arg] = break_assembly(arg_AST,f)
+		if type_passed_arg == 'CONSTANT':
+			arg_registers.append(['CONSTANT',reg_arg])
+		elif type_passed_arg == 'IDENTIFIER':
+			if indirection_arg==0:
+				arg_registers.append(['IDENTIFIER',reg_arg])
+			else:
+				reg = handle_identifier(reg_arg,indirection_arg)							
+				arg_registers.append(['EXPRESSION',reg])
+		elif type_passed_arg == 'FUNCTION_CALL':			
+			reg = handle_function_call(reg_arg,indirection_arg)
+			arg_registers.append(['EXPRESSION',reg])
+		else:
+			arg_registers.append([type_passed_arg,reg_arg])
+		#assuming that argument cannot be a function call
+	
+	f.write("\t # setting up activation record for called function \n")
+	arg_offset_on_stack = sum(arg_width)	
+	i = 0			
+	for arg_reg in arg_registers:
 		arg_offset_on_stack -= arg_width[i]
 		if arg_width[i]==4:
 			arg_type = 'int'
 		else:
 			arg_type = 'float'
 		i+=1
-
-		[reg_arg,type_passed_arg,indirection_arg] = break_assembly(arg_AST,f)
-		if type_passed_arg == 'CONSTANT':
-			reg_used = handle_constant(reg_arg,arg_type)
-		elif type_passed_arg == 'IDENTIFIER':
-			print(indirection_arg)
-			if indirection_arg==0:
-				reg_used = handle_identifier(arg_reg[1],0)#indirection = 0
-			else:
-				reg_used = handle_identifier(reg_arg,indirection_arg)							
-		elif type_passed_arg == 'FUNCTION_CALL':			
-			reg_used = handle_function_call(reg_arg,indirection_arg)
+		if arg_reg[0]=='CONSTANT':
+			reg_used = handle_constant(arg_reg[1],arg_type)						
+		elif arg_reg[0]=='IDENTIFIER':
+			reg_used = handle_identifier(arg_reg[1],0)#indirection = 0
 		else:
-			reg_used = reg_arg
-		
+			reg_used = arg_reg[1]
 		f.write("\t sw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp) \n")
-		free_registers.add(reg_used)
 
 	#ARGUMENTS PUSHED ONTO STACK
-	
-	f.write("\t sub $sp, $sp, " + str(sum(arg_width)) + "\n") #modifying stack pointer to accomodate arguments
-
 	#NOW JUMP TO FUNCTION 
 
-	f.write("\t jal " + fn_name + " # function call \n")
+	f.write("\t jal " + fn_name + " # function call")
 
 	#FUNCTION CALL EPILOGUE (CLEARING ARGUMENTS AND USING RETURN VALUE)
 	f.write("\t add $sp, $sp, " + str(sum(arg_width)) + " # destroying activation record of called function\n") 
-	
 	if return_type[0] != 'void':
 		reg = min(free_registers)
 		free_registers.remove(reg)

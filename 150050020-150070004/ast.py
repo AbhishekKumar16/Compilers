@@ -101,29 +101,11 @@ class Leaf_Node:
 		expression = self.fn_name + "(" + arguments + ")"
 		return expression
 
+	def get_fn_call_arguments(self):
+		return self.args_list
+
 AST_list = []
 current_function_AST = [[] for i in range(2)]			# intend to save [[fn_related_info][AST_list]]
-# def only_num(Tree):
-# 	if Tree is None:
-# 		return True
-# 	elif Tree.is_leaf():
-# 		[type,value] = Tree.get_leaf_details()
-# 		if type == 'CONST':
-# 			return True
-# 		return False
-# 	else:
-# 		[lchild,rchild] = Tree.get_children()
-# 		return only_num(lchild) and only_num(rchild)
-
-
-# def check_syntax(Abstract_Syntax_Tree):
-# 	[lchild,rchild] = Abstract_Syntax_Tree.get_children()
-# 	if lchild.is_leaf():
-# 		if only_num(rchild):
-# 			[type,val] = lchild.get_leaf_details()
-# 			print("Syntax error at " + val + " = \n")
-# 			return False
-# 	return True
 			
 def traverse(node):
 	if node.is_leaf():

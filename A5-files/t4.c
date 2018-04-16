@@ -1,11 +1,10 @@
-float *d;
-int* f(int a, int b,int k11,int k12)
+int f(int a, int b)
 
 {
 
 	int *c;
 
-	return c;
+	return *c;
 
 }
 
@@ -15,10 +14,9 @@ int* f(int a, int b,int k11,int k12)
 
 void main(){
 
-	int *px,x, **pxx;
-	float *fx;
+	int *px,x, **pxx;    
 
-    fx = -d;
+    *px = f(*px,*px) + **pxx;
 
 }
 

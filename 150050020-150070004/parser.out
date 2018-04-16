@@ -1,4 +1,4 @@
-Created by PLY version 3.7 (http://www.dabeaz.com/ply)
+Created by PLY version 3.10 (http://www.dabeaz.com/ply)
 
 Grammar
 
@@ -183,25 +183,59 @@ state 0
     (11) fn_defn1 -> . type fn_name LPAREN arg_list RPAREN
     (12) fn_defn1 -> . VOID fn_name LPAREN arg_list RPAREN
 
-    VOID            shift and go to state 4
-    INT_VAR         shift and go to state 7
-    FLOAT_VAR       shift and go to state 10
+    VOID            shift and go to state 7
+    INT_VAR         shift and go to state 8
+    FLOAT_VAR       shift and go to state 2
 
-    program                        shift and go to state 1
-    type                           shift and go to state 2
-    declaration                    shift and go to state 3
-    fn_definition                  shift and go to state 5
-    fn_declaration                 shift and go to state 6
-    fn_defn1                       shift and go to state 8
-    basic_block                    shift and go to state 9
+    declaration                    shift and go to state 1
+    fn_declaration                 shift and go to state 3
+    fn_defn1                       shift and go to state 4
+    type                           shift and go to state 5
+    program                        shift and go to state 6
+    fn_definition                  shift and go to state 9
+    basic_block                    shift and go to state 10
 
 state 1
 
-    (0) S' -> program .
+    (3) basic_block -> declaration .
 
+    VOID            reduce using rule 3 (basic_block -> declaration .)
+    INT_VAR         reduce using rule 3 (basic_block -> declaration .)
+    FLOAT_VAR       reduce using rule 3 (basic_block -> declaration .)
+    $end            reduce using rule 3 (basic_block -> declaration .)
 
 
 state 2
+
+    (31) type -> FLOAT_VAR .
+
+    IDENTIFIER      reduce using rule 31 (type -> FLOAT_VAR .)
+    STAR            reduce using rule 31 (type -> FLOAT_VAR .)
+    MAIN            reduce using rule 31 (type -> FLOAT_VAR .)
+    COMMA           reduce using rule 31 (type -> FLOAT_VAR .)
+    RPAREN          reduce using rule 31 (type -> FLOAT_VAR .)
+
+
+state 3
+
+    (4) basic_block -> fn_declaration .
+
+    VOID            reduce using rule 4 (basic_block -> fn_declaration .)
+    INT_VAR         reduce using rule 4 (basic_block -> fn_declaration .)
+    FLOAT_VAR       reduce using rule 4 (basic_block -> fn_declaration .)
+    $end            reduce using rule 4 (basic_block -> fn_declaration .)
+
+
+state 4
+
+    (10) fn_definition -> fn_defn1 . fn_defn2
+    (13) fn_defn2 -> . LCURVE fn_body RCURVE
+
+    LCURVE          shift and go to state 11
+
+    fn_defn2                       shift and go to state 12
+
+state 5
 
     (39) declaration -> type . list SEMICOLON
     (6) fn_declaration -> type . fn_name LPAREN dec_arg_list RPAREN SEMICOLON
@@ -216,26 +250,22 @@ state 2
     (16) star -> . STAR star
     (17) star -> .
 
-    IDENTIFIER      shift and go to state 14
-    STAR            shift and go to state 12
+    IDENTIFIER      shift and go to state 18
+    STAR            shift and go to state 13
     MAIN            reduce using rule 17 (star -> .)
 
-    list                           shift and go to state 11
-    fn_name                        shift and go to state 16
-    variable                       shift and go to state 15
-    star                           shift and go to state 13
+    variable                       shift and go to state 16
+    star                           shift and go to state 17
+    list                           shift and go to state 14
+    fn_name                        shift and go to state 15
 
-state 3
+state 6
 
-    (3) basic_block -> declaration .
-
-    VOID            reduce using rule 3 (basic_block -> declaration .)
-    INT_VAR         reduce using rule 3 (basic_block -> declaration .)
-    FLOAT_VAR       reduce using rule 3 (basic_block -> declaration .)
-    $end            reduce using rule 3 (basic_block -> declaration .)
+    (0) S' -> program .
 
 
-state 4
+
+state 7
 
     (8) fn_declaration -> VOID . fn_name LPAREN dec_arg_list RPAREN SEMICOLON
     (9) fn_declaration -> VOID . fn_name LPAREN arg_list RPAREN SEMICOLON
@@ -247,15 +277,26 @@ state 4
     (42) variable -> . IDENTIFIER
     (43) variable -> . STAR variable
 
-    STAR            shift and go to state 17
+    STAR            shift and go to state 21
     MAIN            reduce using rule 17 (star -> .)
-    IDENTIFIER      shift and go to state 14
+    IDENTIFIER      shift and go to state 18
 
+    variable                       shift and go to state 20
+    star                           shift and go to state 17
     fn_name                        shift and go to state 19
-    variable                       shift and go to state 18
-    star                           shift and go to state 13
 
-state 5
+state 8
+
+    (30) type -> INT_VAR .
+
+    IDENTIFIER      reduce using rule 30 (type -> INT_VAR .)
+    STAR            reduce using rule 30 (type -> INT_VAR .)
+    MAIN            reduce using rule 30 (type -> INT_VAR .)
+    COMMA           reduce using rule 30 (type -> INT_VAR .)
+    RPAREN          reduce using rule 30 (type -> INT_VAR .)
+
+
+state 9
 
     (5) basic_block -> fn_definition .
 
@@ -265,37 +306,7 @@ state 5
     $end            reduce using rule 5 (basic_block -> fn_definition .)
 
 
-state 6
-
-    (4) basic_block -> fn_declaration .
-
-    VOID            reduce using rule 4 (basic_block -> fn_declaration .)
-    INT_VAR         reduce using rule 4 (basic_block -> fn_declaration .)
-    FLOAT_VAR       reduce using rule 4 (basic_block -> fn_declaration .)
-    $end            reduce using rule 4 (basic_block -> fn_declaration .)
-
-
-state 7
-
-    (30) type -> INT_VAR .
-
-    IDENTIFIER      reduce using rule 30 (type -> INT_VAR .)
-    STAR            reduce using rule 30 (type -> INT_VAR .)
-    COMMA           reduce using rule 30 (type -> INT_VAR .)
-    RPAREN          reduce using rule 30 (type -> INT_VAR .)
-    MAIN            reduce using rule 30 (type -> INT_VAR .)
-
-
-state 8
-
-    (10) fn_definition -> fn_defn1 . fn_defn2
-    (13) fn_defn2 -> . LCURVE fn_body RCURVE
-
-    LCURVE          shift and go to state 21
-
-    fn_defn2                       shift and go to state 20
-
-state 9
+state 10
 
     (1) program -> basic_block . program
     (2) program -> basic_block .
@@ -316,135 +327,19 @@ state 9
     (12) fn_defn1 -> . VOID fn_name LPAREN arg_list RPAREN
 
     $end            reduce using rule 2 (program -> basic_block .)
-    VOID            shift and go to state 4
-    INT_VAR         shift and go to state 7
-    FLOAT_VAR       shift and go to state 10
+    VOID            shift and go to state 7
+    INT_VAR         shift and go to state 8
+    FLOAT_VAR       shift and go to state 2
 
+    declaration                    shift and go to state 1
+    fn_declaration                 shift and go to state 3
+    fn_defn1                       shift and go to state 4
+    type                           shift and go to state 5
     program                        shift and go to state 22
-    type                           shift and go to state 2
-    declaration                    shift and go to state 3
-    fn_definition                  shift and go to state 5
-    fn_declaration                 shift and go to state 6
-    fn_defn1                       shift and go to state 8
-    basic_block                    shift and go to state 9
-
-state 10
-
-    (31) type -> FLOAT_VAR .
-
-    IDENTIFIER      reduce using rule 31 (type -> FLOAT_VAR .)
-    STAR            reduce using rule 31 (type -> FLOAT_VAR .)
-    COMMA           reduce using rule 31 (type -> FLOAT_VAR .)
-    RPAREN          reduce using rule 31 (type -> FLOAT_VAR .)
-    MAIN            reduce using rule 31 (type -> FLOAT_VAR .)
-
+    fn_definition                  shift and go to state 9
+    basic_block                    shift and go to state 10
 
 state 11
-
-    (39) declaration -> type list . SEMICOLON
-    (40) list -> list . COMMA variable
-
-    SEMICOLON       shift and go to state 23
-    COMMA           shift and go to state 24
-
-
-state 12
-
-    (43) variable -> STAR . variable
-    (16) star -> STAR . star
-    (42) variable -> . IDENTIFIER
-    (43) variable -> . STAR variable
-    (16) star -> . STAR star
-    (17) star -> .
-
-    IDENTIFIER      shift and go to state 14
-    STAR            shift and go to state 12
-    MAIN            reduce using rule 17 (star -> .)
-
-    star                           shift and go to state 25
-    variable                       shift and go to state 26
-
-state 13
-
-    (14) fn_name -> star . MAIN
-
-    MAIN            shift and go to state 27
-
-
-state 14
-
-    (42) variable -> IDENTIFIER .
-
-    SEMICOLON       reduce using rule 42 (variable -> IDENTIFIER .)
-    COMMA           reduce using rule 42 (variable -> IDENTIFIER .)
-    LPAREN          reduce using rule 42 (variable -> IDENTIFIER .)
-    RPAREN          reduce using rule 42 (variable -> IDENTIFIER .)
-
-
-state 15
-
-    (41) list -> variable .
-    (15) fn_name -> variable .
-
-    SEMICOLON       reduce using rule 41 (list -> variable .)
-    COMMA           reduce using rule 41 (list -> variable .)
-    LPAREN          reduce using rule 15 (fn_name -> variable .)
-
-
-state 16
-
-    (6) fn_declaration -> type fn_name . LPAREN dec_arg_list RPAREN SEMICOLON
-    (7) fn_declaration -> type fn_name . LPAREN arg_list RPAREN SEMICOLON
-    (11) fn_defn1 -> type fn_name . LPAREN arg_list RPAREN
-
-    LPAREN          shift and go to state 28
-
-
-state 17
-
-    (16) star -> STAR . star
-    (43) variable -> STAR . variable
-    (16) star -> . STAR star
-    (17) star -> .
-    (42) variable -> . IDENTIFIER
-    (43) variable -> . STAR variable
-
-    STAR            shift and go to state 17
-    MAIN            reduce using rule 17 (star -> .)
-    COMMA           reduce using rule 17 (star -> .)
-    RPAREN          reduce using rule 17 (star -> .)
-    IDENTIFIER      shift and go to state 14
-
-    star                           shift and go to state 25
-    variable                       shift and go to state 26
-
-state 18
-
-    (15) fn_name -> variable .
-
-    LPAREN          reduce using rule 15 (fn_name -> variable .)
-
-
-state 19
-
-    (8) fn_declaration -> VOID fn_name . LPAREN dec_arg_list RPAREN SEMICOLON
-    (9) fn_declaration -> VOID fn_name . LPAREN arg_list RPAREN SEMICOLON
-    (12) fn_defn1 -> VOID fn_name . LPAREN arg_list RPAREN
-
-    LPAREN          shift and go to state 29
-
-
-state 20
-
-    (10) fn_definition -> fn_defn1 fn_defn2 .
-
-    VOID            reduce using rule 10 (fn_definition -> fn_defn1 fn_defn2 .)
-    INT_VAR         reduce using rule 10 (fn_definition -> fn_defn1 fn_defn2 .)
-    FLOAT_VAR       reduce using rule 10 (fn_definition -> fn_defn1 fn_defn2 .)
-    $end            reduce using rule 10 (fn_definition -> fn_defn1 fn_defn2 .)
-
-
-state 21
 
     (13) fn_defn2 -> LCURVE . fn_body RCURVE
     (18) fn_body -> . fn_line fn_body
@@ -479,26 +374,131 @@ state 21
     (89) id -> . IDENTIFIER
 
     RCURVE          reduce using rule 19 (fn_body -> .)
-    IDENTIFIER      shift and go to state 37
-    INT_VAR         shift and go to state 7
-    FLOAT_VAR       shift and go to state 10
-    IF              shift and go to state 46
-    LCURVE          shift and go to state 33
-    WHILE           shift and go to state 36
-    STAR            shift and go to state 34
-    RETURN          shift and go to state 30
+    IDENTIFIER      shift and go to state 38
+    INT_VAR         shift and go to state 8
+    FLOAT_VAR       shift and go to state 2
+    IF              shift and go to state 29
+    LCURVE          shift and go to state 37
+    WHILE           shift and go to state 32
+    STAR            shift and go to state 30
+    RETURN          shift and go to state 33
 
-    id                             shift and go to state 38
-    type                           shift and go to state 40
-    fn_call                        shift and go to state 41
-    declaration                    shift and go to state 42
-    matched_stmt                   shift and go to state 31
-    fn_body                        shift and go to state 32
-    return_stmt                    shift and go to state 44
-    unmatched_stmt                 shift and go to state 35
-    stmt                           shift and go to state 45
-    expr                           shift and go to state 43
-    fn_line                        shift and go to state 39
+    unmatched_stmt                 shift and go to state 23
+    fn_call                        shift and go to state 25
+    fn_line                        shift and go to state 26
+    fn_body                        shift and go to state 27
+    id                             shift and go to state 34
+    stmt                           shift and go to state 35
+    return_stmt                    shift and go to state 39
+    type                           shift and go to state 28
+    expr                           shift and go to state 36
+    declaration                    shift and go to state 31
+    matched_stmt                   shift and go to state 24
+
+state 12
+
+    (10) fn_definition -> fn_defn1 fn_defn2 .
+
+    VOID            reduce using rule 10 (fn_definition -> fn_defn1 fn_defn2 .)
+    INT_VAR         reduce using rule 10 (fn_definition -> fn_defn1 fn_defn2 .)
+    FLOAT_VAR       reduce using rule 10 (fn_definition -> fn_defn1 fn_defn2 .)
+    $end            reduce using rule 10 (fn_definition -> fn_defn1 fn_defn2 .)
+
+
+state 13
+
+    (43) variable -> STAR . variable
+    (16) star -> STAR . star
+    (42) variable -> . IDENTIFIER
+    (43) variable -> . STAR variable
+    (16) star -> . STAR star
+    (17) star -> .
+
+    IDENTIFIER      shift and go to state 18
+    STAR            shift and go to state 13
+    MAIN            reduce using rule 17 (star -> .)
+
+    variable                       shift and go to state 40
+    star                           shift and go to state 41
+
+state 14
+
+    (39) declaration -> type list . SEMICOLON
+    (40) list -> list . COMMA variable
+
+    SEMICOLON       shift and go to state 43
+    COMMA           shift and go to state 42
+
+
+state 15
+
+    (6) fn_declaration -> type fn_name . LPAREN dec_arg_list RPAREN SEMICOLON
+    (7) fn_declaration -> type fn_name . LPAREN arg_list RPAREN SEMICOLON
+    (11) fn_defn1 -> type fn_name . LPAREN arg_list RPAREN
+
+    LPAREN          shift and go to state 44
+
+
+state 16
+
+    (41) list -> variable .
+    (15) fn_name -> variable .
+
+    SEMICOLON       reduce using rule 41 (list -> variable .)
+    COMMA           reduce using rule 41 (list -> variable .)
+    LPAREN          reduce using rule 15 (fn_name -> variable .)
+
+
+state 17
+
+    (14) fn_name -> star . MAIN
+
+    MAIN            shift and go to state 45
+
+
+state 18
+
+    (42) variable -> IDENTIFIER .
+
+    COMMA           reduce using rule 42 (variable -> IDENTIFIER .)
+    RPAREN          reduce using rule 42 (variable -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 42 (variable -> IDENTIFIER .)
+    LPAREN          reduce using rule 42 (variable -> IDENTIFIER .)
+
+
+state 19
+
+    (8) fn_declaration -> VOID fn_name . LPAREN dec_arg_list RPAREN SEMICOLON
+    (9) fn_declaration -> VOID fn_name . LPAREN arg_list RPAREN SEMICOLON
+    (12) fn_defn1 -> VOID fn_name . LPAREN arg_list RPAREN
+
+    LPAREN          shift and go to state 46
+
+
+state 20
+
+    (15) fn_name -> variable .
+
+    LPAREN          reduce using rule 15 (fn_name -> variable .)
+
+
+state 21
+
+    (16) star -> STAR . star
+    (43) variable -> STAR . variable
+    (16) star -> . STAR star
+    (17) star -> .
+    (42) variable -> . IDENTIFIER
+    (43) variable -> . STAR variable
+
+    STAR            shift and go to state 21
+    MAIN            reduce using rule 17 (star -> .)
+    COMMA           reduce using rule 17 (star -> .)
+    RPAREN          reduce using rule 17 (star -> .)
+    IDENTIFIER      shift and go to state 18
+
+    variable                       shift and go to state 40
+    star                           shift and go to state 41
 
 state 22
 
@@ -508,222 +508,6 @@ state 22
 
 
 state 23
-
-    (39) declaration -> type list SEMICOLON .
-
-    IDENTIFIER      reduce using rule 39 (declaration -> type list SEMICOLON .)
-    INT_VAR         reduce using rule 39 (declaration -> type list SEMICOLON .)
-    FLOAT_VAR       reduce using rule 39 (declaration -> type list SEMICOLON .)
-    IF              reduce using rule 39 (declaration -> type list SEMICOLON .)
-    LCURVE          reduce using rule 39 (declaration -> type list SEMICOLON .)
-    WHILE           reduce using rule 39 (declaration -> type list SEMICOLON .)
-    STAR            reduce using rule 39 (declaration -> type list SEMICOLON .)
-    RETURN          reduce using rule 39 (declaration -> type list SEMICOLON .)
-    RCURVE          reduce using rule 39 (declaration -> type list SEMICOLON .)
-    VOID            reduce using rule 39 (declaration -> type list SEMICOLON .)
-    $end            reduce using rule 39 (declaration -> type list SEMICOLON .)
-
-
-state 24
-
-    (40) list -> list COMMA . variable
-    (42) variable -> . IDENTIFIER
-    (43) variable -> . STAR variable
-
-    IDENTIFIER      shift and go to state 14
-    STAR            shift and go to state 48
-
-    variable                       shift and go to state 47
-
-state 25
-
-    (16) star -> STAR star .
-
-    MAIN            reduce using rule 16 (star -> STAR star .)
-    COMMA           reduce using rule 16 (star -> STAR star .)
-    RPAREN          reduce using rule 16 (star -> STAR star .)
-
-
-state 26
-
-    (43) variable -> STAR variable .
-
-    SEMICOLON       reduce using rule 43 (variable -> STAR variable .)
-    COMMA           reduce using rule 43 (variable -> STAR variable .)
-    LPAREN          reduce using rule 43 (variable -> STAR variable .)
-    RPAREN          reduce using rule 43 (variable -> STAR variable .)
-
-
-state 27
-
-    (14) fn_name -> star MAIN .
-
-    LPAREN          reduce using rule 14 (fn_name -> star MAIN .)
-
-
-state 28
-
-    (6) fn_declaration -> type fn_name LPAREN . dec_arg_list RPAREN SEMICOLON
-    (7) fn_declaration -> type fn_name LPAREN . arg_list RPAREN SEMICOLON
-    (11) fn_defn1 -> type fn_name LPAREN . arg_list RPAREN
-    (32) dec_arg_list -> . type star dec_multiple_arg
-    (35) arg_list -> . type variable multiple_arg
-    (36) arg_list -> .
-    (30) type -> . INT_VAR
-    (31) type -> . FLOAT_VAR
-
-    RPAREN          reduce using rule 36 (arg_list -> .)
-    INT_VAR         shift and go to state 7
-    FLOAT_VAR       shift and go to state 10
-
-    type                           shift and go to state 49
-    arg_list                       shift and go to state 50
-    dec_arg_list                   shift and go to state 51
-
-state 29
-
-    (8) fn_declaration -> VOID fn_name LPAREN . dec_arg_list RPAREN SEMICOLON
-    (9) fn_declaration -> VOID fn_name LPAREN . arg_list RPAREN SEMICOLON
-    (12) fn_defn1 -> VOID fn_name LPAREN . arg_list RPAREN
-    (32) dec_arg_list -> . type star dec_multiple_arg
-    (35) arg_list -> . type variable multiple_arg
-    (36) arg_list -> .
-    (30) type -> . INT_VAR
-    (31) type -> . FLOAT_VAR
-
-    RPAREN          reduce using rule 36 (arg_list -> .)
-    INT_VAR         shift and go to state 7
-    FLOAT_VAR       shift and go to state 10
-
-    type                           shift and go to state 49
-    arg_list                       shift and go to state 52
-    dec_arg_list                   shift and go to state 53
-
-state 30
-
-    (23) return_stmt -> RETURN . E1 SEMICOLON
-    (24) return_stmt -> RETURN . SEMICOLON
-    (71) E1 -> . E1 PLUS E2
-    (72) E1 -> . E1 MINUS E2
-    (73) E1 -> . E2
-    (74) E2 -> . E2 STAR E3
-    (75) E2 -> . E2 DIVIDE E3
-    (76) E2 -> . E3
-    (77) E3 -> . LPAREN E1 RPAREN
-    (78) E3 -> . mixed_id
-    (79) mixed_id -> . star_ampersand id
-    (80) mixed_id -> . id
-    (81) mixed_id -> . MINUS mixed_id
-    (82) mixed_id -> . INT
-    (83) mixed_id -> . FLOAT
-    (84) mixed_id -> . fn_call
-    (85) mixed_id -> . star_ampersand fn_call
-    (86) star_ampersand -> . STAR star_ampersand
-    (87) star_ampersand -> . STAR
-    (88) star_ampersand -> . AMPERSAND
-    (89) id -> . IDENTIFIER
-    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
-
-    SEMICOLON       shift and go to state 60
-    LPAREN          shift and go to state 61
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
-
-    E2                             shift and go to state 55
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    E1                             shift and go to state 59
-    id                             shift and go to state 58
-
-state 31
-
-    (44) stmt -> matched_stmt .
-
-    IF              reduce using rule 44 (stmt -> matched_stmt .)
-    LCURVE          reduce using rule 44 (stmt -> matched_stmt .)
-    WHILE           reduce using rule 44 (stmt -> matched_stmt .)
-    STAR            reduce using rule 44 (stmt -> matched_stmt .)
-    RETURN          reduce using rule 44 (stmt -> matched_stmt .)
-    IDENTIFIER      reduce using rule 44 (stmt -> matched_stmt .)
-    RCURVE          reduce using rule 44 (stmt -> matched_stmt .)
-    INT_VAR         reduce using rule 44 (stmt -> matched_stmt .)
-    FLOAT_VAR       reduce using rule 44 (stmt -> matched_stmt .)
-
-
-state 32
-
-    (13) fn_defn2 -> LCURVE fn_body . RCURVE
-
-    RCURVE          shift and go to state 69
-
-
-state 33
-
-    (50) matched_stmt -> LCURVE . stmt_list RCURVE
-    (60) stmt_list -> . stmt stmt_list
-    (61) stmt_list -> . stmt
-    (44) stmt -> . matched_stmt
-    (45) stmt -> . unmatched_stmt
-    (46) matched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt
-    (47) matched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON
-    (48) matched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON
-    (49) matched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt
-    (50) matched_stmt -> . LCURVE stmt_list RCURVE
-    (51) matched_stmt -> . expr
-    (52) matched_stmt -> . return_stmt
-    (53) matched_stmt -> . WHILE LPAREN condition RPAREN matched_stmt
-    (54) matched_stmt -> . WHILE LPAREN condition RPAREN SEMICOLON
-    (55) unmatched_stmt -> . IF LPAREN condition RPAREN stmt
-    (56) unmatched_stmt -> . IF LPAREN condition RPAREN SEMICOLON
-    (57) unmatched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE unmatched_stmt
-    (58) unmatched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE unmatched_stmt
-    (59) unmatched_stmt -> . WHILE LPAREN condition RPAREN unmatched_stmt
-    (67) expr -> . id EQUALS E1 SEMICOLON
-    (68) expr -> . STAR left_side EQUALS E1 SEMICOLON
-    (23) return_stmt -> . RETURN E1 SEMICOLON
-    (24) return_stmt -> . RETURN SEMICOLON
-    (89) id -> . IDENTIFIER
-
-    IF              shift and go to state 46
-    LCURVE          shift and go to state 33
-    WHILE           shift and go to state 36
-    STAR            shift and go to state 34
-    RETURN          shift and go to state 30
-    IDENTIFIER      shift and go to state 70
-
-    stmt                           shift and go to state 71
-    stmt_list                      shift and go to state 72
-    matched_stmt                   shift and go to state 31
-    expr                           shift and go to state 43
-    return_stmt                    shift and go to state 44
-    unmatched_stmt                 shift and go to state 35
-    id                             shift and go to state 38
-
-state 34
-
-    (68) expr -> STAR . left_side EQUALS E1 SEMICOLON
-    (69) left_side -> . id
-    (70) left_side -> . star_ampersand id
-    (89) id -> . IDENTIFIER
-    (86) star_ampersand -> . STAR star_ampersand
-    (87) star_ampersand -> . STAR
-    (88) star_ampersand -> . AMPERSAND
-
-    IDENTIFIER      shift and go to state 70
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-
-    left_side                      shift and go to state 74
-    id                             shift and go to state 75
-    star_ampersand                 shift and go to state 73
-
-state 35
 
     (45) stmt -> unmatched_stmt .
 
@@ -738,32 +522,29 @@ state 35
     FLOAT_VAR       reduce using rule 45 (stmt -> unmatched_stmt .)
 
 
-state 36
+state 24
 
-    (53) matched_stmt -> WHILE . LPAREN condition RPAREN matched_stmt
-    (54) matched_stmt -> WHILE . LPAREN condition RPAREN SEMICOLON
-    (59) unmatched_stmt -> WHILE . LPAREN condition RPAREN unmatched_stmt
+    (44) stmt -> matched_stmt .
 
-    LPAREN          shift and go to state 76
-
-
-state 37
-
-    (25) fn_call -> IDENTIFIER . LPAREN fn_call_args RPAREN
-    (89) id -> IDENTIFIER .
-
-    LPAREN          shift and go to state 77
-    EQUALS          reduce using rule 89 (id -> IDENTIFIER .)
+    IF              reduce using rule 44 (stmt -> matched_stmt .)
+    LCURVE          reduce using rule 44 (stmt -> matched_stmt .)
+    WHILE           reduce using rule 44 (stmt -> matched_stmt .)
+    STAR            reduce using rule 44 (stmt -> matched_stmt .)
+    RETURN          reduce using rule 44 (stmt -> matched_stmt .)
+    IDENTIFIER      reduce using rule 44 (stmt -> matched_stmt .)
+    RCURVE          reduce using rule 44 (stmt -> matched_stmt .)
+    INT_VAR         reduce using rule 44 (stmt -> matched_stmt .)
+    FLOAT_VAR       reduce using rule 44 (stmt -> matched_stmt .)
 
 
-state 38
+state 25
 
-    (67) expr -> id . EQUALS E1 SEMICOLON
+    (22) fn_line -> fn_call . SEMICOLON
 
-    EQUALS          shift and go to state 78
+    SEMICOLON       shift and go to state 47
 
 
-state 39
+state 26
 
     (18) fn_body -> fn_line . fn_body
     (18) fn_body -> . fn_line fn_body
@@ -798,28 +579,35 @@ state 39
     (89) id -> . IDENTIFIER
 
     RCURVE          reduce using rule 19 (fn_body -> .)
-    IDENTIFIER      shift and go to state 37
-    INT_VAR         shift and go to state 7
-    FLOAT_VAR       shift and go to state 10
-    IF              shift and go to state 46
-    LCURVE          shift and go to state 33
-    WHILE           shift and go to state 36
-    STAR            shift and go to state 34
-    RETURN          shift and go to state 30
+    IDENTIFIER      shift and go to state 38
+    INT_VAR         shift and go to state 8
+    FLOAT_VAR       shift and go to state 2
+    IF              shift and go to state 29
+    LCURVE          shift and go to state 37
+    WHILE           shift and go to state 32
+    STAR            shift and go to state 30
+    RETURN          shift and go to state 33
 
-    id                             shift and go to state 38
-    type                           shift and go to state 40
-    fn_call                        shift and go to state 41
-    declaration                    shift and go to state 42
-    matched_stmt                   shift and go to state 31
-    fn_body                        shift and go to state 79
-    return_stmt                    shift and go to state 44
-    unmatched_stmt                 shift and go to state 35
-    stmt                           shift and go to state 45
-    expr                           shift and go to state 43
-    fn_line                        shift and go to state 39
+    unmatched_stmt                 shift and go to state 23
+    fn_call                        shift and go to state 25
+    fn_line                        shift and go to state 26
+    fn_body                        shift and go to state 48
+    id                             shift and go to state 34
+    stmt                           shift and go to state 35
+    return_stmt                    shift and go to state 39
+    type                           shift and go to state 28
+    expr                           shift and go to state 36
+    declaration                    shift and go to state 31
+    matched_stmt                   shift and go to state 24
 
-state 40
+state 27
+
+    (13) fn_defn2 -> LCURVE fn_body . RCURVE
+
+    RCURVE          shift and go to state 49
+
+
+state 28
 
     (39) declaration -> type . list SEMICOLON
     (40) list -> . list COMMA variable
@@ -827,20 +615,45 @@ state 40
     (42) variable -> . IDENTIFIER
     (43) variable -> . STAR variable
 
-    IDENTIFIER      shift and go to state 14
-    STAR            shift and go to state 48
+    IDENTIFIER      shift and go to state 18
+    STAR            shift and go to state 51
 
-    list                           shift and go to state 11
-    variable                       shift and go to state 80
+    variable                       shift and go to state 50
+    list                           shift and go to state 14
 
-state 41
+state 29
 
-    (22) fn_line -> fn_call . SEMICOLON
+    (46) matched_stmt -> IF . LPAREN condition RPAREN matched_stmt ELSE matched_stmt
+    (47) matched_stmt -> IF . LPAREN condition RPAREN matched_stmt ELSE SEMICOLON
+    (48) matched_stmt -> IF . LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON
+    (49) matched_stmt -> IF . LPAREN condition RPAREN SEMICOLON ELSE matched_stmt
+    (55) unmatched_stmt -> IF . LPAREN condition RPAREN stmt
+    (56) unmatched_stmt -> IF . LPAREN condition RPAREN SEMICOLON
+    (57) unmatched_stmt -> IF . LPAREN condition RPAREN matched_stmt ELSE unmatched_stmt
+    (58) unmatched_stmt -> IF . LPAREN condition RPAREN SEMICOLON ELSE unmatched_stmt
 
-    SEMICOLON       shift and go to state 81
+    LPAREN          shift and go to state 52
 
 
-state 42
+state 30
+
+    (68) expr -> STAR . left_side EQUALS E1 SEMICOLON
+    (69) left_side -> . id
+    (70) left_side -> . star_ampersand id
+    (89) id -> . IDENTIFIER
+    (86) star_ampersand -> . STAR star_ampersand
+    (87) star_ampersand -> . STAR
+    (88) star_ampersand -> . AMPERSAND
+
+    IDENTIFIER      shift and go to state 57
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+
+    id                             shift and go to state 53
+    left_side                      shift and go to state 58
+    star_ampersand                 shift and go to state 56
+
+state 31
 
     (20) fn_line -> declaration .
 
@@ -855,245 +668,19 @@ state 42
     RCURVE          reduce using rule 20 (fn_line -> declaration .)
 
 
-state 43
+state 32
 
-    (51) matched_stmt -> expr .
+    (53) matched_stmt -> WHILE . LPAREN condition RPAREN matched_stmt
+    (54) matched_stmt -> WHILE . LPAREN condition RPAREN SEMICOLON
+    (59) unmatched_stmt -> WHILE . LPAREN condition RPAREN unmatched_stmt
 
-    IDENTIFIER      reduce using rule 51 (matched_stmt -> expr .)
-    INT_VAR         reduce using rule 51 (matched_stmt -> expr .)
-    FLOAT_VAR       reduce using rule 51 (matched_stmt -> expr .)
-    IF              reduce using rule 51 (matched_stmt -> expr .)
-    LCURVE          reduce using rule 51 (matched_stmt -> expr .)
-    WHILE           reduce using rule 51 (matched_stmt -> expr .)
-    STAR            reduce using rule 51 (matched_stmt -> expr .)
-    RETURN          reduce using rule 51 (matched_stmt -> expr .)
-    RCURVE          reduce using rule 51 (matched_stmt -> expr .)
-    ELSE            reduce using rule 51 (matched_stmt -> expr .)
+    LPAREN          shift and go to state 59
 
 
-state 44
+state 33
 
-    (52) matched_stmt -> return_stmt .
-
-    IDENTIFIER      reduce using rule 52 (matched_stmt -> return_stmt .)
-    INT_VAR         reduce using rule 52 (matched_stmt -> return_stmt .)
-    FLOAT_VAR       reduce using rule 52 (matched_stmt -> return_stmt .)
-    IF              reduce using rule 52 (matched_stmt -> return_stmt .)
-    LCURVE          reduce using rule 52 (matched_stmt -> return_stmt .)
-    WHILE           reduce using rule 52 (matched_stmt -> return_stmt .)
-    STAR            reduce using rule 52 (matched_stmt -> return_stmt .)
-    RETURN          reduce using rule 52 (matched_stmt -> return_stmt .)
-    RCURVE          reduce using rule 52 (matched_stmt -> return_stmt .)
-    ELSE            reduce using rule 52 (matched_stmt -> return_stmt .)
-
-
-state 45
-
-    (21) fn_line -> stmt .
-
-    IDENTIFIER      reduce using rule 21 (fn_line -> stmt .)
-    INT_VAR         reduce using rule 21 (fn_line -> stmt .)
-    FLOAT_VAR       reduce using rule 21 (fn_line -> stmt .)
-    IF              reduce using rule 21 (fn_line -> stmt .)
-    LCURVE          reduce using rule 21 (fn_line -> stmt .)
-    WHILE           reduce using rule 21 (fn_line -> stmt .)
-    STAR            reduce using rule 21 (fn_line -> stmt .)
-    RETURN          reduce using rule 21 (fn_line -> stmt .)
-    RCURVE          reduce using rule 21 (fn_line -> stmt .)
-
-
-state 46
-
-    (46) matched_stmt -> IF . LPAREN condition RPAREN matched_stmt ELSE matched_stmt
-    (47) matched_stmt -> IF . LPAREN condition RPAREN matched_stmt ELSE SEMICOLON
-    (48) matched_stmt -> IF . LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON
-    (49) matched_stmt -> IF . LPAREN condition RPAREN SEMICOLON ELSE matched_stmt
-    (55) unmatched_stmt -> IF . LPAREN condition RPAREN stmt
-    (56) unmatched_stmt -> IF . LPAREN condition RPAREN SEMICOLON
-    (57) unmatched_stmt -> IF . LPAREN condition RPAREN matched_stmt ELSE unmatched_stmt
-    (58) unmatched_stmt -> IF . LPAREN condition RPAREN SEMICOLON ELSE unmatched_stmt
-
-    LPAREN          shift and go to state 82
-
-
-state 47
-
-    (40) list -> list COMMA variable .
-
-    SEMICOLON       reduce using rule 40 (list -> list COMMA variable .)
-    COMMA           reduce using rule 40 (list -> list COMMA variable .)
-
-
-state 48
-
-    (43) variable -> STAR . variable
-    (42) variable -> . IDENTIFIER
-    (43) variable -> . STAR variable
-
-    IDENTIFIER      shift and go to state 14
-    STAR            shift and go to state 48
-
-    variable                       shift and go to state 26
-
-state 49
-
-    (32) dec_arg_list -> type . star dec_multiple_arg
-    (35) arg_list -> type . variable multiple_arg
-    (16) star -> . STAR star
-    (17) star -> .
-    (42) variable -> . IDENTIFIER
-    (43) variable -> . STAR variable
-
-    STAR            shift and go to state 17
-    COMMA           reduce using rule 17 (star -> .)
-    RPAREN          reduce using rule 17 (star -> .)
-    IDENTIFIER      shift and go to state 14
-
-    star                           shift and go to state 83
-    variable                       shift and go to state 84
-
-state 50
-
-    (7) fn_declaration -> type fn_name LPAREN arg_list . RPAREN SEMICOLON
-    (11) fn_defn1 -> type fn_name LPAREN arg_list . RPAREN
-
-    RPAREN          shift and go to state 85
-
-
-state 51
-
-    (6) fn_declaration -> type fn_name LPAREN dec_arg_list . RPAREN SEMICOLON
-
-    RPAREN          shift and go to state 86
-
-
-state 52
-
-    (9) fn_declaration -> VOID fn_name LPAREN arg_list . RPAREN SEMICOLON
-    (12) fn_defn1 -> VOID fn_name LPAREN arg_list . RPAREN
-
-    RPAREN          shift and go to state 87
-
-
-state 53
-
-    (8) fn_declaration -> VOID fn_name LPAREN dec_arg_list . RPAREN SEMICOLON
-
-    RPAREN          shift and go to state 88
-
-
-state 54
-
-    (83) mixed_id -> FLOAT .
-
-    STAR            reduce using rule 83 (mixed_id -> FLOAT .)
-    DIVIDE          reduce using rule 83 (mixed_id -> FLOAT .)
-    PLUS            reduce using rule 83 (mixed_id -> FLOAT .)
-    MINUS           reduce using rule 83 (mixed_id -> FLOAT .)
-    COMMA           reduce using rule 83 (mixed_id -> FLOAT .)
-    RPAREN          reduce using rule 83 (mixed_id -> FLOAT .)
-    SEMICOLON       reduce using rule 83 (mixed_id -> FLOAT .)
-    OPERATOR        reduce using rule 83 (mixed_id -> FLOAT .)
-    AND             reduce using rule 83 (mixed_id -> FLOAT .)
-    OR              reduce using rule 83 (mixed_id -> FLOAT .)
-
-
-state 55
-
-    (73) E1 -> E2 .
-    (74) E2 -> E2 . STAR E3
-    (75) E2 -> E2 . DIVIDE E3
-
-    OPERATOR        reduce using rule 73 (E1 -> E2 .)
-    PLUS            reduce using rule 73 (E1 -> E2 .)
-    MINUS           reduce using rule 73 (E1 -> E2 .)
-    COMMA           reduce using rule 73 (E1 -> E2 .)
-    RPAREN          reduce using rule 73 (E1 -> E2 .)
-    SEMICOLON       reduce using rule 73 (E1 -> E2 .)
-    AND             reduce using rule 73 (E1 -> E2 .)
-    OR              reduce using rule 73 (E1 -> E2 .)
-    STAR            shift and go to state 89
-    DIVIDE          shift and go to state 90
-
-
-state 56
-
-    (84) mixed_id -> fn_call .
-
-    STAR            reduce using rule 84 (mixed_id -> fn_call .)
-    DIVIDE          reduce using rule 84 (mixed_id -> fn_call .)
-    PLUS            reduce using rule 84 (mixed_id -> fn_call .)
-    MINUS           reduce using rule 84 (mixed_id -> fn_call .)
-    COMMA           reduce using rule 84 (mixed_id -> fn_call .)
-    RPAREN          reduce using rule 84 (mixed_id -> fn_call .)
-    SEMICOLON       reduce using rule 84 (mixed_id -> fn_call .)
-    OPERATOR        reduce using rule 84 (mixed_id -> fn_call .)
-    AND             reduce using rule 84 (mixed_id -> fn_call .)
-    OR              reduce using rule 84 (mixed_id -> fn_call .)
-
-
-state 57
-
-    (76) E2 -> E3 .
-
-    STAR            reduce using rule 76 (E2 -> E3 .)
-    DIVIDE          reduce using rule 76 (E2 -> E3 .)
-    OPERATOR        reduce using rule 76 (E2 -> E3 .)
-    PLUS            reduce using rule 76 (E2 -> E3 .)
-    MINUS           reduce using rule 76 (E2 -> E3 .)
-    SEMICOLON       reduce using rule 76 (E2 -> E3 .)
-    RPAREN          reduce using rule 76 (E2 -> E3 .)
-    COMMA           reduce using rule 76 (E2 -> E3 .)
-    AND             reduce using rule 76 (E2 -> E3 .)
-    OR              reduce using rule 76 (E2 -> E3 .)
-
-
-state 58
-
-    (80) mixed_id -> id .
-
-    STAR            reduce using rule 80 (mixed_id -> id .)
-    DIVIDE          reduce using rule 80 (mixed_id -> id .)
-    PLUS            reduce using rule 80 (mixed_id -> id .)
-    MINUS           reduce using rule 80 (mixed_id -> id .)
-    COMMA           reduce using rule 80 (mixed_id -> id .)
-    RPAREN          reduce using rule 80 (mixed_id -> id .)
-    SEMICOLON       reduce using rule 80 (mixed_id -> id .)
-    OPERATOR        reduce using rule 80 (mixed_id -> id .)
-    AND             reduce using rule 80 (mixed_id -> id .)
-    OR              reduce using rule 80 (mixed_id -> id .)
-
-
-state 59
-
-    (23) return_stmt -> RETURN E1 . SEMICOLON
-    (71) E1 -> E1 . PLUS E2
-    (72) E1 -> E1 . MINUS E2
-
-    SEMICOLON       shift and go to state 93
-    PLUS            shift and go to state 91
-    MINUS           shift and go to state 92
-
-
-state 60
-
-    (24) return_stmt -> RETURN SEMICOLON .
-
-    IF              reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
-    LCURVE          reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
-    WHILE           reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
-    STAR            reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
-    RETURN          reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
-    IDENTIFIER      reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
-    RCURVE          reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
-    INT_VAR         reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
-    FLOAT_VAR       reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
-    ELSE            reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
-
-
-state 61
-
-    (77) E3 -> LPAREN . E1 RPAREN
+    (23) return_stmt -> RETURN . E1 SEMICOLON
+    (24) return_stmt -> RETURN . SEMICOLON
     (71) E1 -> . E1 PLUS E2
     (72) E1 -> . E1 MINUS E2
     (73) E1 -> . E2
@@ -1115,154 +702,64 @@ state 61
     (89) id -> . IDENTIFIER
     (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
 
-    LPAREN          shift and go to state 61
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
+    SEMICOLON       shift and go to state 63
+    LPAREN          shift and go to state 66
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
 
-    E2                             shift and go to state 55
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    E1                             shift and go to state 94
-    id                             shift and go to state 58
+    id                             shift and go to state 69
+    E3                             shift and go to state 70
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    E2                             shift and go to state 72
+    E1                             shift and go to state 65
+    mixed_id                       shift and go to state 64
 
-state 62
+state 34
 
-    (86) star_ampersand -> STAR . star_ampersand
-    (87) star_ampersand -> STAR .
-    (86) star_ampersand -> . STAR star_ampersand
-    (87) star_ampersand -> . STAR
-    (88) star_ampersand -> . AMPERSAND
+    (67) expr -> id . EQUALS E1 SEMICOLON
 
-    IDENTIFIER      reduce using rule 87 (star_ampersand -> STAR .)
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-
-    star_ampersand                 shift and go to state 95
-
-state 63
-
-    (89) id -> IDENTIFIER .
-    (25) fn_call -> IDENTIFIER . LPAREN fn_call_args RPAREN
-
-    STAR            reduce using rule 89 (id -> IDENTIFIER .)
-    DIVIDE          reduce using rule 89 (id -> IDENTIFIER .)
-    RPAREN          reduce using rule 89 (id -> IDENTIFIER .)
-    OPERATOR        reduce using rule 89 (id -> IDENTIFIER .)
-    PLUS            reduce using rule 89 (id -> IDENTIFIER .)
-    MINUS           reduce using rule 89 (id -> IDENTIFIER .)
-    SEMICOLON       reduce using rule 89 (id -> IDENTIFIER .)
-    COMMA           reduce using rule 89 (id -> IDENTIFIER .)
-    AND             reduce using rule 89 (id -> IDENTIFIER .)
-    OR              reduce using rule 89 (id -> IDENTIFIER .)
-    LPAREN          shift and go to state 77
+    EQUALS          shift and go to state 73
 
 
-state 64
+state 35
 
-    (82) mixed_id -> INT .
+    (21) fn_line -> stmt .
 
-    STAR            reduce using rule 82 (mixed_id -> INT .)
-    DIVIDE          reduce using rule 82 (mixed_id -> INT .)
-    PLUS            reduce using rule 82 (mixed_id -> INT .)
-    MINUS           reduce using rule 82 (mixed_id -> INT .)
-    COMMA           reduce using rule 82 (mixed_id -> INT .)
-    RPAREN          reduce using rule 82 (mixed_id -> INT .)
-    SEMICOLON       reduce using rule 82 (mixed_id -> INT .)
-    OPERATOR        reduce using rule 82 (mixed_id -> INT .)
-    AND             reduce using rule 82 (mixed_id -> INT .)
-    OR              reduce using rule 82 (mixed_id -> INT .)
-
-
-state 65
-
-    (81) mixed_id -> MINUS . mixed_id
-    (79) mixed_id -> . star_ampersand id
-    (80) mixed_id -> . id
-    (81) mixed_id -> . MINUS mixed_id
-    (82) mixed_id -> . INT
-    (83) mixed_id -> . FLOAT
-    (84) mixed_id -> . fn_call
-    (85) mixed_id -> . star_ampersand fn_call
-    (86) star_ampersand -> . STAR star_ampersand
-    (87) star_ampersand -> . STAR
-    (88) star_ampersand -> . AMPERSAND
-    (89) id -> . IDENTIFIER
-    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
-
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
-
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 96
-    id                             shift and go to state 58
-    star_ampersand                 shift and go to state 66
-
-state 66
-
-    (79) mixed_id -> star_ampersand . id
-    (85) mixed_id -> star_ampersand . fn_call
-    (89) id -> . IDENTIFIER
-    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
-
-    IDENTIFIER      shift and go to state 63
-
-    fn_call                        shift and go to state 97
-    id                             shift and go to state 98
-
-state 67
-
-    (88) star_ampersand -> AMPERSAND .
-
-    IDENTIFIER      reduce using rule 88 (star_ampersand -> AMPERSAND .)
+    IDENTIFIER      reduce using rule 21 (fn_line -> stmt .)
+    INT_VAR         reduce using rule 21 (fn_line -> stmt .)
+    FLOAT_VAR       reduce using rule 21 (fn_line -> stmt .)
+    IF              reduce using rule 21 (fn_line -> stmt .)
+    LCURVE          reduce using rule 21 (fn_line -> stmt .)
+    WHILE           reduce using rule 21 (fn_line -> stmt .)
+    STAR            reduce using rule 21 (fn_line -> stmt .)
+    RETURN          reduce using rule 21 (fn_line -> stmt .)
+    RCURVE          reduce using rule 21 (fn_line -> stmt .)
 
 
-state 68
+state 36
 
-    (78) E3 -> mixed_id .
+    (51) matched_stmt -> expr .
 
-    STAR            reduce using rule 78 (E3 -> mixed_id .)
-    DIVIDE          reduce using rule 78 (E3 -> mixed_id .)
-    PLUS            reduce using rule 78 (E3 -> mixed_id .)
-    MINUS           reduce using rule 78 (E3 -> mixed_id .)
-    COMMA           reduce using rule 78 (E3 -> mixed_id .)
-    RPAREN          reduce using rule 78 (E3 -> mixed_id .)
-    OPERATOR        reduce using rule 78 (E3 -> mixed_id .)
-    AND             reduce using rule 78 (E3 -> mixed_id .)
-    OR              reduce using rule 78 (E3 -> mixed_id .)
-    SEMICOLON       reduce using rule 78 (E3 -> mixed_id .)
-
-
-state 69
-
-    (13) fn_defn2 -> LCURVE fn_body RCURVE .
-
-    VOID            reduce using rule 13 (fn_defn2 -> LCURVE fn_body RCURVE .)
-    INT_VAR         reduce using rule 13 (fn_defn2 -> LCURVE fn_body RCURVE .)
-    FLOAT_VAR       reduce using rule 13 (fn_defn2 -> LCURVE fn_body RCURVE .)
-    $end            reduce using rule 13 (fn_defn2 -> LCURVE fn_body RCURVE .)
+    IF              reduce using rule 51 (matched_stmt -> expr .)
+    LCURVE          reduce using rule 51 (matched_stmt -> expr .)
+    WHILE           reduce using rule 51 (matched_stmt -> expr .)
+    STAR            reduce using rule 51 (matched_stmt -> expr .)
+    RETURN          reduce using rule 51 (matched_stmt -> expr .)
+    IDENTIFIER      reduce using rule 51 (matched_stmt -> expr .)
+    RCURVE          reduce using rule 51 (matched_stmt -> expr .)
+    INT_VAR         reduce using rule 51 (matched_stmt -> expr .)
+    FLOAT_VAR       reduce using rule 51 (matched_stmt -> expr .)
+    ELSE            reduce using rule 51 (matched_stmt -> expr .)
 
 
-state 70
+state 37
 
-    (89) id -> IDENTIFIER .
-
-    EQUALS          reduce using rule 89 (id -> IDENTIFIER .)
-
-
-state 71
-
-    (60) stmt_list -> stmt . stmt_list
-    (61) stmt_list -> stmt .
+    (50) matched_stmt -> LCURVE . stmt_list RCURVE
     (60) stmt_list -> . stmt stmt_list
     (61) stmt_list -> . stmt
     (44) stmt -> . matched_stmt
@@ -1287,201 +784,139 @@ state 71
     (24) return_stmt -> . RETURN SEMICOLON
     (89) id -> . IDENTIFIER
 
-    RCURVE          reduce using rule 61 (stmt_list -> stmt .)
-    IF              shift and go to state 46
-    LCURVE          shift and go to state 33
-    WHILE           shift and go to state 36
-    STAR            shift and go to state 34
-    RETURN          shift and go to state 30
-    IDENTIFIER      shift and go to state 70
+    IF              shift and go to state 29
+    LCURVE          shift and go to state 37
+    WHILE           shift and go to state 32
+    STAR            shift and go to state 30
+    RETURN          shift and go to state 33
+    IDENTIFIER      shift and go to state 57
 
-    stmt                           shift and go to state 71
-    stmt_list                      shift and go to state 99
-    matched_stmt                   shift and go to state 31
-    expr                           shift and go to state 43
-    return_stmt                    shift and go to state 44
-    unmatched_stmt                 shift and go to state 35
-    id                             shift and go to state 38
+    unmatched_stmt                 shift and go to state 23
+    stmt                           shift and go to state 75
+    matched_stmt                   shift and go to state 24
+    stmt_list                      shift and go to state 74
+    expr                           shift and go to state 36
+    id                             shift and go to state 34
+    return_stmt                    shift and go to state 39
 
-state 72
+state 38
 
-    (50) matched_stmt -> LCURVE stmt_list . RCURVE
+    (25) fn_call -> IDENTIFIER . LPAREN fn_call_args RPAREN
+    (89) id -> IDENTIFIER .
 
-    RCURVE          shift and go to state 100
-
-
-state 73
-
-    (70) left_side -> star_ampersand . id
-    (89) id -> . IDENTIFIER
-
-    IDENTIFIER      shift and go to state 70
-
-    id                             shift and go to state 101
-
-state 74
-
-    (68) expr -> STAR left_side . EQUALS E1 SEMICOLON
-
-    EQUALS          shift and go to state 102
+    LPAREN          shift and go to state 76
+    EQUALS          reduce using rule 89 (id -> IDENTIFIER .)
 
 
-state 75
+state 39
 
-    (69) left_side -> id .
+    (52) matched_stmt -> return_stmt .
 
-    EQUALS          reduce using rule 69 (left_side -> id .)
-
-
-state 76
-
-    (53) matched_stmt -> WHILE LPAREN . condition RPAREN matched_stmt
-    (54) matched_stmt -> WHILE LPAREN . condition RPAREN SEMICOLON
-    (59) unmatched_stmt -> WHILE LPAREN . condition RPAREN unmatched_stmt
-    (62) condition -> . condition AND condition
-    (63) condition -> . condition OR condition
-    (64) condition -> . E1 OPERATOR E1
-    (65) condition -> . LPAREN condition RPAREN
-    (66) condition -> . NOT condition
-    (71) E1 -> . E1 PLUS E2
-    (72) E1 -> . E1 MINUS E2
-    (73) E1 -> . E2
-    (74) E2 -> . E2 STAR E3
-    (75) E2 -> . E2 DIVIDE E3
-    (76) E2 -> . E3
-    (77) E3 -> . LPAREN E1 RPAREN
-    (78) E3 -> . mixed_id
-    (79) mixed_id -> . star_ampersand id
-    (80) mixed_id -> . id
-    (81) mixed_id -> . MINUS mixed_id
-    (82) mixed_id -> . INT
-    (83) mixed_id -> . FLOAT
-    (84) mixed_id -> . fn_call
-    (85) mixed_id -> . star_ampersand fn_call
-    (86) star_ampersand -> . STAR star_ampersand
-    (87) star_ampersand -> . STAR
-    (88) star_ampersand -> . AMPERSAND
-    (89) id -> . IDENTIFIER
-    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
-
-    LPAREN          shift and go to state 105
-    NOT             shift and go to state 106
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
-
-    E2                             shift and go to state 55
-    condition                      shift and go to state 103
-    mixed_id                       shift and go to state 68
-    fn_call                        shift and go to state 56
-    E3                             shift and go to state 57
-    star_ampersand                 shift and go to state 66
-    E1                             shift and go to state 104
-    id                             shift and go to state 58
-
-state 77
-
-    (25) fn_call -> IDENTIFIER LPAREN . fn_call_args RPAREN
-    (26) fn_call_args -> . E1 fn_call_args_list
-    (27) fn_call_args -> .
-    (71) E1 -> . E1 PLUS E2
-    (72) E1 -> . E1 MINUS E2
-    (73) E1 -> . E2
-    (74) E2 -> . E2 STAR E3
-    (75) E2 -> . E2 DIVIDE E3
-    (76) E2 -> . E3
-    (77) E3 -> . LPAREN E1 RPAREN
-    (78) E3 -> . mixed_id
-    (79) mixed_id -> . star_ampersand id
-    (80) mixed_id -> . id
-    (81) mixed_id -> . MINUS mixed_id
-    (82) mixed_id -> . INT
-    (83) mixed_id -> . FLOAT
-    (84) mixed_id -> . fn_call
-    (85) mixed_id -> . star_ampersand fn_call
-    (86) star_ampersand -> . STAR star_ampersand
-    (87) star_ampersand -> . STAR
-    (88) star_ampersand -> . AMPERSAND
-    (89) id -> . IDENTIFIER
-    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
-
-    RPAREN          reduce using rule 27 (fn_call_args -> .)
-    LPAREN          shift and go to state 61
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
-
-    E2                             shift and go to state 55
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 68
-    fn_call_args                   shift and go to state 107
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    E1                             shift and go to state 108
-    id                             shift and go to state 58
-
-state 78
-
-    (67) expr -> id EQUALS . E1 SEMICOLON
-    (71) E1 -> . E1 PLUS E2
-    (72) E1 -> . E1 MINUS E2
-    (73) E1 -> . E2
-    (74) E2 -> . E2 STAR E3
-    (75) E2 -> . E2 DIVIDE E3
-    (76) E2 -> . E3
-    (77) E3 -> . LPAREN E1 RPAREN
-    (78) E3 -> . mixed_id
-    (79) mixed_id -> . star_ampersand id
-    (80) mixed_id -> . id
-    (81) mixed_id -> . MINUS mixed_id
-    (82) mixed_id -> . INT
-    (83) mixed_id -> . FLOAT
-    (84) mixed_id -> . fn_call
-    (85) mixed_id -> . star_ampersand fn_call
-    (86) star_ampersand -> . STAR star_ampersand
-    (87) star_ampersand -> . STAR
-    (88) star_ampersand -> . AMPERSAND
-    (89) id -> . IDENTIFIER
-    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
-
-    LPAREN          shift and go to state 61
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
-
-    E2                             shift and go to state 55
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    E1                             shift and go to state 109
-    id                             shift and go to state 58
-
-state 79
-
-    (18) fn_body -> fn_line fn_body .
-
-    RCURVE          reduce using rule 18 (fn_body -> fn_line fn_body .)
+    IF              reduce using rule 52 (matched_stmt -> return_stmt .)
+    LCURVE          reduce using rule 52 (matched_stmt -> return_stmt .)
+    WHILE           reduce using rule 52 (matched_stmt -> return_stmt .)
+    STAR            reduce using rule 52 (matched_stmt -> return_stmt .)
+    RETURN          reduce using rule 52 (matched_stmt -> return_stmt .)
+    IDENTIFIER      reduce using rule 52 (matched_stmt -> return_stmt .)
+    RCURVE          reduce using rule 52 (matched_stmt -> return_stmt .)
+    INT_VAR         reduce using rule 52 (matched_stmt -> return_stmt .)
+    FLOAT_VAR       reduce using rule 52 (matched_stmt -> return_stmt .)
+    ELSE            reduce using rule 52 (matched_stmt -> return_stmt .)
 
 
-state 80
+state 40
 
-    (41) list -> variable .
+    (43) variable -> STAR variable .
 
-    SEMICOLON       reduce using rule 41 (list -> variable .)
-    COMMA           reduce using rule 41 (list -> variable .)
+    COMMA           reduce using rule 43 (variable -> STAR variable .)
+    RPAREN          reduce using rule 43 (variable -> STAR variable .)
+    SEMICOLON       reduce using rule 43 (variable -> STAR variable .)
+    LPAREN          reduce using rule 43 (variable -> STAR variable .)
 
 
-state 81
+state 41
+
+    (16) star -> STAR star .
+
+    COMMA           reduce using rule 16 (star -> STAR star .)
+    RPAREN          reduce using rule 16 (star -> STAR star .)
+    MAIN            reduce using rule 16 (star -> STAR star .)
+
+
+state 42
+
+    (40) list -> list COMMA . variable
+    (42) variable -> . IDENTIFIER
+    (43) variable -> . STAR variable
+
+    IDENTIFIER      shift and go to state 18
+    STAR            shift and go to state 51
+
+    variable                       shift and go to state 77
+
+state 43
+
+    (39) declaration -> type list SEMICOLON .
+
+    IDENTIFIER      reduce using rule 39 (declaration -> type list SEMICOLON .)
+    INT_VAR         reduce using rule 39 (declaration -> type list SEMICOLON .)
+    FLOAT_VAR       reduce using rule 39 (declaration -> type list SEMICOLON .)
+    IF              reduce using rule 39 (declaration -> type list SEMICOLON .)
+    LCURVE          reduce using rule 39 (declaration -> type list SEMICOLON .)
+    WHILE           reduce using rule 39 (declaration -> type list SEMICOLON .)
+    STAR            reduce using rule 39 (declaration -> type list SEMICOLON .)
+    RETURN          reduce using rule 39 (declaration -> type list SEMICOLON .)
+    RCURVE          reduce using rule 39 (declaration -> type list SEMICOLON .)
+    VOID            reduce using rule 39 (declaration -> type list SEMICOLON .)
+    $end            reduce using rule 39 (declaration -> type list SEMICOLON .)
+
+
+state 44
+
+    (6) fn_declaration -> type fn_name LPAREN . dec_arg_list RPAREN SEMICOLON
+    (7) fn_declaration -> type fn_name LPAREN . arg_list RPAREN SEMICOLON
+    (11) fn_defn1 -> type fn_name LPAREN . arg_list RPAREN
+    (32) dec_arg_list -> . type star dec_multiple_arg
+    (35) arg_list -> . type variable multiple_arg
+    (36) arg_list -> .
+    (30) type -> . INT_VAR
+    (31) type -> . FLOAT_VAR
+
+    RPAREN          reduce using rule 36 (arg_list -> .)
+    INT_VAR         shift and go to state 8
+    FLOAT_VAR       shift and go to state 2
+
+    dec_arg_list                   shift and go to state 78
+    type                           shift and go to state 80
+    arg_list                       shift and go to state 79
+
+state 45
+
+    (14) fn_name -> star MAIN .
+
+    LPAREN          reduce using rule 14 (fn_name -> star MAIN .)
+
+
+state 46
+
+    (8) fn_declaration -> VOID fn_name LPAREN . dec_arg_list RPAREN SEMICOLON
+    (9) fn_declaration -> VOID fn_name LPAREN . arg_list RPAREN SEMICOLON
+    (12) fn_defn1 -> VOID fn_name LPAREN . arg_list RPAREN
+    (32) dec_arg_list -> . type star dec_multiple_arg
+    (35) arg_list -> . type variable multiple_arg
+    (36) arg_list -> .
+    (30) type -> . INT_VAR
+    (31) type -> . FLOAT_VAR
+
+    RPAREN          reduce using rule 36 (arg_list -> .)
+    INT_VAR         shift and go to state 8
+    FLOAT_VAR       shift and go to state 2
+
+    dec_arg_list                   shift and go to state 81
+    type                           shift and go to state 80
+    arg_list                       shift and go to state 82
+
+state 47
 
     (22) fn_line -> fn_call SEMICOLON .
 
@@ -1496,7 +931,43 @@ state 81
     RCURVE          reduce using rule 22 (fn_line -> fn_call SEMICOLON .)
 
 
-state 82
+state 48
+
+    (18) fn_body -> fn_line fn_body .
+
+    RCURVE          reduce using rule 18 (fn_body -> fn_line fn_body .)
+
+
+state 49
+
+    (13) fn_defn2 -> LCURVE fn_body RCURVE .
+
+    VOID            reduce using rule 13 (fn_defn2 -> LCURVE fn_body RCURVE .)
+    INT_VAR         reduce using rule 13 (fn_defn2 -> LCURVE fn_body RCURVE .)
+    FLOAT_VAR       reduce using rule 13 (fn_defn2 -> LCURVE fn_body RCURVE .)
+    $end            reduce using rule 13 (fn_defn2 -> LCURVE fn_body RCURVE .)
+
+
+state 50
+
+    (41) list -> variable .
+
+    SEMICOLON       reduce using rule 41 (list -> variable .)
+    COMMA           reduce using rule 41 (list -> variable .)
+
+
+state 51
+
+    (43) variable -> STAR . variable
+    (42) variable -> . IDENTIFIER
+    (43) variable -> . STAR variable
+
+    IDENTIFIER      shift and go to state 18
+    STAR            shift and go to state 51
+
+    variable                       shift and go to state 40
+
+state 52
 
     (46) matched_stmt -> IF LPAREN . condition RPAREN matched_stmt ELSE matched_stmt
     (47) matched_stmt -> IF LPAREN . condition RPAREN matched_stmt ELSE SEMICOLON
@@ -1532,329 +1003,85 @@ state 82
     (89) id -> . IDENTIFIER
     (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
 
-    LPAREN          shift and go to state 105
-    NOT             shift and go to state 106
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
+    LPAREN          shift and go to state 84
+    NOT             shift and go to state 85
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
 
-    E2                             shift and go to state 55
-    condition                      shift and go to state 110
-    mixed_id                       shift and go to state 68
-    E1                             shift and go to state 104
-    E3                             shift and go to state 57
-    fn_call                        shift and go to state 56
-    star_ampersand                 shift and go to state 66
-    id                             shift and go to state 58
+    condition                      shift and go to state 83
+    star_ampersand                 shift and go to state 71
+    E1                             shift and go to state 86
+    id                             shift and go to state 69
+    E3                             shift and go to state 70
+    mixed_id                       shift and go to state 64
+    E2                             shift and go to state 72
+    fn_call                        shift and go to state 62
 
-state 83
+state 53
 
-    (32) dec_arg_list -> type star . dec_multiple_arg
-    (33) dec_multiple_arg -> . COMMA type star dec_multiple_arg
-    (34) dec_multiple_arg -> .
+    (69) left_side -> id .
 
-    COMMA           shift and go to state 112
-    RPAREN          reduce using rule 34 (dec_multiple_arg -> .)
-
-    dec_multiple_arg               shift and go to state 111
-
-state 84
-
-    (35) arg_list -> type variable . multiple_arg
-    (37) multiple_arg -> . COMMA type variable multiple_arg
-    (38) multiple_arg -> .
-
-    COMMA           shift and go to state 113
-    RPAREN          reduce using rule 38 (multiple_arg -> .)
-
-    multiple_arg                   shift and go to state 114
-
-state 85
-
-    (7) fn_declaration -> type fn_name LPAREN arg_list RPAREN . SEMICOLON
-    (11) fn_defn1 -> type fn_name LPAREN arg_list RPAREN .
-
-    SEMICOLON       shift and go to state 115
-    LCURVE          reduce using rule 11 (fn_defn1 -> type fn_name LPAREN arg_list RPAREN .)
+    EQUALS          reduce using rule 69 (left_side -> id .)
 
 
-state 86
+state 54
 
-    (6) fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN . SEMICOLON
-
-    SEMICOLON       shift and go to state 116
-
-
-state 87
-
-    (9) fn_declaration -> VOID fn_name LPAREN arg_list RPAREN . SEMICOLON
-    (12) fn_defn1 -> VOID fn_name LPAREN arg_list RPAREN .
-
-    SEMICOLON       shift and go to state 117
-    LCURVE          reduce using rule 12 (fn_defn1 -> VOID fn_name LPAREN arg_list RPAREN .)
-
-
-state 88
-
-    (8) fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN . SEMICOLON
-
-    SEMICOLON       shift and go to state 118
-
-
-state 89
-
-    (74) E2 -> E2 STAR . E3
-    (77) E3 -> . LPAREN E1 RPAREN
-    (78) E3 -> . mixed_id
-    (79) mixed_id -> . star_ampersand id
-    (80) mixed_id -> . id
-    (81) mixed_id -> . MINUS mixed_id
-    (82) mixed_id -> . INT
-    (83) mixed_id -> . FLOAT
-    (84) mixed_id -> . fn_call
-    (85) mixed_id -> . star_ampersand fn_call
+    (86) star_ampersand -> STAR . star_ampersand
+    (87) star_ampersand -> STAR .
     (86) star_ampersand -> . STAR star_ampersand
     (87) star_ampersand -> . STAR
     (88) star_ampersand -> . AMPERSAND
+
+    IDENTIFIER      reduce using rule 87 (star_ampersand -> STAR .)
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+
+    star_ampersand                 shift and go to state 87
+
+state 55
+
+    (88) star_ampersand -> AMPERSAND .
+
+    IDENTIFIER      reduce using rule 88 (star_ampersand -> AMPERSAND .)
+
+
+state 56
+
+    (70) left_side -> star_ampersand . id
     (89) id -> . IDENTIFIER
-    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
 
-    LPAREN          shift and go to state 61
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
+    IDENTIFIER      shift and go to state 57
 
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 119
-    id                             shift and go to state 58
+    id                             shift and go to state 88
 
-state 90
+state 57
 
-    (75) E2 -> E2 DIVIDE . E3
-    (77) E3 -> . LPAREN E1 RPAREN
-    (78) E3 -> . mixed_id
-    (79) mixed_id -> . star_ampersand id
-    (80) mixed_id -> . id
-    (81) mixed_id -> . MINUS mixed_id
-    (82) mixed_id -> . INT
-    (83) mixed_id -> . FLOAT
-    (84) mixed_id -> . fn_call
-    (85) mixed_id -> . star_ampersand fn_call
-    (86) star_ampersand -> . STAR star_ampersand
-    (87) star_ampersand -> . STAR
-    (88) star_ampersand -> . AMPERSAND
-    (89) id -> . IDENTIFIER
-    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+    (89) id -> IDENTIFIER .
 
-    LPAREN          shift and go to state 61
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
-
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 120
-    id                             shift and go to state 58
-
-state 91
-
-    (71) E1 -> E1 PLUS . E2
-    (74) E2 -> . E2 STAR E3
-    (75) E2 -> . E2 DIVIDE E3
-    (76) E2 -> . E3
-    (77) E3 -> . LPAREN E1 RPAREN
-    (78) E3 -> . mixed_id
-    (79) mixed_id -> . star_ampersand id
-    (80) mixed_id -> . id
-    (81) mixed_id -> . MINUS mixed_id
-    (82) mixed_id -> . INT
-    (83) mixed_id -> . FLOAT
-    (84) mixed_id -> . fn_call
-    (85) mixed_id -> . star_ampersand fn_call
-    (86) star_ampersand -> . STAR star_ampersand
-    (87) star_ampersand -> . STAR
-    (88) star_ampersand -> . AMPERSAND
-    (89) id -> . IDENTIFIER
-    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
-
-    LPAREN          shift and go to state 61
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
-
-    E2                             shift and go to state 121
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    id                             shift and go to state 58
-
-state 92
-
-    (72) E1 -> E1 MINUS . E2
-    (74) E2 -> . E2 STAR E3
-    (75) E2 -> . E2 DIVIDE E3
-    (76) E2 -> . E3
-    (77) E3 -> . LPAREN E1 RPAREN
-    (78) E3 -> . mixed_id
-    (79) mixed_id -> . star_ampersand id
-    (80) mixed_id -> . id
-    (81) mixed_id -> . MINUS mixed_id
-    (82) mixed_id -> . INT
-    (83) mixed_id -> . FLOAT
-    (84) mixed_id -> . fn_call
-    (85) mixed_id -> . star_ampersand fn_call
-    (86) star_ampersand -> . STAR star_ampersand
-    (87) star_ampersand -> . STAR
-    (88) star_ampersand -> . AMPERSAND
-    (89) id -> . IDENTIFIER
-    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
-
-    LPAREN          shift and go to state 61
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
-
-    E2                             shift and go to state 122
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    id                             shift and go to state 58
-
-state 93
-
-    (23) return_stmt -> RETURN E1 SEMICOLON .
-
-    IF              reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
-    LCURVE          reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
-    WHILE           reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
-    STAR            reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
-    RETURN          reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
-    IDENTIFIER      reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
-    RCURVE          reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
-    INT_VAR         reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
-    FLOAT_VAR       reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
-    ELSE            reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
+    EQUALS          reduce using rule 89 (id -> IDENTIFIER .)
 
 
-state 94
+state 58
 
-    (77) E3 -> LPAREN E1 . RPAREN
-    (71) E1 -> E1 . PLUS E2
-    (72) E1 -> E1 . MINUS E2
+    (68) expr -> STAR left_side . EQUALS E1 SEMICOLON
 
-    RPAREN          shift and go to state 123
-    PLUS            shift and go to state 91
-    MINUS           shift and go to state 92
+    EQUALS          shift and go to state 89
 
 
-state 95
+state 59
 
-    (86) star_ampersand -> STAR star_ampersand .
-
-    IDENTIFIER      reduce using rule 86 (star_ampersand -> STAR star_ampersand .)
-
-
-state 96
-
-    (81) mixed_id -> MINUS mixed_id .
-
-    STAR            reduce using rule 81 (mixed_id -> MINUS mixed_id .)
-    DIVIDE          reduce using rule 81 (mixed_id -> MINUS mixed_id .)
-    PLUS            reduce using rule 81 (mixed_id -> MINUS mixed_id .)
-    MINUS           reduce using rule 81 (mixed_id -> MINUS mixed_id .)
-    COMMA           reduce using rule 81 (mixed_id -> MINUS mixed_id .)
-    RPAREN          reduce using rule 81 (mixed_id -> MINUS mixed_id .)
-    SEMICOLON       reduce using rule 81 (mixed_id -> MINUS mixed_id .)
-    OPERATOR        reduce using rule 81 (mixed_id -> MINUS mixed_id .)
-    AND             reduce using rule 81 (mixed_id -> MINUS mixed_id .)
-    OR              reduce using rule 81 (mixed_id -> MINUS mixed_id .)
-
-
-state 97
-
-    (85) mixed_id -> star_ampersand fn_call .
-
-    STAR            reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
-    DIVIDE          reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
-    PLUS            reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
-    MINUS           reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
-    COMMA           reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
-    RPAREN          reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
-    SEMICOLON       reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
-    OPERATOR        reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
-    AND             reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
-    OR              reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
-
-
-state 98
-
-    (79) mixed_id -> star_ampersand id .
-
-    STAR            reduce using rule 79 (mixed_id -> star_ampersand id .)
-    DIVIDE          reduce using rule 79 (mixed_id -> star_ampersand id .)
-    PLUS            reduce using rule 79 (mixed_id -> star_ampersand id .)
-    MINUS           reduce using rule 79 (mixed_id -> star_ampersand id .)
-    COMMA           reduce using rule 79 (mixed_id -> star_ampersand id .)
-    RPAREN          reduce using rule 79 (mixed_id -> star_ampersand id .)
-    SEMICOLON       reduce using rule 79 (mixed_id -> star_ampersand id .)
-    OPERATOR        reduce using rule 79 (mixed_id -> star_ampersand id .)
-    AND             reduce using rule 79 (mixed_id -> star_ampersand id .)
-    OR              reduce using rule 79 (mixed_id -> star_ampersand id .)
-
-
-state 99
-
-    (60) stmt_list -> stmt stmt_list .
-
-    RCURVE          reduce using rule 60 (stmt_list -> stmt stmt_list .)
-
-
-state 100
-
-    (50) matched_stmt -> LCURVE stmt_list RCURVE .
-
-    IDENTIFIER      reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
-    INT_VAR         reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
-    FLOAT_VAR       reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
-    IF              reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
-    LCURVE          reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
-    WHILE           reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
-    STAR            reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
-    RETURN          reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
-    RCURVE          reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
-    ELSE            reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
-
-
-state 101
-
-    (70) left_side -> star_ampersand id .
-
-    EQUALS          reduce using rule 70 (left_side -> star_ampersand id .)
-
-
-state 102
-
-    (68) expr -> STAR left_side EQUALS . E1 SEMICOLON
+    (53) matched_stmt -> WHILE LPAREN . condition RPAREN matched_stmt
+    (54) matched_stmt -> WHILE LPAREN . condition RPAREN SEMICOLON
+    (59) unmatched_stmt -> WHILE LPAREN . condition RPAREN unmatched_stmt
+    (62) condition -> . condition AND condition
+    (63) condition -> . condition OR condition
+    (64) condition -> . E1 OPERATOR E1
+    (65) condition -> . LPAREN condition RPAREN
+    (66) condition -> . NOT condition
     (71) E1 -> . E1 PLUS E2
     (72) E1 -> . E1 MINUS E2
     (73) E1 -> . E2
@@ -1876,47 +1103,472 @@ state 102
     (89) id -> . IDENTIFIER
     (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
 
-    LPAREN          shift and go to state 61
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
+    LPAREN          shift and go to state 84
+    NOT             shift and go to state 85
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
 
-    E2                             shift and go to state 55
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    E1                             shift and go to state 124
-    id                             shift and go to state 58
+    condition                      shift and go to state 90
+    E3                             shift and go to state 70
+    mixed_id                       shift and go to state 64
+    star_ampersand                 shift and go to state 71
+    E1                             shift and go to state 86
+    E2                             shift and go to state 72
+    id                             shift and go to state 69
+    fn_call                        shift and go to state 62
 
-state 103
+state 60
 
-    (53) matched_stmt -> WHILE LPAREN condition . RPAREN matched_stmt
-    (54) matched_stmt -> WHILE LPAREN condition . RPAREN SEMICOLON
-    (59) unmatched_stmt -> WHILE LPAREN condition . RPAREN unmatched_stmt
-    (62) condition -> condition . AND condition
-    (63) condition -> condition . OR condition
+    (82) mixed_id -> INT .
 
-    RPAREN          shift and go to state 127
-    AND             shift and go to state 125
-    OR              shift and go to state 126
+    STAR            reduce using rule 82 (mixed_id -> INT .)
+    DIVIDE          reduce using rule 82 (mixed_id -> INT .)
+    OPERATOR        reduce using rule 82 (mixed_id -> INT .)
+    PLUS            reduce using rule 82 (mixed_id -> INT .)
+    MINUS           reduce using rule 82 (mixed_id -> INT .)
+    SEMICOLON       reduce using rule 82 (mixed_id -> INT .)
+    RPAREN          reduce using rule 82 (mixed_id -> INT .)
+    COMMA           reduce using rule 82 (mixed_id -> INT .)
+    AND             reduce using rule 82 (mixed_id -> INT .)
+    OR              reduce using rule 82 (mixed_id -> INT .)
 
 
-state 104
+state 61
 
-    (64) condition -> E1 . OPERATOR E1
+    (83) mixed_id -> FLOAT .
+
+    STAR            reduce using rule 83 (mixed_id -> FLOAT .)
+    DIVIDE          reduce using rule 83 (mixed_id -> FLOAT .)
+    OPERATOR        reduce using rule 83 (mixed_id -> FLOAT .)
+    PLUS            reduce using rule 83 (mixed_id -> FLOAT .)
+    MINUS           reduce using rule 83 (mixed_id -> FLOAT .)
+    SEMICOLON       reduce using rule 83 (mixed_id -> FLOAT .)
+    RPAREN          reduce using rule 83 (mixed_id -> FLOAT .)
+    COMMA           reduce using rule 83 (mixed_id -> FLOAT .)
+    AND             reduce using rule 83 (mixed_id -> FLOAT .)
+    OR              reduce using rule 83 (mixed_id -> FLOAT .)
+
+
+state 62
+
+    (84) mixed_id -> fn_call .
+
+    STAR            reduce using rule 84 (mixed_id -> fn_call .)
+    DIVIDE          reduce using rule 84 (mixed_id -> fn_call .)
+    OPERATOR        reduce using rule 84 (mixed_id -> fn_call .)
+    PLUS            reduce using rule 84 (mixed_id -> fn_call .)
+    MINUS           reduce using rule 84 (mixed_id -> fn_call .)
+    SEMICOLON       reduce using rule 84 (mixed_id -> fn_call .)
+    RPAREN          reduce using rule 84 (mixed_id -> fn_call .)
+    COMMA           reduce using rule 84 (mixed_id -> fn_call .)
+    AND             reduce using rule 84 (mixed_id -> fn_call .)
+    OR              reduce using rule 84 (mixed_id -> fn_call .)
+
+
+state 63
+
+    (24) return_stmt -> RETURN SEMICOLON .
+
+    IDENTIFIER      reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
+    INT_VAR         reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
+    FLOAT_VAR       reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
+    IF              reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
+    LCURVE          reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
+    WHILE           reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
+    STAR            reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
+    RETURN          reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
+    RCURVE          reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
+    ELSE            reduce using rule 24 (return_stmt -> RETURN SEMICOLON .)
+
+
+state 64
+
+    (78) E3 -> mixed_id .
+
+    STAR            reduce using rule 78 (E3 -> mixed_id .)
+    DIVIDE          reduce using rule 78 (E3 -> mixed_id .)
+    OPERATOR        reduce using rule 78 (E3 -> mixed_id .)
+    PLUS            reduce using rule 78 (E3 -> mixed_id .)
+    MINUS           reduce using rule 78 (E3 -> mixed_id .)
+    SEMICOLON       reduce using rule 78 (E3 -> mixed_id .)
+    RPAREN          reduce using rule 78 (E3 -> mixed_id .)
+    AND             reduce using rule 78 (E3 -> mixed_id .)
+    OR              reduce using rule 78 (E3 -> mixed_id .)
+    COMMA           reduce using rule 78 (E3 -> mixed_id .)
+
+
+state 65
+
+    (23) return_stmt -> RETURN E1 . SEMICOLON
     (71) E1 -> E1 . PLUS E2
     (72) E1 -> E1 . MINUS E2
 
-    OPERATOR        shift and go to state 128
-    PLUS            shift and go to state 91
-    MINUS           shift and go to state 92
+    SEMICOLON       shift and go to state 93
+    PLUS            shift and go to state 92
+    MINUS           shift and go to state 91
 
 
-state 105
+state 66
+
+    (77) E3 -> LPAREN . E1 RPAREN
+    (71) E1 -> . E1 PLUS E2
+    (72) E1 -> . E1 MINUS E2
+    (73) E1 -> . E2
+    (74) E2 -> . E2 STAR E3
+    (75) E2 -> . E2 DIVIDE E3
+    (76) E2 -> . E3
+    (77) E3 -> . LPAREN E1 RPAREN
+    (78) E3 -> . mixed_id
+    (79) mixed_id -> . star_ampersand id
+    (80) mixed_id -> . id
+    (81) mixed_id -> . MINUS mixed_id
+    (82) mixed_id -> . INT
+    (83) mixed_id -> . FLOAT
+    (84) mixed_id -> . fn_call
+    (85) mixed_id -> . star_ampersand fn_call
+    (86) star_ampersand -> . STAR star_ampersand
+    (87) star_ampersand -> . STAR
+    (88) star_ampersand -> . AMPERSAND
+    (89) id -> . IDENTIFIER
+    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+
+    LPAREN          shift and go to state 66
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
+
+    id                             shift and go to state 69
+    E3                             shift and go to state 70
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    E2                             shift and go to state 72
+    E1                             shift and go to state 94
+    mixed_id                       shift and go to state 64
+
+state 67
+
+    (89) id -> IDENTIFIER .
+    (25) fn_call -> IDENTIFIER . LPAREN fn_call_args RPAREN
+
+    STAR            reduce using rule 89 (id -> IDENTIFIER .)
+    DIVIDE          reduce using rule 89 (id -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 89 (id -> IDENTIFIER .)
+    PLUS            reduce using rule 89 (id -> IDENTIFIER .)
+    MINUS           reduce using rule 89 (id -> IDENTIFIER .)
+    COMMA           reduce using rule 89 (id -> IDENTIFIER .)
+    RPAREN          reduce using rule 89 (id -> IDENTIFIER .)
+    OPERATOR        reduce using rule 89 (id -> IDENTIFIER .)
+    AND             reduce using rule 89 (id -> IDENTIFIER .)
+    OR              reduce using rule 89 (id -> IDENTIFIER .)
+    LPAREN          shift and go to state 76
+
+
+state 68
+
+    (81) mixed_id -> MINUS . mixed_id
+    (79) mixed_id -> . star_ampersand id
+    (80) mixed_id -> . id
+    (81) mixed_id -> . MINUS mixed_id
+    (82) mixed_id -> . INT
+    (83) mixed_id -> . FLOAT
+    (84) mixed_id -> . fn_call
+    (85) mixed_id -> . star_ampersand fn_call
+    (86) star_ampersand -> . STAR star_ampersand
+    (87) star_ampersand -> . STAR
+    (88) star_ampersand -> . AMPERSAND
+    (89) id -> . IDENTIFIER
+    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
+
+    star_ampersand                 shift and go to state 71
+    mixed_id                       shift and go to state 95
+    fn_call                        shift and go to state 62
+    id                             shift and go to state 69
+
+state 69
+
+    (80) mixed_id -> id .
+
+    STAR            reduce using rule 80 (mixed_id -> id .)
+    DIVIDE          reduce using rule 80 (mixed_id -> id .)
+    OPERATOR        reduce using rule 80 (mixed_id -> id .)
+    PLUS            reduce using rule 80 (mixed_id -> id .)
+    MINUS           reduce using rule 80 (mixed_id -> id .)
+    SEMICOLON       reduce using rule 80 (mixed_id -> id .)
+    RPAREN          reduce using rule 80 (mixed_id -> id .)
+    COMMA           reduce using rule 80 (mixed_id -> id .)
+    AND             reduce using rule 80 (mixed_id -> id .)
+    OR              reduce using rule 80 (mixed_id -> id .)
+
+
+state 70
+
+    (76) E2 -> E3 .
+
+    STAR            reduce using rule 76 (E2 -> E3 .)
+    DIVIDE          reduce using rule 76 (E2 -> E3 .)
+    OPERATOR        reduce using rule 76 (E2 -> E3 .)
+    PLUS            reduce using rule 76 (E2 -> E3 .)
+    MINUS           reduce using rule 76 (E2 -> E3 .)
+    COMMA           reduce using rule 76 (E2 -> E3 .)
+    RPAREN          reduce using rule 76 (E2 -> E3 .)
+    SEMICOLON       reduce using rule 76 (E2 -> E3 .)
+    AND             reduce using rule 76 (E2 -> E3 .)
+    OR              reduce using rule 76 (E2 -> E3 .)
+
+
+state 71
+
+    (79) mixed_id -> star_ampersand . id
+    (85) mixed_id -> star_ampersand . fn_call
+    (89) id -> . IDENTIFIER
+    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+
+    IDENTIFIER      shift and go to state 67
+
+    fn_call                        shift and go to state 97
+    id                             shift and go to state 96
+
+state 72
+
+    (73) E1 -> E2 .
+    (74) E2 -> E2 . STAR E3
+    (75) E2 -> E2 . DIVIDE E3
+
+    SEMICOLON       reduce using rule 73 (E1 -> E2 .)
+    PLUS            reduce using rule 73 (E1 -> E2 .)
+    MINUS           reduce using rule 73 (E1 -> E2 .)
+    OPERATOR        reduce using rule 73 (E1 -> E2 .)
+    COMMA           reduce using rule 73 (E1 -> E2 .)
+    RPAREN          reduce using rule 73 (E1 -> E2 .)
+    AND             reduce using rule 73 (E1 -> E2 .)
+    OR              reduce using rule 73 (E1 -> E2 .)
+    STAR            shift and go to state 99
+    DIVIDE          shift and go to state 98
+
+
+state 73
+
+    (67) expr -> id EQUALS . E1 SEMICOLON
+    (71) E1 -> . E1 PLUS E2
+    (72) E1 -> . E1 MINUS E2
+    (73) E1 -> . E2
+    (74) E2 -> . E2 STAR E3
+    (75) E2 -> . E2 DIVIDE E3
+    (76) E2 -> . E3
+    (77) E3 -> . LPAREN E1 RPAREN
+    (78) E3 -> . mixed_id
+    (79) mixed_id -> . star_ampersand id
+    (80) mixed_id -> . id
+    (81) mixed_id -> . MINUS mixed_id
+    (82) mixed_id -> . INT
+    (83) mixed_id -> . FLOAT
+    (84) mixed_id -> . fn_call
+    (85) mixed_id -> . star_ampersand fn_call
+    (86) star_ampersand -> . STAR star_ampersand
+    (87) star_ampersand -> . STAR
+    (88) star_ampersand -> . AMPERSAND
+    (89) id -> . IDENTIFIER
+    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+
+    LPAREN          shift and go to state 66
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
+
+    id                             shift and go to state 69
+    E3                             shift and go to state 70
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    mixed_id                       shift and go to state 64
+    E1                             shift and go to state 100
+    E2                             shift and go to state 72
+
+state 74
+
+    (50) matched_stmt -> LCURVE stmt_list . RCURVE
+
+    RCURVE          shift and go to state 101
+
+
+state 75
+
+    (60) stmt_list -> stmt . stmt_list
+    (61) stmt_list -> stmt .
+    (60) stmt_list -> . stmt stmt_list
+    (61) stmt_list -> . stmt
+    (44) stmt -> . matched_stmt
+    (45) stmt -> . unmatched_stmt
+    (46) matched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt
+    (47) matched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON
+    (48) matched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON
+    (49) matched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt
+    (50) matched_stmt -> . LCURVE stmt_list RCURVE
+    (51) matched_stmt -> . expr
+    (52) matched_stmt -> . return_stmt
+    (53) matched_stmt -> . WHILE LPAREN condition RPAREN matched_stmt
+    (54) matched_stmt -> . WHILE LPAREN condition RPAREN SEMICOLON
+    (55) unmatched_stmt -> . IF LPAREN condition RPAREN stmt
+    (56) unmatched_stmt -> . IF LPAREN condition RPAREN SEMICOLON
+    (57) unmatched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE unmatched_stmt
+    (58) unmatched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE unmatched_stmt
+    (59) unmatched_stmt -> . WHILE LPAREN condition RPAREN unmatched_stmt
+    (67) expr -> . id EQUALS E1 SEMICOLON
+    (68) expr -> . STAR left_side EQUALS E1 SEMICOLON
+    (23) return_stmt -> . RETURN E1 SEMICOLON
+    (24) return_stmt -> . RETURN SEMICOLON
+    (89) id -> . IDENTIFIER
+
+    RCURVE          reduce using rule 61 (stmt_list -> stmt .)
+    IF              shift and go to state 29
+    LCURVE          shift and go to state 37
+    WHILE           shift and go to state 32
+    STAR            shift and go to state 30
+    RETURN          shift and go to state 33
+    IDENTIFIER      shift and go to state 57
+
+    unmatched_stmt                 shift and go to state 23
+    stmt                           shift and go to state 75
+    matched_stmt                   shift and go to state 24
+    stmt_list                      shift and go to state 102
+    expr                           shift and go to state 36
+    id                             shift and go to state 34
+    return_stmt                    shift and go to state 39
+
+state 76
+
+    (25) fn_call -> IDENTIFIER LPAREN . fn_call_args RPAREN
+    (26) fn_call_args -> . E1 fn_call_args_list
+    (27) fn_call_args -> .
+    (71) E1 -> . E1 PLUS E2
+    (72) E1 -> . E1 MINUS E2
+    (73) E1 -> . E2
+    (74) E2 -> . E2 STAR E3
+    (75) E2 -> . E2 DIVIDE E3
+    (76) E2 -> . E3
+    (77) E3 -> . LPAREN E1 RPAREN
+    (78) E3 -> . mixed_id
+    (79) mixed_id -> . star_ampersand id
+    (80) mixed_id -> . id
+    (81) mixed_id -> . MINUS mixed_id
+    (82) mixed_id -> . INT
+    (83) mixed_id -> . FLOAT
+    (84) mixed_id -> . fn_call
+    (85) mixed_id -> . star_ampersand fn_call
+    (86) star_ampersand -> . STAR star_ampersand
+    (87) star_ampersand -> . STAR
+    (88) star_ampersand -> . AMPERSAND
+    (89) id -> . IDENTIFIER
+    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+
+    RPAREN          reduce using rule 27 (fn_call_args -> .)
+    LPAREN          shift and go to state 66
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
+
+    id                             shift and go to state 69
+    E3                             shift and go to state 70
+    E1                             shift and go to state 103
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    mixed_id                       shift and go to state 64
+    E2                             shift and go to state 72
+    fn_call_args                   shift and go to state 104
+
+state 77
+
+    (40) list -> list COMMA variable .
+
+    SEMICOLON       reduce using rule 40 (list -> list COMMA variable .)
+    COMMA           reduce using rule 40 (list -> list COMMA variable .)
+
+
+state 78
+
+    (6) fn_declaration -> type fn_name LPAREN dec_arg_list . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 105
+
+
+state 79
+
+    (7) fn_declaration -> type fn_name LPAREN arg_list . RPAREN SEMICOLON
+    (11) fn_defn1 -> type fn_name LPAREN arg_list . RPAREN
+
+    RPAREN          shift and go to state 106
+
+
+state 80
+
+    (32) dec_arg_list -> type . star dec_multiple_arg
+    (35) arg_list -> type . variable multiple_arg
+    (16) star -> . STAR star
+    (17) star -> .
+    (42) variable -> . IDENTIFIER
+    (43) variable -> . STAR variable
+
+    STAR            shift and go to state 21
+    COMMA           reduce using rule 17 (star -> .)
+    RPAREN          reduce using rule 17 (star -> .)
+    IDENTIFIER      shift and go to state 18
+
+    variable                       shift and go to state 107
+    star                           shift and go to state 108
+
+state 81
+
+    (8) fn_declaration -> VOID fn_name LPAREN dec_arg_list . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 109
+
+
+state 82
+
+    (9) fn_declaration -> VOID fn_name LPAREN arg_list . RPAREN SEMICOLON
+    (12) fn_defn1 -> VOID fn_name LPAREN arg_list . RPAREN
+
+    RPAREN          shift and go to state 110
+
+
+state 83
+
+    (46) matched_stmt -> IF LPAREN condition . RPAREN matched_stmt ELSE matched_stmt
+    (47) matched_stmt -> IF LPAREN condition . RPAREN matched_stmt ELSE SEMICOLON
+    (48) matched_stmt -> IF LPAREN condition . RPAREN SEMICOLON ELSE SEMICOLON
+    (49) matched_stmt -> IF LPAREN condition . RPAREN SEMICOLON ELSE matched_stmt
+    (55) unmatched_stmt -> IF LPAREN condition . RPAREN stmt
+    (56) unmatched_stmt -> IF LPAREN condition . RPAREN SEMICOLON
+    (57) unmatched_stmt -> IF LPAREN condition . RPAREN matched_stmt ELSE unmatched_stmt
+    (58) unmatched_stmt -> IF LPAREN condition . RPAREN SEMICOLON ELSE unmatched_stmt
+    (62) condition -> condition . AND condition
+    (63) condition -> condition . OR condition
+
+    RPAREN          shift and go to state 113
+    AND             shift and go to state 112
+    OR              shift and go to state 111
+
+
+state 84
 
     (65) condition -> LPAREN . condition RPAREN
     (77) E3 -> LPAREN . E1 RPAREN
@@ -1946,25 +1598,25 @@ state 105
     (89) id -> . IDENTIFIER
     (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
 
-    LPAREN          shift and go to state 105
-    NOT             shift and go to state 106
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
+    LPAREN          shift and go to state 84
+    NOT             shift and go to state 85
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
 
-    E2                             shift and go to state 55
-    condition                      shift and go to state 129
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    E1                             shift and go to state 130
-    fn_call                        shift and go to state 56
-    id                             shift and go to state 58
+    condition                      shift and go to state 114
+    E3                             shift and go to state 70
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    mixed_id                       shift and go to state 64
+    id                             shift and go to state 69
+    E1                             shift and go to state 115
+    E2                             shift and go to state 72
 
-state 106
+state 85
 
     (66) condition -> NOT . condition
     (62) condition -> . condition AND condition
@@ -1993,254 +1645,52 @@ state 106
     (89) id -> . IDENTIFIER
     (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
 
-    LPAREN          shift and go to state 105
-    NOT             shift and go to state 106
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
+    LPAREN          shift and go to state 84
+    NOT             shift and go to state 85
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
 
-    E2                             shift and go to state 55
-    condition                      shift and go to state 131
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    E1                             shift and go to state 104
-    fn_call                        shift and go to state 56
-    id                             shift and go to state 58
+    condition                      shift and go to state 116
+    E3                             shift and go to state 70
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    mixed_id                       shift and go to state 64
+    id                             shift and go to state 69
+    E1                             shift and go to state 86
+    E2                             shift and go to state 72
 
-state 107
+state 86
 
-    (25) fn_call -> IDENTIFIER LPAREN fn_call_args . RPAREN
-
-    RPAREN          shift and go to state 132
-
-
-state 108
-
-    (26) fn_call_args -> E1 . fn_call_args_list
-    (71) E1 -> E1 . PLUS E2
-    (72) E1 -> E1 . MINUS E2
-    (28) fn_call_args_list -> . COMMA E1 fn_call_args_list
-    (29) fn_call_args_list -> .
-
-    PLUS            shift and go to state 91
-    MINUS           shift and go to state 92
-    COMMA           shift and go to state 133
-    RPAREN          reduce using rule 29 (fn_call_args_list -> .)
-
-    fn_call_args_list              shift and go to state 134
-
-state 109
-
-    (67) expr -> id EQUALS E1 . SEMICOLON
+    (64) condition -> E1 . OPERATOR E1
     (71) E1 -> E1 . PLUS E2
     (72) E1 -> E1 . MINUS E2
 
-    SEMICOLON       shift and go to state 135
-    PLUS            shift and go to state 91
-    MINUS           shift and go to state 92
+    OPERATOR        shift and go to state 117
+    PLUS            shift and go to state 92
+    MINUS           shift and go to state 91
 
 
-state 110
+state 87
 
-    (46) matched_stmt -> IF LPAREN condition . RPAREN matched_stmt ELSE matched_stmt
-    (47) matched_stmt -> IF LPAREN condition . RPAREN matched_stmt ELSE SEMICOLON
-    (48) matched_stmt -> IF LPAREN condition . RPAREN SEMICOLON ELSE SEMICOLON
-    (49) matched_stmt -> IF LPAREN condition . RPAREN SEMICOLON ELSE matched_stmt
-    (55) unmatched_stmt -> IF LPAREN condition . RPAREN stmt
-    (56) unmatched_stmt -> IF LPAREN condition . RPAREN SEMICOLON
-    (57) unmatched_stmt -> IF LPAREN condition . RPAREN matched_stmt ELSE unmatched_stmt
-    (58) unmatched_stmt -> IF LPAREN condition . RPAREN SEMICOLON ELSE unmatched_stmt
-    (62) condition -> condition . AND condition
-    (63) condition -> condition . OR condition
+    (86) star_ampersand -> STAR star_ampersand .
 
-    RPAREN          shift and go to state 136
-    AND             shift and go to state 125
-    OR              shift and go to state 126
+    IDENTIFIER      reduce using rule 86 (star_ampersand -> STAR star_ampersand .)
 
 
-state 111
+state 88
 
-    (32) dec_arg_list -> type star dec_multiple_arg .
+    (70) left_side -> star_ampersand id .
 
-    RPAREN          reduce using rule 32 (dec_arg_list -> type star dec_multiple_arg .)
-
-
-state 112
-
-    (33) dec_multiple_arg -> COMMA . type star dec_multiple_arg
-    (30) type -> . INT_VAR
-    (31) type -> . FLOAT_VAR
-
-    INT_VAR         shift and go to state 7
-    FLOAT_VAR       shift and go to state 10
-
-    type                           shift and go to state 137
-
-state 113
-
-    (37) multiple_arg -> COMMA . type variable multiple_arg
-    (30) type -> . INT_VAR
-    (31) type -> . FLOAT_VAR
-
-    INT_VAR         shift and go to state 7
-    FLOAT_VAR       shift and go to state 10
-
-    type                           shift and go to state 138
-
-state 114
-
-    (35) arg_list -> type variable multiple_arg .
-
-    RPAREN          reduce using rule 35 (arg_list -> type variable multiple_arg .)
+    EQUALS          reduce using rule 70 (left_side -> star_ampersand id .)
 
 
-state 115
+state 89
 
-    (7) fn_declaration -> type fn_name LPAREN arg_list RPAREN SEMICOLON .
-
-    VOID            reduce using rule 7 (fn_declaration -> type fn_name LPAREN arg_list RPAREN SEMICOLON .)
-    INT_VAR         reduce using rule 7 (fn_declaration -> type fn_name LPAREN arg_list RPAREN SEMICOLON .)
-    FLOAT_VAR       reduce using rule 7 (fn_declaration -> type fn_name LPAREN arg_list RPAREN SEMICOLON .)
-    $end            reduce using rule 7 (fn_declaration -> type fn_name LPAREN arg_list RPAREN SEMICOLON .)
-
-
-state 116
-
-    (6) fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN SEMICOLON .
-
-    VOID            reduce using rule 6 (fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
-    INT_VAR         reduce using rule 6 (fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
-    FLOAT_VAR       reduce using rule 6 (fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
-    $end            reduce using rule 6 (fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
-
-
-state 117
-
-    (9) fn_declaration -> VOID fn_name LPAREN arg_list RPAREN SEMICOLON .
-
-    VOID            reduce using rule 9 (fn_declaration -> VOID fn_name LPAREN arg_list RPAREN SEMICOLON .)
-    INT_VAR         reduce using rule 9 (fn_declaration -> VOID fn_name LPAREN arg_list RPAREN SEMICOLON .)
-    FLOAT_VAR       reduce using rule 9 (fn_declaration -> VOID fn_name LPAREN arg_list RPAREN SEMICOLON .)
-    $end            reduce using rule 9 (fn_declaration -> VOID fn_name LPAREN arg_list RPAREN SEMICOLON .)
-
-
-state 118
-
-    (8) fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN SEMICOLON .
-
-    VOID            reduce using rule 8 (fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
-    INT_VAR         reduce using rule 8 (fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
-    FLOAT_VAR       reduce using rule 8 (fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
-    $end            reduce using rule 8 (fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
-
-
-state 119
-
-    (74) E2 -> E2 STAR E3 .
-
-    STAR            reduce using rule 74 (E2 -> E2 STAR E3 .)
-    DIVIDE          reduce using rule 74 (E2 -> E2 STAR E3 .)
-    OPERATOR        reduce using rule 74 (E2 -> E2 STAR E3 .)
-    PLUS            reduce using rule 74 (E2 -> E2 STAR E3 .)
-    MINUS           reduce using rule 74 (E2 -> E2 STAR E3 .)
-    SEMICOLON       reduce using rule 74 (E2 -> E2 STAR E3 .)
-    RPAREN          reduce using rule 74 (E2 -> E2 STAR E3 .)
-    COMMA           reduce using rule 74 (E2 -> E2 STAR E3 .)
-    AND             reduce using rule 74 (E2 -> E2 STAR E3 .)
-    OR              reduce using rule 74 (E2 -> E2 STAR E3 .)
-
-
-state 120
-
-    (75) E2 -> E2 DIVIDE E3 .
-
-    STAR            reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
-    DIVIDE          reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
-    OPERATOR        reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
-    PLUS            reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
-    MINUS           reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
-    SEMICOLON       reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
-    RPAREN          reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
-    COMMA           reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
-    AND             reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
-    OR              reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
-
-
-state 121
-
-    (71) E1 -> E1 PLUS E2 .
-    (74) E2 -> E2 . STAR E3
-    (75) E2 -> E2 . DIVIDE E3
-
-    OPERATOR        reduce using rule 71 (E1 -> E1 PLUS E2 .)
-    PLUS            reduce using rule 71 (E1 -> E1 PLUS E2 .)
-    MINUS           reduce using rule 71 (E1 -> E1 PLUS E2 .)
-    COMMA           reduce using rule 71 (E1 -> E1 PLUS E2 .)
-    RPAREN          reduce using rule 71 (E1 -> E1 PLUS E2 .)
-    SEMICOLON       reduce using rule 71 (E1 -> E1 PLUS E2 .)
-    AND             reduce using rule 71 (E1 -> E1 PLUS E2 .)
-    OR              reduce using rule 71 (E1 -> E1 PLUS E2 .)
-    STAR            shift and go to state 89
-    DIVIDE          shift and go to state 90
-
-
-state 122
-
-    (72) E1 -> E1 MINUS E2 .
-    (74) E2 -> E2 . STAR E3
-    (75) E2 -> E2 . DIVIDE E3
-
-    OPERATOR        reduce using rule 72 (E1 -> E1 MINUS E2 .)
-    PLUS            reduce using rule 72 (E1 -> E1 MINUS E2 .)
-    MINUS           reduce using rule 72 (E1 -> E1 MINUS E2 .)
-    COMMA           reduce using rule 72 (E1 -> E1 MINUS E2 .)
-    RPAREN          reduce using rule 72 (E1 -> E1 MINUS E2 .)
-    SEMICOLON       reduce using rule 72 (E1 -> E1 MINUS E2 .)
-    AND             reduce using rule 72 (E1 -> E1 MINUS E2 .)
-    OR              reduce using rule 72 (E1 -> E1 MINUS E2 .)
-    STAR            shift and go to state 89
-    DIVIDE          shift and go to state 90
-
-
-state 123
-
-    (77) E3 -> LPAREN E1 RPAREN .
-
-    STAR            reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
-    DIVIDE          reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
-    PLUS            reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
-    MINUS           reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
-    COMMA           reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
-    RPAREN          reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
-    OPERATOR        reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
-    AND             reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
-    OR              reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
-    SEMICOLON       reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
-
-
-state 124
-
-    (68) expr -> STAR left_side EQUALS E1 . SEMICOLON
-    (71) E1 -> E1 . PLUS E2
-    (72) E1 -> E1 . MINUS E2
-
-    SEMICOLON       shift and go to state 139
-    PLUS            shift and go to state 91
-    MINUS           shift and go to state 92
-
-
-state 125
-
-    (62) condition -> condition AND . condition
-    (62) condition -> . condition AND condition
-    (63) condition -> . condition OR condition
-    (64) condition -> . E1 OPERATOR E1
-    (65) condition -> . LPAREN condition RPAREN
-    (66) condition -> . NOT condition
+    (68) expr -> STAR left_side EQUALS . E1 SEMICOLON
     (71) E1 -> . E1 PLUS E2
     (72) E1 -> . E1 MINUS E2
     (73) E1 -> . E2
@@ -2262,25 +1712,357 @@ state 125
     (89) id -> . IDENTIFIER
     (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
 
-    LPAREN          shift and go to state 105
-    NOT             shift and go to state 106
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
+    LPAREN          shift and go to state 66
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
 
-    E2                             shift and go to state 55
-    condition                      shift and go to state 140
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    E1                             shift and go to state 104
-    fn_call                        shift and go to state 56
-    id                             shift and go to state 58
+    id                             shift and go to state 69
+    E3                             shift and go to state 70
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    E2                             shift and go to state 72
+    E1                             shift and go to state 118
+    mixed_id                       shift and go to state 64
 
-state 126
+state 90
+
+    (53) matched_stmt -> WHILE LPAREN condition . RPAREN matched_stmt
+    (54) matched_stmt -> WHILE LPAREN condition . RPAREN SEMICOLON
+    (59) unmatched_stmt -> WHILE LPAREN condition . RPAREN unmatched_stmt
+    (62) condition -> condition . AND condition
+    (63) condition -> condition . OR condition
+
+    RPAREN          shift and go to state 119
+    AND             shift and go to state 112
+    OR              shift and go to state 111
+
+
+state 91
+
+    (72) E1 -> E1 MINUS . E2
+    (74) E2 -> . E2 STAR E3
+    (75) E2 -> . E2 DIVIDE E3
+    (76) E2 -> . E3
+    (77) E3 -> . LPAREN E1 RPAREN
+    (78) E3 -> . mixed_id
+    (79) mixed_id -> . star_ampersand id
+    (80) mixed_id -> . id
+    (81) mixed_id -> . MINUS mixed_id
+    (82) mixed_id -> . INT
+    (83) mixed_id -> . FLOAT
+    (84) mixed_id -> . fn_call
+    (85) mixed_id -> . star_ampersand fn_call
+    (86) star_ampersand -> . STAR star_ampersand
+    (87) star_ampersand -> . STAR
+    (88) star_ampersand -> . AMPERSAND
+    (89) id -> . IDENTIFIER
+    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+
+    LPAREN          shift and go to state 66
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
+
+    id                             shift and go to state 69
+    E3                             shift and go to state 70
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    E2                             shift and go to state 120
+    mixed_id                       shift and go to state 64
+
+state 92
+
+    (71) E1 -> E1 PLUS . E2
+    (74) E2 -> . E2 STAR E3
+    (75) E2 -> . E2 DIVIDE E3
+    (76) E2 -> . E3
+    (77) E3 -> . LPAREN E1 RPAREN
+    (78) E3 -> . mixed_id
+    (79) mixed_id -> . star_ampersand id
+    (80) mixed_id -> . id
+    (81) mixed_id -> . MINUS mixed_id
+    (82) mixed_id -> . INT
+    (83) mixed_id -> . FLOAT
+    (84) mixed_id -> . fn_call
+    (85) mixed_id -> . star_ampersand fn_call
+    (86) star_ampersand -> . STAR star_ampersand
+    (87) star_ampersand -> . STAR
+    (88) star_ampersand -> . AMPERSAND
+    (89) id -> . IDENTIFIER
+    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+
+    LPAREN          shift and go to state 66
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
+
+    id                             shift and go to state 69
+    E3                             shift and go to state 70
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    E2                             shift and go to state 121
+    mixed_id                       shift and go to state 64
+
+state 93
+
+    (23) return_stmt -> RETURN E1 SEMICOLON .
+
+    IDENTIFIER      reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
+    INT_VAR         reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
+    FLOAT_VAR       reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
+    IF              reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
+    LCURVE          reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
+    WHILE           reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
+    STAR            reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
+    RETURN          reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
+    RCURVE          reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
+    ELSE            reduce using rule 23 (return_stmt -> RETURN E1 SEMICOLON .)
+
+
+state 94
+
+    (77) E3 -> LPAREN E1 . RPAREN
+    (71) E1 -> E1 . PLUS E2
+    (72) E1 -> E1 . MINUS E2
+
+    RPAREN          shift and go to state 122
+    PLUS            shift and go to state 92
+    MINUS           shift and go to state 91
+
+
+state 95
+
+    (81) mixed_id -> MINUS mixed_id .
+
+    STAR            reduce using rule 81 (mixed_id -> MINUS mixed_id .)
+    DIVIDE          reduce using rule 81 (mixed_id -> MINUS mixed_id .)
+    OPERATOR        reduce using rule 81 (mixed_id -> MINUS mixed_id .)
+    PLUS            reduce using rule 81 (mixed_id -> MINUS mixed_id .)
+    MINUS           reduce using rule 81 (mixed_id -> MINUS mixed_id .)
+    SEMICOLON       reduce using rule 81 (mixed_id -> MINUS mixed_id .)
+    RPAREN          reduce using rule 81 (mixed_id -> MINUS mixed_id .)
+    COMMA           reduce using rule 81 (mixed_id -> MINUS mixed_id .)
+    AND             reduce using rule 81 (mixed_id -> MINUS mixed_id .)
+    OR              reduce using rule 81 (mixed_id -> MINUS mixed_id .)
+
+
+state 96
+
+    (79) mixed_id -> star_ampersand id .
+
+    STAR            reduce using rule 79 (mixed_id -> star_ampersand id .)
+    DIVIDE          reduce using rule 79 (mixed_id -> star_ampersand id .)
+    OPERATOR        reduce using rule 79 (mixed_id -> star_ampersand id .)
+    PLUS            reduce using rule 79 (mixed_id -> star_ampersand id .)
+    MINUS           reduce using rule 79 (mixed_id -> star_ampersand id .)
+    SEMICOLON       reduce using rule 79 (mixed_id -> star_ampersand id .)
+    RPAREN          reduce using rule 79 (mixed_id -> star_ampersand id .)
+    COMMA           reduce using rule 79 (mixed_id -> star_ampersand id .)
+    AND             reduce using rule 79 (mixed_id -> star_ampersand id .)
+    OR              reduce using rule 79 (mixed_id -> star_ampersand id .)
+
+
+state 97
+
+    (85) mixed_id -> star_ampersand fn_call .
+
+    STAR            reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
+    DIVIDE          reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
+    OPERATOR        reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
+    PLUS            reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
+    MINUS           reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
+    SEMICOLON       reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
+    RPAREN          reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
+    COMMA           reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
+    AND             reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
+    OR              reduce using rule 85 (mixed_id -> star_ampersand fn_call .)
+
+
+state 98
+
+    (75) E2 -> E2 DIVIDE . E3
+    (77) E3 -> . LPAREN E1 RPAREN
+    (78) E3 -> . mixed_id
+    (79) mixed_id -> . star_ampersand id
+    (80) mixed_id -> . id
+    (81) mixed_id -> . MINUS mixed_id
+    (82) mixed_id -> . INT
+    (83) mixed_id -> . FLOAT
+    (84) mixed_id -> . fn_call
+    (85) mixed_id -> . star_ampersand fn_call
+    (86) star_ampersand -> . STAR star_ampersand
+    (87) star_ampersand -> . STAR
+    (88) star_ampersand -> . AMPERSAND
+    (89) id -> . IDENTIFIER
+    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+
+    LPAREN          shift and go to state 66
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
+
+    id                             shift and go to state 69
+    E3                             shift and go to state 123
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    mixed_id                       shift and go to state 64
+
+state 99
+
+    (74) E2 -> E2 STAR . E3
+    (77) E3 -> . LPAREN E1 RPAREN
+    (78) E3 -> . mixed_id
+    (79) mixed_id -> . star_ampersand id
+    (80) mixed_id -> . id
+    (81) mixed_id -> . MINUS mixed_id
+    (82) mixed_id -> . INT
+    (83) mixed_id -> . FLOAT
+    (84) mixed_id -> . fn_call
+    (85) mixed_id -> . star_ampersand fn_call
+    (86) star_ampersand -> . STAR star_ampersand
+    (87) star_ampersand -> . STAR
+    (88) star_ampersand -> . AMPERSAND
+    (89) id -> . IDENTIFIER
+    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+
+    LPAREN          shift and go to state 66
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
+
+    id                             shift and go to state 69
+    E3                             shift and go to state 124
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    mixed_id                       shift and go to state 64
+
+state 100
+
+    (67) expr -> id EQUALS E1 . SEMICOLON
+    (71) E1 -> E1 . PLUS E2
+    (72) E1 -> E1 . MINUS E2
+
+    SEMICOLON       shift and go to state 125
+    PLUS            shift and go to state 92
+    MINUS           shift and go to state 91
+
+
+state 101
+
+    (50) matched_stmt -> LCURVE stmt_list RCURVE .
+
+    IF              reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
+    LCURVE          reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
+    WHILE           reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
+    STAR            reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
+    RETURN          reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
+    IDENTIFIER      reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
+    RCURVE          reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
+    INT_VAR         reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
+    FLOAT_VAR       reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
+    ELSE            reduce using rule 50 (matched_stmt -> LCURVE stmt_list RCURVE .)
+
+
+state 102
+
+    (60) stmt_list -> stmt stmt_list .
+
+    RCURVE          reduce using rule 60 (stmt_list -> stmt stmt_list .)
+
+
+state 103
+
+    (26) fn_call_args -> E1 . fn_call_args_list
+    (71) E1 -> E1 . PLUS E2
+    (72) E1 -> E1 . MINUS E2
+    (28) fn_call_args_list -> . COMMA E1 fn_call_args_list
+    (29) fn_call_args_list -> .
+
+    PLUS            shift and go to state 92
+    MINUS           shift and go to state 91
+    COMMA           shift and go to state 127
+    RPAREN          reduce using rule 29 (fn_call_args_list -> .)
+
+    fn_call_args_list              shift and go to state 126
+
+state 104
+
+    (25) fn_call -> IDENTIFIER LPAREN fn_call_args . RPAREN
+
+    RPAREN          shift and go to state 128
+
+
+state 105
+
+    (6) fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 129
+
+
+state 106
+
+    (7) fn_declaration -> type fn_name LPAREN arg_list RPAREN . SEMICOLON
+    (11) fn_defn1 -> type fn_name LPAREN arg_list RPAREN .
+
+    SEMICOLON       shift and go to state 130
+    LCURVE          reduce using rule 11 (fn_defn1 -> type fn_name LPAREN arg_list RPAREN .)
+
+
+state 107
+
+    (35) arg_list -> type variable . multiple_arg
+    (37) multiple_arg -> . COMMA type variable multiple_arg
+    (38) multiple_arg -> .
+
+    COMMA           shift and go to state 131
+    RPAREN          reduce using rule 38 (multiple_arg -> .)
+
+    multiple_arg                   shift and go to state 132
+
+state 108
+
+    (32) dec_arg_list -> type star . dec_multiple_arg
+    (33) dec_multiple_arg -> . COMMA type star dec_multiple_arg
+    (34) dec_multiple_arg -> .
+
+    COMMA           shift and go to state 133
+    RPAREN          reduce using rule 34 (dec_multiple_arg -> .)
+
+    dec_multiple_arg               shift and go to state 134
+
+state 109
+
+    (8) fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 135
+
+
+state 110
+
+    (9) fn_declaration -> VOID fn_name LPAREN arg_list RPAREN . SEMICOLON
+    (12) fn_defn1 -> VOID fn_name LPAREN arg_list RPAREN .
+
+    SEMICOLON       shift and go to state 136
+    LCURVE          reduce using rule 12 (fn_defn1 -> VOID fn_name LPAREN arg_list RPAREN .)
+
+
+state 111
 
     (63) condition -> condition OR . condition
     (62) condition -> . condition AND condition
@@ -2309,66 +2091,32 @@ state 126
     (89) id -> . IDENTIFIER
     (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
 
-    LPAREN          shift and go to state 105
-    NOT             shift and go to state 106
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
+    LPAREN          shift and go to state 84
+    NOT             shift and go to state 85
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
 
-    E2                             shift and go to state 55
-    condition                      shift and go to state 141
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    E1                             shift and go to state 104
-    fn_call                        shift and go to state 56
-    id                             shift and go to state 58
+    condition                      shift and go to state 137
+    E3                             shift and go to state 70
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    mixed_id                       shift and go to state 64
+    id                             shift and go to state 69
+    E1                             shift and go to state 86
+    E2                             shift and go to state 72
 
-state 127
+state 112
 
-    (53) matched_stmt -> WHILE LPAREN condition RPAREN . matched_stmt
-    (54) matched_stmt -> WHILE LPAREN condition RPAREN . SEMICOLON
-    (59) unmatched_stmt -> WHILE LPAREN condition RPAREN . unmatched_stmt
-    (46) matched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt
-    (47) matched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON
-    (48) matched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON
-    (49) matched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt
-    (50) matched_stmt -> . LCURVE stmt_list RCURVE
-    (51) matched_stmt -> . expr
-    (52) matched_stmt -> . return_stmt
-    (53) matched_stmt -> . WHILE LPAREN condition RPAREN matched_stmt
-    (54) matched_stmt -> . WHILE LPAREN condition RPAREN SEMICOLON
-    (55) unmatched_stmt -> . IF LPAREN condition RPAREN stmt
-    (56) unmatched_stmt -> . IF LPAREN condition RPAREN SEMICOLON
-    (57) unmatched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE unmatched_stmt
-    (58) unmatched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE unmatched_stmt
-    (59) unmatched_stmt -> . WHILE LPAREN condition RPAREN unmatched_stmt
-    (67) expr -> . id EQUALS E1 SEMICOLON
-    (68) expr -> . STAR left_side EQUALS E1 SEMICOLON
-    (23) return_stmt -> . RETURN E1 SEMICOLON
-    (24) return_stmt -> . RETURN SEMICOLON
-    (89) id -> . IDENTIFIER
-
-    SEMICOLON       shift and go to state 143
-    IF              shift and go to state 46
-    LCURVE          shift and go to state 33
-    WHILE           shift and go to state 36
-    STAR            shift and go to state 34
-    RETURN          shift and go to state 30
-    IDENTIFIER      shift and go to state 70
-
-    expr                           shift and go to state 43
-    matched_stmt                   shift and go to state 142
-    return_stmt                    shift and go to state 44
-    unmatched_stmt                 shift and go to state 144
-    id                             shift and go to state 38
-
-state 128
-
-    (64) condition -> E1 OPERATOR . E1
+    (62) condition -> condition AND . condition
+    (62) condition -> . condition AND condition
+    (63) condition -> . condition OR condition
+    (64) condition -> . E1 OPERATOR E1
+    (65) condition -> . LPAREN condition RPAREN
+    (66) condition -> . NOT condition
     (71) E1 -> . E1 PLUS E2
     (72) E1 -> . E1 MINUS E2
     (73) E1 -> . E2
@@ -2390,140 +2138,25 @@ state 128
     (89) id -> . IDENTIFIER
     (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
 
-    LPAREN          shift and go to state 61
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
+    LPAREN          shift and go to state 84
+    NOT             shift and go to state 85
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
 
-    E2                             shift and go to state 55
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    E1                             shift and go to state 145
-    id                             shift and go to state 58
+    condition                      shift and go to state 138
+    E3                             shift and go to state 70
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    mixed_id                       shift and go to state 64
+    id                             shift and go to state 69
+    E1                             shift and go to state 86
+    E2                             shift and go to state 72
 
-state 129
-
-    (65) condition -> LPAREN condition . RPAREN
-    (62) condition -> condition . AND condition
-    (63) condition -> condition . OR condition
-
-    RPAREN          shift and go to state 146
-    AND             shift and go to state 125
-    OR              shift and go to state 126
-
-
-state 130
-
-    (77) E3 -> LPAREN E1 . RPAREN
-    (64) condition -> E1 . OPERATOR E1
-    (71) E1 -> E1 . PLUS E2
-    (72) E1 -> E1 . MINUS E2
-
-    RPAREN          shift and go to state 123
-    OPERATOR        shift and go to state 128
-    PLUS            shift and go to state 91
-    MINUS           shift and go to state 92
-
-
-state 131
-
-    (66) condition -> NOT condition .
-    (62) condition -> condition . AND condition
-    (63) condition -> condition . OR condition
-
-    RPAREN          reduce using rule 66 (condition -> NOT condition .)
-    AND             reduce using rule 66 (condition -> NOT condition .)
-    OR              reduce using rule 66 (condition -> NOT condition .)
-
-  ! AND             [ shift and go to state 125 ]
-  ! OR              [ shift and go to state 126 ]
-
-
-state 132
-
-    (25) fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .
-
-    STAR            reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
-    DIVIDE          reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
-    OPERATOR        reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
-    PLUS            reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
-    MINUS           reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
-    SEMICOLON       reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
-    RPAREN          reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
-    COMMA           reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
-    AND             reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
-    OR              reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
-
-
-state 133
-
-    (28) fn_call_args_list -> COMMA . E1 fn_call_args_list
-    (71) E1 -> . E1 PLUS E2
-    (72) E1 -> . E1 MINUS E2
-    (73) E1 -> . E2
-    (74) E2 -> . E2 STAR E3
-    (75) E2 -> . E2 DIVIDE E3
-    (76) E2 -> . E3
-    (77) E3 -> . LPAREN E1 RPAREN
-    (78) E3 -> . mixed_id
-    (79) mixed_id -> . star_ampersand id
-    (80) mixed_id -> . id
-    (81) mixed_id -> . MINUS mixed_id
-    (82) mixed_id -> . INT
-    (83) mixed_id -> . FLOAT
-    (84) mixed_id -> . fn_call
-    (85) mixed_id -> . star_ampersand fn_call
-    (86) star_ampersand -> . STAR star_ampersand
-    (87) star_ampersand -> . STAR
-    (88) star_ampersand -> . AMPERSAND
-    (89) id -> . IDENTIFIER
-    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
-
-    LPAREN          shift and go to state 61
-    MINUS           shift and go to state 65
-    INT             shift and go to state 64
-    FLOAT           shift and go to state 54
-    STAR            shift and go to state 62
-    AMPERSAND       shift and go to state 67
-    IDENTIFIER      shift and go to state 63
-
-    E2                             shift and go to state 55
-    fn_call                        shift and go to state 56
-    mixed_id                       shift and go to state 68
-    star_ampersand                 shift and go to state 66
-    E3                             shift and go to state 57
-    E1                             shift and go to state 147
-    id                             shift and go to state 58
-
-state 134
-
-    (26) fn_call_args -> E1 fn_call_args_list .
-
-    RPAREN          reduce using rule 26 (fn_call_args -> E1 fn_call_args_list .)
-
-
-state 135
-
-    (67) expr -> id EQUALS E1 SEMICOLON .
-
-    IF              reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
-    LCURVE          reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
-    WHILE           reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
-    STAR            reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
-    RETURN          reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
-    IDENTIFIER      reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
-    RCURVE          reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
-    INT_VAR         reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
-    FLOAT_VAR       reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
-    ELSE            reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
-
-
-state 136
+state 113
 
     (46) matched_stmt -> IF LPAREN condition RPAREN . matched_stmt ELSE matched_stmt
     (47) matched_stmt -> IF LPAREN condition RPAREN . matched_stmt ELSE SEMICOLON
@@ -2555,45 +2188,492 @@ state 136
     (59) unmatched_stmt -> . WHILE LPAREN condition RPAREN unmatched_stmt
     (89) id -> . IDENTIFIER
 
-    SEMICOLON       shift and go to state 150
-    IF              shift and go to state 46
-    LCURVE          shift and go to state 33
-    WHILE           shift and go to state 36
-    STAR            shift and go to state 34
-    RETURN          shift and go to state 30
-    IDENTIFIER      shift and go to state 70
+    SEMICOLON       shift and go to state 140
+    IF              shift and go to state 29
+    LCURVE          shift and go to state 37
+    WHILE           shift and go to state 32
+    STAR            shift and go to state 30
+    RETURN          shift and go to state 33
+    IDENTIFIER      shift and go to state 57
 
-    stmt                           shift and go to state 149
-    matched_stmt                   shift and go to state 148
-    expr                           shift and go to state 43
-    return_stmt                    shift and go to state 44
-    unmatched_stmt                 shift and go to state 35
-    id                             shift and go to state 38
+    stmt                           shift and go to state 141
+    matched_stmt                   shift and go to state 139
+    unmatched_stmt                 shift and go to state 23
+    expr                           shift and go to state 36
+    id                             shift and go to state 34
+    return_stmt                    shift and go to state 39
+
+state 114
+
+    (65) condition -> LPAREN condition . RPAREN
+    (62) condition -> condition . AND condition
+    (63) condition -> condition . OR condition
+
+    RPAREN          shift and go to state 142
+    AND             shift and go to state 112
+    OR              shift and go to state 111
+
+
+state 115
+
+    (77) E3 -> LPAREN E1 . RPAREN
+    (64) condition -> E1 . OPERATOR E1
+    (71) E1 -> E1 . PLUS E2
+    (72) E1 -> E1 . MINUS E2
+
+    RPAREN          shift and go to state 122
+    OPERATOR        shift and go to state 117
+    PLUS            shift and go to state 92
+    MINUS           shift and go to state 91
+
+
+state 116
+
+    (66) condition -> NOT condition .
+    (62) condition -> condition . AND condition
+    (63) condition -> condition . OR condition
+
+    AND             reduce using rule 66 (condition -> NOT condition .)
+    OR              reduce using rule 66 (condition -> NOT condition .)
+    RPAREN          reduce using rule 66 (condition -> NOT condition .)
+
+  ! AND             [ shift and go to state 112 ]
+  ! OR              [ shift and go to state 111 ]
+
+
+state 117
+
+    (64) condition -> E1 OPERATOR . E1
+    (71) E1 -> . E1 PLUS E2
+    (72) E1 -> . E1 MINUS E2
+    (73) E1 -> . E2
+    (74) E2 -> . E2 STAR E3
+    (75) E2 -> . E2 DIVIDE E3
+    (76) E2 -> . E3
+    (77) E3 -> . LPAREN E1 RPAREN
+    (78) E3 -> . mixed_id
+    (79) mixed_id -> . star_ampersand id
+    (80) mixed_id -> . id
+    (81) mixed_id -> . MINUS mixed_id
+    (82) mixed_id -> . INT
+    (83) mixed_id -> . FLOAT
+    (84) mixed_id -> . fn_call
+    (85) mixed_id -> . star_ampersand fn_call
+    (86) star_ampersand -> . STAR star_ampersand
+    (87) star_ampersand -> . STAR
+    (88) star_ampersand -> . AMPERSAND
+    (89) id -> . IDENTIFIER
+    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+
+    LPAREN          shift and go to state 66
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
+
+    id                             shift and go to state 69
+    E3                             shift and go to state 70
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    E2                             shift and go to state 72
+    E1                             shift and go to state 143
+    mixed_id                       shift and go to state 64
+
+state 118
+
+    (68) expr -> STAR left_side EQUALS E1 . SEMICOLON
+    (71) E1 -> E1 . PLUS E2
+    (72) E1 -> E1 . MINUS E2
+
+    SEMICOLON       shift and go to state 144
+    PLUS            shift and go to state 92
+    MINUS           shift and go to state 91
+
+
+state 119
+
+    (53) matched_stmt -> WHILE LPAREN condition RPAREN . matched_stmt
+    (54) matched_stmt -> WHILE LPAREN condition RPAREN . SEMICOLON
+    (59) unmatched_stmt -> WHILE LPAREN condition RPAREN . unmatched_stmt
+    (46) matched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt
+    (47) matched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON
+    (48) matched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON
+    (49) matched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt
+    (50) matched_stmt -> . LCURVE stmt_list RCURVE
+    (51) matched_stmt -> . expr
+    (52) matched_stmt -> . return_stmt
+    (53) matched_stmt -> . WHILE LPAREN condition RPAREN matched_stmt
+    (54) matched_stmt -> . WHILE LPAREN condition RPAREN SEMICOLON
+    (55) unmatched_stmt -> . IF LPAREN condition RPAREN stmt
+    (56) unmatched_stmt -> . IF LPAREN condition RPAREN SEMICOLON
+    (57) unmatched_stmt -> . IF LPAREN condition RPAREN matched_stmt ELSE unmatched_stmt
+    (58) unmatched_stmt -> . IF LPAREN condition RPAREN SEMICOLON ELSE unmatched_stmt
+    (59) unmatched_stmt -> . WHILE LPAREN condition RPAREN unmatched_stmt
+    (67) expr -> . id EQUALS E1 SEMICOLON
+    (68) expr -> . STAR left_side EQUALS E1 SEMICOLON
+    (23) return_stmt -> . RETURN E1 SEMICOLON
+    (24) return_stmt -> . RETURN SEMICOLON
+    (89) id -> . IDENTIFIER
+
+    SEMICOLON       shift and go to state 147
+    IF              shift and go to state 29
+    LCURVE          shift and go to state 37
+    WHILE           shift and go to state 32
+    STAR            shift and go to state 30
+    RETURN          shift and go to state 33
+    IDENTIFIER      shift and go to state 57
+
+    matched_stmt                   shift and go to state 145
+    unmatched_stmt                 shift and go to state 146
+    expr                           shift and go to state 36
+    id                             shift and go to state 34
+    return_stmt                    shift and go to state 39
+
+state 120
+
+    (72) E1 -> E1 MINUS E2 .
+    (74) E2 -> E2 . STAR E3
+    (75) E2 -> E2 . DIVIDE E3
+
+    SEMICOLON       reduce using rule 72 (E1 -> E1 MINUS E2 .)
+    PLUS            reduce using rule 72 (E1 -> E1 MINUS E2 .)
+    MINUS           reduce using rule 72 (E1 -> E1 MINUS E2 .)
+    OPERATOR        reduce using rule 72 (E1 -> E1 MINUS E2 .)
+    COMMA           reduce using rule 72 (E1 -> E1 MINUS E2 .)
+    RPAREN          reduce using rule 72 (E1 -> E1 MINUS E2 .)
+    AND             reduce using rule 72 (E1 -> E1 MINUS E2 .)
+    OR              reduce using rule 72 (E1 -> E1 MINUS E2 .)
+    STAR            shift and go to state 99
+    DIVIDE          shift and go to state 98
+
+
+state 121
+
+    (71) E1 -> E1 PLUS E2 .
+    (74) E2 -> E2 . STAR E3
+    (75) E2 -> E2 . DIVIDE E3
+
+    SEMICOLON       reduce using rule 71 (E1 -> E1 PLUS E2 .)
+    PLUS            reduce using rule 71 (E1 -> E1 PLUS E2 .)
+    MINUS           reduce using rule 71 (E1 -> E1 PLUS E2 .)
+    OPERATOR        reduce using rule 71 (E1 -> E1 PLUS E2 .)
+    COMMA           reduce using rule 71 (E1 -> E1 PLUS E2 .)
+    RPAREN          reduce using rule 71 (E1 -> E1 PLUS E2 .)
+    AND             reduce using rule 71 (E1 -> E1 PLUS E2 .)
+    OR              reduce using rule 71 (E1 -> E1 PLUS E2 .)
+    STAR            shift and go to state 99
+    DIVIDE          shift and go to state 98
+
+
+state 122
+
+    (77) E3 -> LPAREN E1 RPAREN .
+
+    STAR            reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
+    DIVIDE          reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
+    OPERATOR        reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
+    PLUS            reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
+    MINUS           reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
+    SEMICOLON       reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
+    RPAREN          reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
+    AND             reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
+    OR              reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
+    COMMA           reduce using rule 77 (E3 -> LPAREN E1 RPAREN .)
+
+
+state 123
+
+    (75) E2 -> E2 DIVIDE E3 .
+
+    STAR            reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
+    DIVIDE          reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
+    OPERATOR        reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
+    PLUS            reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
+    MINUS           reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
+    COMMA           reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
+    RPAREN          reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
+    SEMICOLON       reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
+    AND             reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
+    OR              reduce using rule 75 (E2 -> E2 DIVIDE E3 .)
+
+
+state 124
+
+    (74) E2 -> E2 STAR E3 .
+
+    STAR            reduce using rule 74 (E2 -> E2 STAR E3 .)
+    DIVIDE          reduce using rule 74 (E2 -> E2 STAR E3 .)
+    OPERATOR        reduce using rule 74 (E2 -> E2 STAR E3 .)
+    PLUS            reduce using rule 74 (E2 -> E2 STAR E3 .)
+    MINUS           reduce using rule 74 (E2 -> E2 STAR E3 .)
+    COMMA           reduce using rule 74 (E2 -> E2 STAR E3 .)
+    RPAREN          reduce using rule 74 (E2 -> E2 STAR E3 .)
+    SEMICOLON       reduce using rule 74 (E2 -> E2 STAR E3 .)
+    AND             reduce using rule 74 (E2 -> E2 STAR E3 .)
+    OR              reduce using rule 74 (E2 -> E2 STAR E3 .)
+
+
+state 125
+
+    (67) expr -> id EQUALS E1 SEMICOLON .
+
+    IF              reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
+    LCURVE          reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
+    WHILE           reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
+    STAR            reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
+    RETURN          reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
+    IDENTIFIER      reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
+    RCURVE          reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
+    INT_VAR         reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
+    FLOAT_VAR       reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
+    ELSE            reduce using rule 67 (expr -> id EQUALS E1 SEMICOLON .)
+
+
+state 126
+
+    (26) fn_call_args -> E1 fn_call_args_list .
+
+    RPAREN          reduce using rule 26 (fn_call_args -> E1 fn_call_args_list .)
+
+
+state 127
+
+    (28) fn_call_args_list -> COMMA . E1 fn_call_args_list
+    (71) E1 -> . E1 PLUS E2
+    (72) E1 -> . E1 MINUS E2
+    (73) E1 -> . E2
+    (74) E2 -> . E2 STAR E3
+    (75) E2 -> . E2 DIVIDE E3
+    (76) E2 -> . E3
+    (77) E3 -> . LPAREN E1 RPAREN
+    (78) E3 -> . mixed_id
+    (79) mixed_id -> . star_ampersand id
+    (80) mixed_id -> . id
+    (81) mixed_id -> . MINUS mixed_id
+    (82) mixed_id -> . INT
+    (83) mixed_id -> . FLOAT
+    (84) mixed_id -> . fn_call
+    (85) mixed_id -> . star_ampersand fn_call
+    (86) star_ampersand -> . STAR star_ampersand
+    (87) star_ampersand -> . STAR
+    (88) star_ampersand -> . AMPERSAND
+    (89) id -> . IDENTIFIER
+    (25) fn_call -> . IDENTIFIER LPAREN fn_call_args RPAREN
+
+    LPAREN          shift and go to state 66
+    MINUS           shift and go to state 68
+    INT             shift and go to state 60
+    FLOAT           shift and go to state 61
+    STAR            shift and go to state 54
+    AMPERSAND       shift and go to state 55
+    IDENTIFIER      shift and go to state 67
+
+    id                             shift and go to state 69
+    E3                             shift and go to state 70
+    E1                             shift and go to state 148
+    fn_call                        shift and go to state 62
+    star_ampersand                 shift and go to state 71
+    E2                             shift and go to state 72
+    mixed_id                       shift and go to state 64
+
+state 128
+
+    (25) fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .
+
+    STAR            reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
+    DIVIDE          reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
+    RPAREN          reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
+    PLUS            reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
+    MINUS           reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
+    OPERATOR        reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
+    SEMICOLON       reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
+    COMMA           reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
+    AND             reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
+    OR              reduce using rule 25 (fn_call -> IDENTIFIER LPAREN fn_call_args RPAREN .)
+
+
+state 129
+
+    (6) fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN SEMICOLON .
+
+    VOID            reduce using rule 6 (fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
+    INT_VAR         reduce using rule 6 (fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
+    FLOAT_VAR       reduce using rule 6 (fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
+    $end            reduce using rule 6 (fn_declaration -> type fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
+
+
+state 130
+
+    (7) fn_declaration -> type fn_name LPAREN arg_list RPAREN SEMICOLON .
+
+    VOID            reduce using rule 7 (fn_declaration -> type fn_name LPAREN arg_list RPAREN SEMICOLON .)
+    INT_VAR         reduce using rule 7 (fn_declaration -> type fn_name LPAREN arg_list RPAREN SEMICOLON .)
+    FLOAT_VAR       reduce using rule 7 (fn_declaration -> type fn_name LPAREN arg_list RPAREN SEMICOLON .)
+    $end            reduce using rule 7 (fn_declaration -> type fn_name LPAREN arg_list RPAREN SEMICOLON .)
+
+
+state 131
+
+    (37) multiple_arg -> COMMA . type variable multiple_arg
+    (30) type -> . INT_VAR
+    (31) type -> . FLOAT_VAR
+
+    INT_VAR         shift and go to state 8
+    FLOAT_VAR       shift and go to state 2
+
+    type                           shift and go to state 149
+
+state 132
+
+    (35) arg_list -> type variable multiple_arg .
+
+    RPAREN          reduce using rule 35 (arg_list -> type variable multiple_arg .)
+
+
+state 133
+
+    (33) dec_multiple_arg -> COMMA . type star dec_multiple_arg
+    (30) type -> . INT_VAR
+    (31) type -> . FLOAT_VAR
+
+    INT_VAR         shift and go to state 8
+    FLOAT_VAR       shift and go to state 2
+
+    type                           shift and go to state 150
+
+state 134
+
+    (32) dec_arg_list -> type star dec_multiple_arg .
+
+    RPAREN          reduce using rule 32 (dec_arg_list -> type star dec_multiple_arg .)
+
+
+state 135
+
+    (8) fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN SEMICOLON .
+
+    VOID            reduce using rule 8 (fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
+    INT_VAR         reduce using rule 8 (fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
+    FLOAT_VAR       reduce using rule 8 (fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
+    $end            reduce using rule 8 (fn_declaration -> VOID fn_name LPAREN dec_arg_list RPAREN SEMICOLON .)
+
+
+state 136
+
+    (9) fn_declaration -> VOID fn_name LPAREN arg_list RPAREN SEMICOLON .
+
+    VOID            reduce using rule 9 (fn_declaration -> VOID fn_name LPAREN arg_list RPAREN SEMICOLON .)
+    INT_VAR         reduce using rule 9 (fn_declaration -> VOID fn_name LPAREN arg_list RPAREN SEMICOLON .)
+    FLOAT_VAR       reduce using rule 9 (fn_declaration -> VOID fn_name LPAREN arg_list RPAREN SEMICOLON .)
+    $end            reduce using rule 9 (fn_declaration -> VOID fn_name LPAREN arg_list RPAREN SEMICOLON .)
+
 
 state 137
 
-    (33) dec_multiple_arg -> COMMA type . star dec_multiple_arg
-    (16) star -> . STAR star
-    (17) star -> .
+    (63) condition -> condition OR condition .
+    (62) condition -> condition . AND condition
+    (63) condition -> condition . OR condition
 
-    STAR            shift and go to state 152
-    COMMA           reduce using rule 17 (star -> .)
-    RPAREN          reduce using rule 17 (star -> .)
+    OR              reduce using rule 63 (condition -> condition OR condition .)
+    RPAREN          reduce using rule 63 (condition -> condition OR condition .)
+    AND             shift and go to state 112
 
-    star                           shift and go to state 151
+  ! AND             [ reduce using rule 63 (condition -> condition OR condition .) ]
+  ! OR              [ shift and go to state 111 ]
+
 
 state 138
 
-    (37) multiple_arg -> COMMA type . variable multiple_arg
-    (42) variable -> . IDENTIFIER
-    (43) variable -> . STAR variable
+    (62) condition -> condition AND condition .
+    (62) condition -> condition . AND condition
+    (63) condition -> condition . OR condition
 
-    IDENTIFIER      shift and go to state 14
-    STAR            shift and go to state 48
+    AND             reduce using rule 62 (condition -> condition AND condition .)
+    OR              reduce using rule 62 (condition -> condition AND condition .)
+    RPAREN          reduce using rule 62 (condition -> condition AND condition .)
 
-    variable                       shift and go to state 153
+  ! AND             [ shift and go to state 112 ]
+  ! OR              [ shift and go to state 111 ]
+
 
 state 139
+
+    (46) matched_stmt -> IF LPAREN condition RPAREN matched_stmt . ELSE matched_stmt
+    (47) matched_stmt -> IF LPAREN condition RPAREN matched_stmt . ELSE SEMICOLON
+    (57) unmatched_stmt -> IF LPAREN condition RPAREN matched_stmt . ELSE unmatched_stmt
+    (44) stmt -> matched_stmt .
+
+    ELSE            shift and go to state 151
+    IDENTIFIER      reduce using rule 44 (stmt -> matched_stmt .)
+    INT_VAR         reduce using rule 44 (stmt -> matched_stmt .)
+    FLOAT_VAR       reduce using rule 44 (stmt -> matched_stmt .)
+    IF              reduce using rule 44 (stmt -> matched_stmt .)
+    LCURVE          reduce using rule 44 (stmt -> matched_stmt .)
+    WHILE           reduce using rule 44 (stmt -> matched_stmt .)
+    STAR            reduce using rule 44 (stmt -> matched_stmt .)
+    RETURN          reduce using rule 44 (stmt -> matched_stmt .)
+    RCURVE          reduce using rule 44 (stmt -> matched_stmt .)
+
+
+state 140
+
+    (48) matched_stmt -> IF LPAREN condition RPAREN SEMICOLON . ELSE SEMICOLON
+    (49) matched_stmt -> IF LPAREN condition RPAREN SEMICOLON . ELSE matched_stmt
+    (56) unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .
+    (58) unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON . ELSE unmatched_stmt
+
+    ELSE            shift and go to state 152
+    IDENTIFIER      reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
+    INT_VAR         reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
+    FLOAT_VAR       reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
+    IF              reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
+    LCURVE          reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
+    WHILE           reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
+    STAR            reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
+    RETURN          reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
+    RCURVE          reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
+
+
+state 141
+
+    (55) unmatched_stmt -> IF LPAREN condition RPAREN stmt .
+
+    IDENTIFIER      reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
+    INT_VAR         reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
+    FLOAT_VAR       reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
+    IF              reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
+    LCURVE          reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
+    WHILE           reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
+    STAR            reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
+    RETURN          reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
+    RCURVE          reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
+
+
+state 142
+
+    (65) condition -> LPAREN condition RPAREN .
+
+    AND             reduce using rule 65 (condition -> LPAREN condition RPAREN .)
+    OR              reduce using rule 65 (condition -> LPAREN condition RPAREN .)
+    RPAREN          reduce using rule 65 (condition -> LPAREN condition RPAREN .)
+
+
+state 143
+
+    (64) condition -> E1 OPERATOR E1 .
+    (71) E1 -> E1 . PLUS E2
+    (72) E1 -> E1 . MINUS E2
+
+    AND             reduce using rule 64 (condition -> E1 OPERATOR E1 .)
+    OR              reduce using rule 64 (condition -> E1 OPERATOR E1 .)
+    RPAREN          reduce using rule 64 (condition -> E1 OPERATOR E1 .)
+    PLUS            shift and go to state 92
+    MINUS           shift and go to state 91
+
+
+state 144
 
     (68) expr -> STAR left_side EQUALS E1 SEMICOLON .
 
@@ -2609,67 +2689,23 @@ state 139
     ELSE            reduce using rule 68 (expr -> STAR left_side EQUALS E1 SEMICOLON .)
 
 
-state 140
-
-    (62) condition -> condition AND condition .
-    (62) condition -> condition . AND condition
-    (63) condition -> condition . OR condition
-
-    RPAREN          reduce using rule 62 (condition -> condition AND condition .)
-    AND             reduce using rule 62 (condition -> condition AND condition .)
-    OR              reduce using rule 62 (condition -> condition AND condition .)
-
-  ! AND             [ shift and go to state 125 ]
-  ! OR              [ shift and go to state 126 ]
-
-
-state 141
-
-    (63) condition -> condition OR condition .
-    (62) condition -> condition . AND condition
-    (63) condition -> condition . OR condition
-
-    RPAREN          reduce using rule 63 (condition -> condition OR condition .)
-    OR              reduce using rule 63 (condition -> condition OR condition .)
-    AND             shift and go to state 125
-
-  ! AND             [ reduce using rule 63 (condition -> condition OR condition .) ]
-  ! OR              [ shift and go to state 126 ]
-
-
-state 142
+state 145
 
     (53) matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .
 
-    IDENTIFIER      reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
-    INT_VAR         reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
-    FLOAT_VAR       reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
     IF              reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
     LCURVE          reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
     WHILE           reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
     STAR            reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
     RETURN          reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
+    IDENTIFIER      reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
     RCURVE          reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
+    INT_VAR         reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
+    FLOAT_VAR       reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
     ELSE            reduce using rule 53 (matched_stmt -> WHILE LPAREN condition RPAREN matched_stmt .)
 
 
-state 143
-
-    (54) matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .
-
-    IDENTIFIER      reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
-    INT_VAR         reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
-    FLOAT_VAR       reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
-    IF              reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
-    LCURVE          reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
-    WHILE           reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
-    STAR            reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
-    RETURN          reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
-    RCURVE          reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
-    ELSE            reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
-
-
-state 144
+state 146
 
     (59) unmatched_stmt -> WHILE LPAREN condition RPAREN unmatched_stmt .
 
@@ -2684,29 +2720,23 @@ state 144
     RCURVE          reduce using rule 59 (unmatched_stmt -> WHILE LPAREN condition RPAREN unmatched_stmt .)
 
 
-state 145
-
-    (64) condition -> E1 OPERATOR E1 .
-    (71) E1 -> E1 . PLUS E2
-    (72) E1 -> E1 . MINUS E2
-
-    RPAREN          reduce using rule 64 (condition -> E1 OPERATOR E1 .)
-    AND             reduce using rule 64 (condition -> E1 OPERATOR E1 .)
-    OR              reduce using rule 64 (condition -> E1 OPERATOR E1 .)
-    PLUS            shift and go to state 91
-    MINUS           shift and go to state 92
-
-
-state 146
-
-    (65) condition -> LPAREN condition RPAREN .
-
-    RPAREN          reduce using rule 65 (condition -> LPAREN condition RPAREN .)
-    AND             reduce using rule 65 (condition -> LPAREN condition RPAREN .)
-    OR              reduce using rule 65 (condition -> LPAREN condition RPAREN .)
-
-
 state 147
+
+    (54) matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .
+
+    IF              reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
+    LCURVE          reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
+    WHILE           reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
+    STAR            reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
+    RETURN          reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
+    IDENTIFIER      reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
+    RCURVE          reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
+    INT_VAR         reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
+    FLOAT_VAR       reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
+    ELSE            reduce using rule 54 (matched_stmt -> WHILE LPAREN condition RPAREN SEMICOLON .)
+
+
+state 148
 
     (28) fn_call_args_list -> COMMA E1 . fn_call_args_list
     (71) E1 -> E1 . PLUS E2
@@ -2714,108 +2744,37 @@ state 147
     (28) fn_call_args_list -> . COMMA E1 fn_call_args_list
     (29) fn_call_args_list -> .
 
-    PLUS            shift and go to state 91
-    MINUS           shift and go to state 92
-    COMMA           shift and go to state 133
+    PLUS            shift and go to state 92
+    MINUS           shift and go to state 91
+    COMMA           shift and go to state 127
     RPAREN          reduce using rule 29 (fn_call_args_list -> .)
 
-    fn_call_args_list              shift and go to state 154
-
-state 148
-
-    (46) matched_stmt -> IF LPAREN condition RPAREN matched_stmt . ELSE matched_stmt
-    (47) matched_stmt -> IF LPAREN condition RPAREN matched_stmt . ELSE SEMICOLON
-    (57) unmatched_stmt -> IF LPAREN condition RPAREN matched_stmt . ELSE unmatched_stmt
-    (44) stmt -> matched_stmt .
-
-    ELSE            shift and go to state 155
-    IDENTIFIER      reduce using rule 44 (stmt -> matched_stmt .)
-    INT_VAR         reduce using rule 44 (stmt -> matched_stmt .)
-    FLOAT_VAR       reduce using rule 44 (stmt -> matched_stmt .)
-    IF              reduce using rule 44 (stmt -> matched_stmt .)
-    LCURVE          reduce using rule 44 (stmt -> matched_stmt .)
-    WHILE           reduce using rule 44 (stmt -> matched_stmt .)
-    STAR            reduce using rule 44 (stmt -> matched_stmt .)
-    RETURN          reduce using rule 44 (stmt -> matched_stmt .)
-    RCURVE          reduce using rule 44 (stmt -> matched_stmt .)
-
+    fn_call_args_list              shift and go to state 153
 
 state 149
 
-    (55) unmatched_stmt -> IF LPAREN condition RPAREN stmt .
+    (37) multiple_arg -> COMMA type . variable multiple_arg
+    (42) variable -> . IDENTIFIER
+    (43) variable -> . STAR variable
 
-    IDENTIFIER      reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
-    INT_VAR         reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
-    FLOAT_VAR       reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
-    IF              reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
-    LCURVE          reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
-    WHILE           reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
-    STAR            reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
-    RETURN          reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
-    RCURVE          reduce using rule 55 (unmatched_stmt -> IF LPAREN condition RPAREN stmt .)
+    IDENTIFIER      shift and go to state 18
+    STAR            shift and go to state 51
 
+    variable                       shift and go to state 154
 
 state 150
 
-    (48) matched_stmt -> IF LPAREN condition RPAREN SEMICOLON . ELSE SEMICOLON
-    (49) matched_stmt -> IF LPAREN condition RPAREN SEMICOLON . ELSE matched_stmt
-    (56) unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .
-    (58) unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON . ELSE unmatched_stmt
-
-    ELSE            shift and go to state 156
-    IDENTIFIER      reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
-    INT_VAR         reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
-    FLOAT_VAR       reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
-    IF              reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
-    LCURVE          reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
-    WHILE           reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
-    STAR            reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
-    RETURN          reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
-    RCURVE          reduce using rule 56 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON .)
-
-
-state 151
-
-    (33) dec_multiple_arg -> COMMA type star . dec_multiple_arg
-    (33) dec_multiple_arg -> . COMMA type star dec_multiple_arg
-    (34) dec_multiple_arg -> .
-
-    COMMA           shift and go to state 112
-    RPAREN          reduce using rule 34 (dec_multiple_arg -> .)
-
-    dec_multiple_arg               shift and go to state 157
-
-state 152
-
-    (16) star -> STAR . star
+    (33) dec_multiple_arg -> COMMA type . star dec_multiple_arg
     (16) star -> . STAR star
     (17) star -> .
 
-    STAR            shift and go to state 152
+    STAR            shift and go to state 155
     COMMA           reduce using rule 17 (star -> .)
     RPAREN          reduce using rule 17 (star -> .)
 
-    star                           shift and go to state 25
+    star                           shift and go to state 156
 
-state 153
-
-    (37) multiple_arg -> COMMA type variable . multiple_arg
-    (37) multiple_arg -> . COMMA type variable multiple_arg
-    (38) multiple_arg -> .
-
-    COMMA           shift and go to state 113
-    RPAREN          reduce using rule 38 (multiple_arg -> .)
-
-    multiple_arg                   shift and go to state 158
-
-state 154
-
-    (28) fn_call_args_list -> COMMA E1 fn_call_args_list .
-
-    RPAREN          reduce using rule 28 (fn_call_args_list -> COMMA E1 fn_call_args_list .)
-
-
-state 155
+state 151
 
     (46) matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE . matched_stmt
     (47) matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE . SEMICOLON
@@ -2840,21 +2799,21 @@ state 155
     (24) return_stmt -> . RETURN SEMICOLON
     (89) id -> . IDENTIFIER
 
-    SEMICOLON       shift and go to state 161
-    IF              shift and go to state 46
-    LCURVE          shift and go to state 33
-    WHILE           shift and go to state 36
-    STAR            shift and go to state 34
-    RETURN          shift and go to state 30
-    IDENTIFIER      shift and go to state 70
+    SEMICOLON       shift and go to state 159
+    IF              shift and go to state 29
+    LCURVE          shift and go to state 37
+    WHILE           shift and go to state 32
+    STAR            shift and go to state 30
+    RETURN          shift and go to state 33
+    IDENTIFIER      shift and go to state 57
 
-    expr                           shift and go to state 43
-    matched_stmt                   shift and go to state 159
-    return_stmt                    shift and go to state 44
-    unmatched_stmt                 shift and go to state 160
-    id                             shift and go to state 38
+    matched_stmt                   shift and go to state 158
+    unmatched_stmt                 shift and go to state 157
+    expr                           shift and go to state 36
+    id                             shift and go to state 34
+    return_stmt                    shift and go to state 39
 
-state 156
+state 152
 
     (48) matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE . SEMICOLON
     (49) matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE . matched_stmt
@@ -2879,51 +2838,62 @@ state 156
     (24) return_stmt -> . RETURN SEMICOLON
     (89) id -> . IDENTIFIER
 
-    SEMICOLON       shift and go to state 163
-    IF              shift and go to state 46
-    LCURVE          shift and go to state 33
-    WHILE           shift and go to state 36
-    STAR            shift and go to state 34
-    RETURN          shift and go to state 30
-    IDENTIFIER      shift and go to state 70
+    SEMICOLON       shift and go to state 162
+    IF              shift and go to state 29
+    LCURVE          shift and go to state 37
+    WHILE           shift and go to state 32
+    STAR            shift and go to state 30
+    RETURN          shift and go to state 33
+    IDENTIFIER      shift and go to state 57
 
-    expr                           shift and go to state 43
-    matched_stmt                   shift and go to state 162
-    return_stmt                    shift and go to state 44
-    unmatched_stmt                 shift and go to state 164
-    id                             shift and go to state 38
+    matched_stmt                   shift and go to state 161
+    unmatched_stmt                 shift and go to state 160
+    expr                           shift and go to state 36
+    id                             shift and go to state 34
+    return_stmt                    shift and go to state 39
+
+state 153
+
+    (28) fn_call_args_list -> COMMA E1 fn_call_args_list .
+
+    RPAREN          reduce using rule 28 (fn_call_args_list -> COMMA E1 fn_call_args_list .)
+
+
+state 154
+
+    (37) multiple_arg -> COMMA type variable . multiple_arg
+    (37) multiple_arg -> . COMMA type variable multiple_arg
+    (38) multiple_arg -> .
+
+    COMMA           shift and go to state 131
+    RPAREN          reduce using rule 38 (multiple_arg -> .)
+
+    multiple_arg                   shift and go to state 163
+
+state 155
+
+    (16) star -> STAR . star
+    (16) star -> . STAR star
+    (17) star -> .
+
+    STAR            shift and go to state 155
+    COMMA           reduce using rule 17 (star -> .)
+    RPAREN          reduce using rule 17 (star -> .)
+
+    star                           shift and go to state 41
+
+state 156
+
+    (33) dec_multiple_arg -> COMMA type star . dec_multiple_arg
+    (33) dec_multiple_arg -> . COMMA type star dec_multiple_arg
+    (34) dec_multiple_arg -> .
+
+    COMMA           shift and go to state 133
+    RPAREN          reduce using rule 34 (dec_multiple_arg -> .)
+
+    dec_multiple_arg               shift and go to state 164
 
 state 157
-
-    (33) dec_multiple_arg -> COMMA type star dec_multiple_arg .
-
-    RPAREN          reduce using rule 33 (dec_multiple_arg -> COMMA type star dec_multiple_arg .)
-
-
-state 158
-
-    (37) multiple_arg -> COMMA type variable multiple_arg .
-
-    RPAREN          reduce using rule 37 (multiple_arg -> COMMA type variable multiple_arg .)
-
-
-state 159
-
-    (46) matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .
-
-    IDENTIFIER      reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
-    INT_VAR         reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
-    FLOAT_VAR       reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
-    IF              reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
-    LCURVE          reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
-    WHILE           reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
-    STAR            reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
-    RETURN          reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
-    RCURVE          reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
-    ELSE            reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
-
-
-state 160
 
     (57) unmatched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE unmatched_stmt .
 
@@ -2938,55 +2908,39 @@ state 160
     RCURVE          reduce using rule 57 (unmatched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE unmatched_stmt .)
 
 
-state 161
+state 158
+
+    (46) matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .
+
+    IF              reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
+    LCURVE          reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
+    WHILE           reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
+    STAR            reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
+    RETURN          reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
+    IDENTIFIER      reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
+    RCURVE          reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
+    INT_VAR         reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
+    FLOAT_VAR       reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
+    ELSE            reduce using rule 46 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE matched_stmt .)
+
+
+state 159
 
     (47) matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .
 
-    IDENTIFIER      reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
-    INT_VAR         reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
-    FLOAT_VAR       reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
     IF              reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
     LCURVE          reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
     WHILE           reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
     STAR            reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
     RETURN          reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
+    IDENTIFIER      reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
     RCURVE          reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
+    INT_VAR         reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
+    FLOAT_VAR       reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
     ELSE            reduce using rule 47 (matched_stmt -> IF LPAREN condition RPAREN matched_stmt ELSE SEMICOLON .)
 
 
-state 162
-
-    (49) matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .
-
-    IDENTIFIER      reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
-    INT_VAR         reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
-    FLOAT_VAR       reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
-    IF              reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
-    LCURVE          reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
-    WHILE           reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
-    STAR            reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
-    RETURN          reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
-    RCURVE          reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
-    ELSE            reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
-
-
-state 163
-
-    (48) matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .
-
-    IDENTIFIER      reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
-    INT_VAR         reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
-    FLOAT_VAR       reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
-    IF              reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
-    LCURVE          reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
-    WHILE           reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
-    STAR            reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
-    RETURN          reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
-    RCURVE          reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
-    ELSE            reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
-
-
-state 164
+state 160
 
     (58) unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE unmatched_stmt .
 
@@ -2999,4 +2953,50 @@ state 164
     STAR            reduce using rule 58 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE unmatched_stmt .)
     RETURN          reduce using rule 58 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE unmatched_stmt .)
     RCURVE          reduce using rule 58 (unmatched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE unmatched_stmt .)
+
+
+state 161
+
+    (49) matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .
+
+    IF              reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
+    LCURVE          reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
+    WHILE           reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
+    STAR            reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
+    RETURN          reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
+    IDENTIFIER      reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
+    RCURVE          reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
+    INT_VAR         reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
+    FLOAT_VAR       reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
+    ELSE            reduce using rule 49 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE matched_stmt .)
+
+
+state 162
+
+    (48) matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .
+
+    IF              reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
+    LCURVE          reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
+    WHILE           reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
+    STAR            reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
+    RETURN          reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
+    IDENTIFIER      reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
+    RCURVE          reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
+    INT_VAR         reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
+    FLOAT_VAR       reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
+    ELSE            reduce using rule 48 (matched_stmt -> IF LPAREN condition RPAREN SEMICOLON ELSE SEMICOLON .)
+
+
+state 163
+
+    (37) multiple_arg -> COMMA type variable multiple_arg .
+
+    RPAREN          reduce using rule 37 (multiple_arg -> COMMA type variable multiple_arg .)
+
+
+state 164
+
+    (33) dec_multiple_arg -> COMMA type star dec_multiple_arg .
+
+    RPAREN          reduce using rule 33 (dec_multiple_arg -> COMMA type star dec_multiple_arg .)
 

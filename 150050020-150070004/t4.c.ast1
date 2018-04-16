@@ -1,9 +1,12 @@
 FUNCTION f
-PARAMS (int a, int b, int k11, int k12)
-RETURNS *int
+PARAMS (int a, int b)
+RETURNS int
 	RETURN
 	(
-		VAR(c)
+		DEREF
+		(
+			VAR(c)
+		)
 	)
 
 FUNCTION main
@@ -18,12 +21,25 @@ RETURNS void
 		,
 		PLUS
 		(
-			DEREF
-			(
-				VAR(px)
+			CALL f(
+				DEREF
+				(
+					VAR(px)
+				)
+				,
+				DEREF
+				(
+					VAR(px)
+				)
 			)
 			,
-			CONST(3)
+			DEREF
+			(
+				DEREF
+				(
+					VAR(pxx)
+				)
+			)
 		)
 	)
 

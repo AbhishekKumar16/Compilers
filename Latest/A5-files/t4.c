@@ -1,10 +1,10 @@
-int* f(int a, int b,int k11,int k12)
+int f(int a, int b)
 
 {
 
 	int *c;
 
-	return c;
+	return *c;
 
 }
 
@@ -14,9 +14,9 @@ int* f(int a, int b,int k11,int k12)
 
 void main(){
 
-	int *px,x, **pxx;
+	int *px,x, **pxx;    
 
-    *px = *px + 3;
+    *px = **pxx + *f(*px,*px);
 
 }
 

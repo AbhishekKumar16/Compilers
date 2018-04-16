@@ -11,7 +11,9 @@ f:
 	 sub $sp, $sp, 12	# Make space for the locals
 # Prologue ends
 label0:
-	 move $v1, c # move return value to $v1
+	 lw $s0, 4($sp)
+	 lw $s1, 0($s0)
+	 move $v1, $s1 # move return value to $v1
 	 j epilogue_f
 
 # Epilogue begins
@@ -31,36 +33,24 @@ main:
 	 sub $sp, $sp, 20	# Make space for the locals
 # Prologue ends
 label1:
+	 # setting up activation record for called function 
 	 lw $s0, 4($sp)
 	 lw $s1, 0($s0)
-	 li $s0, 3
-	 add $s2,$s1, $s0
+	 sw $s1, -4($sp) 
+	 lw $s0, 4($sp)
+	 lw $s1, 0($s0)
+	 sw $s1, -0($sp) 
+	 sub $sp, $sp, 8
+	 jal f # function call 
+	 add $sp, $sp, 8 # destroying activation record of called function
+	 move $s0, $v1 # using the return value of called function 
+	 lw $s1, 8($sp)
+	 lw $s2, 0($s1)
+	 lw $s1, 0($s2)
+	 add $s2,$s0, $s1
 	 move $s0, $s2
 	 lw $s1, 4($sp)
-	 sw $s00($s1)
-	 lw $s0, 8($sp)
-	 lw $s1, 0($s0)
-	 lw $s0, 0($s1)
-	 lw $s1, 4($sp)
-	 lw $s2, 0($s1)
-	 lw $s1, 4($sp)
-	 lw $s3, 0($s1)
-	 lw $s1, 4($sp)
-	 lw $s4, 0($s1)
-	 lw $s1, 4($sp)
-	 lw $s5, 0($s1)
-	 # setting up activation record for called function 
-	 sw $s2, -12($sp) 
-	 sw $s3, -8($sp) 
-	 sw $s4, -4($sp) 
-	 sw $s5, -0($sp) 
-	 jalf # function call	 add $sp, $sp, 16 # destroying activation record of called function
-	 move $s1, $v1 # using the return value of called function 
-	 lw $s6, 0($s1)
-	 add $s1,$s0, $s6
-	 move $s0, $s1
-	 lw $s1, 4($sp)
-	 sw $s00($s1)
+	 sw $s0, 0($s1)
 	 j label2
 label2:
 	 j epilogue_main

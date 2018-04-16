@@ -1,11 +1,11 @@
 
-function f(int a, int b, int k11, int k12)
+function f(int a, int b)
 <bb 0>
-return c
+return *c
 
 function main()
 <bb 1>
-t0 = *px + 3
+t0 = f(*px, *px) + **pxx
 *px = t0
 goto <bb 2>
 
