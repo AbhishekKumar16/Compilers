@@ -1,22 +1,20 @@
-int f(int a, int b)
+int *d;
 
+int* f(int a, int b)
 {
-
-	int *c;
-
-	return *c;
-
+	int *c,m;
+        c=&m;
+	return c;
 }
-
-
-
 
 
 void main(){
-
-	int *px,x, **pxx;    
-
-    *px = f(*px,*px) + **pxx;
+	
+	int x ,y, *px, *py;
+        px = &x;
+        py= &y;
+        *px= 2;
+        *py = 3;
+	d = f(*px,*py);
 
 }
-

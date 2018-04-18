@@ -1,8 +1,9 @@
-int *p;
+int *d;
+
 int* f(int a, int b)
 {
 	int *c,m;
-        c=&m + b;
+        c=&m;
 	return c;
 }
 
@@ -14,6 +15,6 @@ void main(){
         py= &y;
         *px= 2;
         *py = 3;
-	p = f(*px,*py);
+	d = f(*px,*py);
 
 }

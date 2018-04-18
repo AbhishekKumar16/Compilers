@@ -10,15 +10,15 @@ global_vars = set()
 def print_fn_epilogue(fn_name,f, is_return,return_reg):
 	global free_registers
 	if is_return:
-		f.write("\t move $v1, " + return_reg + " # move return value to $v1\n")
+		f.write("\tmove $v1, " + return_reg + " # move return value to $v1\n")
 		free_registers.add(return_reg)
-	f.write("\t j epilogue_" + fn_name+"\n")
+	f.write("\tj epilogue_" + fn_name+"\n")
 	f.write("\n# Epilogue begins\n")
 	f.write("epilogue_" + fn_name+":\n")
-	f.write("\t add $sp, $sp," + str(local_size+8) + "\n")
-	f.write("\t lw $fp, -4($sp)\n")
-	f.write("\t lw $ra, 0($sp)\n")
-	f.write("\t jr $ra	# Jump back to the called procedure\n")
+	f.write("\tadd $sp, $sp, " + str(local_size+8) + "\n")
+	f.write("\tlw $fp, -4($sp)\n")
+	f.write("\tlw $ra, 0($sp)\n")
+	f.write("\tjr $ra	# Jump back to the called procedure\n")
 	f.write("# Epilogue ends\n")
 
 
@@ -26,15 +26,15 @@ def print_fn_prologue(fn_name,f):
 	global local_size, var_dictionary
 	local_size = 0
 	var_dictionary = {}
-	f.write("\t text	# The .text assembler directive indicates\n")
-	f.write("\t .globl "+ fn_name+"	# The following is the code\n")
+	f.write("\t.text	# The .text assembler directive indicates\n")
+	f.write("\t.globl "+ fn_name+"	# The following is the code\n")
 	f.write(fn_name+ ":\n")
 	f.write("# Prologue begins\n")
-	f.write("\t sw $ra, 0($sp)	# Save the return address\n")
-	f.write("\t sw $fp, -4($sp)	# Save the frame pointer\n")
-	f.write("\t sub $fp, $sp, 8	# Update the frame pointer\n")
+	f.write("\tsw $ra, 0($sp)	# Save the return address\n")
+	f.write("\tsw $fp, -4($sp)	# Save the frame pointer\n")
+	f.write("\tsub $fp, $sp, 8	# Update the frame pointer\n")
 	get_fn_locals(fn_name)
-	f.write("\t sub $sp, $sp, %d	# Make space for the locals\n"%(local_size+8))
+	f.write("\tsub $sp, $sp, %d	# Make space for the locals\n"%(local_size+8))
 	f.write("# Prologue ends\n")
 
 
@@ -107,20 +107,20 @@ def print_assembly_code(g_table,root,f):
 			print("CONDITIONAL JUMP",reg_used)
 
 			if lchild!='End' and rchild != 'End':
-				f.write('\t bne ' + reg_used + ', $0, label'+ str(lchild.get_index()) + '\n')
-				f.write('\t j label' + str(rchild.get_index()) + '\n')
+				f.write('\tbne ' + reg_used + ', $0, label'+ str(lchild.get_index()) + '\n')
+				f.write('\tj label' + str(rchild.get_index()) + '\n')
 				# f.write('if' + condition_var + ' goto <bb ' + str(lchild.get_index()) + '>\nelse goto <bb ' + str(rchild.get_index()) + '>\n')
 			elif lchild=='End' and rchild !='End':
-				f.write('\t bne ' + reg_used + ', $0, label'+ str(len(cfg_buckets)+1) + '\n')
-				f.write('\t j label' + str(rchild.get_index()) + '\n')
+				f.write('\tbne ' + reg_used + ', $0, label'+ str(len(cfg_buckets)+1) + '\n')
+				f.write('\tj label' + str(rchild.get_index()) + '\n')
 				# f.write('if' + condition_var + ' goto <bb ' + str(len(cfg_buckets)+1) + '>\nelse goto <bb ' + str(rchild.get_index()) + '>\n')
 			elif lchild!='End' and rchild =='End':
-				f.write('\t bne ' + reg_used + ', $0, label'+ str(lchild.get_index()) + '\n')
-				f.write('\t j label' + str(len(cfg_buckets)+1) + '\n')
+				f.write('\tbne ' + reg_used + ', $0, label'+ str(lchild.get_index()) + '\n')
+				f.write('\tj label' + str(len(cfg_buckets)+1) + '\n')
 				# f.write('if' + condition_var + ' goto <bb ' + str(lchild.get_index()) + '>\nelse goto <bb ' + str(len(cfg_buckets)+1) + '>\n')
 			else:
-				f.write('\t bne ' + reg_used + ', $0, label'+ str(len(cfg_buckets)+1) + '\n')
-				f.write('\t j label' + str(len(cfg_buckets)+1) + '\n')
+				f.write('\tbne ' + reg_used + ', $0, label'+ str(len(cfg_buckets)+1) + '\n')
+				f.write('\tj label' + str(len(cfg_buckets)+1) + '\n')
 				# f.write('if' + condition_var + ' goto <bb ' + str(len(cfg_buckets)+1) + '>\nelse goto <bb ' + str(len(cfg_buckets)+1) + '>\n')
 			free_registers.add(reg_used)
 
@@ -161,9 +161,9 @@ def print_assembly_code(g_table,root,f):
 					free_registers.add(reg_used)
 
 			if lchild == 'End' or rchild == 'End':
-				f.write('\t j label' + str(len(cfg_buckets)+1) + '\n')
+				f.write('\tj label' + str(len(cfg_buckets)+1) + '\n')
 			else:
-				f.write('\t j label' + str(lchild.get_index()) + '\n')
+				f.write('\tj label' + str(lchild.get_index()) + '\n')
 
 
 free_registers = set()
@@ -218,13 +218,13 @@ def break_assembly(AST, g):
 				reg = min(free_registers)
 				free_registers.remove(min(free_registers))
 
-				f.write('\t not '+ reg +', '+ reg_used +'\n')
+				f.write('\tnot '+ reg +', '+ reg_used +'\n')
 				free_registers.add(reg_used)
 
 				move_reg = min(free_registers)
 				free_registers.remove(min(free_registers))
 
-				f.write('\t move ' + move_reg + ', ' + reg+ '\n')
+				f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
 				free_registers.add(reg)
 				return [move_reg, 'EXPRESSION',0]
 
@@ -263,25 +263,25 @@ def break_assembly(AST, g):
 
 			if op == '=':
 				[address,reg_used_l] = handle_assignment_identifier(reg_used_l,indirection_l)
-				f.write('\t sw ' + reg_used_r + ', ' + address + '\n')
+				f.write('\tsw ' + reg_used_r + ', ' + address + '\n')
 				if reg_used_l is not None:
 					free_registers.add(reg_used_l)
 				free_registers.add(reg_used_r)
 				return [None, 'VOID', 0]
 
 			elif op == '/':
-				f.write('\t '+ get_operation[op] + reg_used_l + ', ' + reg_used_r+ '\n')
+				f.write('\t'+ get_operation[op] + reg_used_l + ', ' + reg_used_r+ '\n')
 				reg = min(free_registers)
 				free_registers.remove(min(free_registers))
 
-				f.write('\t mflo ' + reg + '\n')
+				f.write('\tmflo ' + reg + '\n')
 				free_registers.add(reg_used_l)
 				free_registers.add(reg_used_r)
 				
 				move_reg = min(free_registers)
 				free_registers.remove(min(free_registers))
 
-				f.write('\t move ' + move_reg + ', ' + reg+ '\n')
+				f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
 				free_registers.add(reg)
 				return [move_reg, 'BINARY', 0]
 			
@@ -290,7 +290,7 @@ def break_assembly(AST, g):
 				free_registers.remove(min(free_registers))
 
 
-				f.write('\t '+ get_operation[op] + reg + ',' + reg_used_l + ', ' + reg_used_r+ '\n')
+				f.write('\t'+ get_operation[op] + reg + ',' + reg_used_l + ', ' + reg_used_r+ '\n')
 				
 				free_registers.add(reg_used_l)
 				free_registers.add(reg_used_r)
@@ -298,7 +298,7 @@ def break_assembly(AST, g):
 				move_reg = min(free_registers)
 				free_registers.remove(min(free_registers))
 
-				f.write('\t move ' + move_reg + ', ' + reg+ '\n')
+				f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
 				free_registers.add(reg)
 				return [move_reg, 'BINARY', 0]
 		
@@ -307,9 +307,9 @@ def break_assembly(AST, g):
 				free_registers.remove(min(free_registers))
 
 				if op=='<':
-					f.write('\t '+ get_operation[op] + reg + ',' + reg_used_l + ', ' + reg_used_r+ '\n')
+					f.write('\t'+ get_operation[op] + reg + ',' + reg_used_l + ', ' + reg_used_r+ '\n')
 				else:
-					f.write('\t '+ get_operation[op] + reg + ',' + reg_used_r + ', ' + reg_used_l+ '\n')
+					f.write('\t'+ get_operation[op] + reg + ',' + reg_used_r + ', ' + reg_used_l+ '\n')
 
 				free_registers.add(reg_used_l)
 				free_registers.add(reg_used_r)
@@ -317,7 +317,7 @@ def break_assembly(AST, g):
 				move_reg = min(free_registers)
 				free_registers.remove(min(free_registers))
 
-				f.write('\t move ' + move_reg + ', ' + reg+ '\n')
+				f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
 				free_registers.add(reg)
 				return [move_reg, 'BINARY', 0]
 
@@ -326,23 +326,23 @@ def break_assembly(AST, g):
 				free_registers.remove(min(free_registers))
 
 				if op=='<=':
-					f.write('\t '+ get_operation[op] + reg + ',' + reg_used_r + ', ' + reg_used_l+ '\n')
+					f.write('\t'+ get_operation[op] + reg + ',' + reg_used_r + ', ' + reg_used_l+ '\n')
 				else:
-					f.write('\t '+ get_operation[op] + reg + ',' + reg_used_l + ', ' + reg_used_r+ '\n')
+					f.write('\t'+ get_operation[op] + reg + ',' + reg_used_l + ', ' + reg_used_r+ '\n')
 				free_registers.add(reg_used_l)
 				free_registers.add(reg_used_r)
 
 				not_reg = min(free_registers)
 				free_registers.remove(min(free_registers))
 
-				f.write('\t not ' + not_reg + ',' + reg + '\n')
+				f.write('\tnot ' + not_reg + ',' + reg + '\n')
 
 				free_registers.add(reg)
 
 				move_reg = min(free_registers)
 				free_registers.remove(min(free_registers))
 
-				f.write('\t move ' + move_reg + ', ' + not_reg+ '\n')
+				f.write('\tmove ' + move_reg + ', ' + not_reg+ '\n')
 				free_registers.add(not_reg)
 				return [move_reg, 'BINARY', 0]
 
@@ -368,13 +368,13 @@ def handle_negation(reg):
 	new_reg = min(free_registers)
 	free_registers.remove(min(free_registers))
 
-	f.write('\t negu ' + new_reg + ', ' + reg+ '\n')
+	f.write('\tnegu ' + new_reg + ', ' + reg+ '\n')
 	free_registers.add(reg)
 
 	move_reg = min(free_registers)
 	free_registers.remove(min(free_registers))
 
-	f.write('\t move ' + move_reg + ', ' + new_reg+ '\n')
+	f.write('\tmove ' + move_reg + ', ' + new_reg+ '\n')
 	free_registers.add(new_reg)
 	return [new_reg, 'EXPRESSION', 0]
 
@@ -386,9 +386,9 @@ def handle_constant(number,num_type):
 	free_registers.remove(reg_used)
 	
 	if num_type == 'int':
-		f.write('\t li '+reg_used+', '+str(number)+'\n')
+		f.write('\tli '+reg_used+', '+str(number)+'\n')
 	elif AST.get_type()[0] == 'float':
-		f.write('\t li.s '+reg_used+', '+str(number)+'\n')
+		f.write('\tli.s '+reg_used+', '+str(number)+'\n')
 	return reg_used
 
 #case where we have **p = rhs
@@ -404,11 +404,11 @@ def handle_assignment_identifier(identifier,indirection):
 	else:
 		reg = min(free_registers)
 		free_registers.remove(min(free_registers))
-		f.write('\t lw '+reg+', '+address+'\n')
+		f.write('\tlw '+reg+', '+address+'\n')
 		for i in range(indirection-1):
 			new_reg = min(free_registers)
 			free_registers.remove(min(free_registers))
-			f.write('\t lw '+new_reg+', 0('+reg+')\n')
+			f.write('\tlw '+new_reg+', 0('+reg+')\n')
 			free_registers.add(reg)
 			reg = new_reg
 		address = '0('+reg+')'		
@@ -424,22 +424,22 @@ def handle_identifier(identifier,indirection):
 	if identifier in var_dictionary:
 		offset = var_dictionary[identifier]
 		if indirection == -1:
-			f.write('\t addi ' + reg + ', $sp' + str(offset) + '\n')
+			f.write('\taddi ' + reg + ', $sp' + str(offset) + '\n')
 		else:
-			f.write('\t lw '+reg+', '+str(offset)+'($sp)'+'\n')
+			f.write('\tlw '+reg+', '+str(offset)+'($sp)'+'\n')
 
 	elif identifier in global_vars:
 		if indirection == -1:
-			f.write('\t la ' + reg + ', global_' + identifier + '\n')
+			f.write('\tla ' + reg + ', global_' + identifier + '\n')
 		else:
-			f.write('\t lw '+reg+', global_'+identifier+'\n')
+			f.write('\tlw '+reg+', global_'+identifier+'\n')
 
 	if indirection >= 0:
 		for i in range(indirection):
 			new_reg = min(free_registers)
 			free_registers.remove(min(free_registers))
 
-			f.write('\t lw '+new_reg+', 0('+reg+')\n')
+			f.write('\tlw '+new_reg+', 0('+reg+')\n')
 
 			free_registers.add(reg)
 			reg = new_reg
@@ -453,7 +453,7 @@ def handle_function_call(fn_AST,indirection):
 	global free_registers,f
 	[fn_name,_,return_type,_,arg_list] = fn_AST.get_fn_leaf_details() 
 	arg_width = get_width_fn_arguments(fn_name)
-	f.write("\t # setting up activation record for called function \n")
+	f.write("\t# setting up activation record for called function \n")
 
 	arg_offset_on_stack = sum(arg_width)	
 	i = 0	
@@ -481,29 +481,29 @@ def handle_function_call(fn_AST,indirection):
 		else:
 			reg_used = reg_arg
 		
-		f.write("\t sw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp) \n")
+		f.write("\tsw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp) \n")
 		free_registers.add(reg_used)
 
 	#ARGUMENTS PUSHED ONTO STACK
 	
-	f.write("\t sub $sp, $sp, " + str(sum(arg_width)) + "\n") #modifying stack pointer to accomodate arguments
+	f.write("\tsub $sp, $sp, " + str(sum(arg_width)) + "\n") #modifying stack pointer to accomodate arguments
 
 	#NOW JUMP TO FUNCTION 
 
-	f.write("\t jal " + fn_name + " # function call \n")
+	f.write("\tjal " + fn_name + " # function call \n")
 
 	#FUNCTION CALL EPILOGUE (CLEARING ARGUMENTS AND USING RETURN VALUE)
-	f.write("\t add $sp, $sp, " + str(sum(arg_width)) + " # destroying activation record of called function\n") 
+	f.write("\tadd $sp, $sp, " + str(sum(arg_width)) + " # destroying activation record of called function\n") 
 	
 	if return_type[0] != 'void':
 		reg = min(free_registers)
 		free_registers.remove(reg)
-		f.write("\t move " + reg + ", $v1 # using the return value of called function \n")
+		f.write("\tmove " + reg + ", $v1 # using the return value of called function \n")
 		for i in range(indirection):
 			new_reg = min(free_registers)
 			free_registers.remove(min(free_registers))
 
-			f.write('\t lw '+new_reg+', 0('+reg+')\n')
+			f.write('\tlw '+new_reg+', 0('+reg+')\n')
 			free_registers.add(reg)
 			reg = new_reg
 		return reg
@@ -550,7 +550,7 @@ def handle_function_call(fn_AST,indirection):
 	# 		#return [AST.get_fn_call_expression(),None,[]]		
 	# 		print('yay')
 	# 	elif AST.get_var_type() == 'CONSTANT':		
-	# 		f.write("\t li "+reg+", "+str(AST.get_identifier())+"\n")
+	# 		f.write("\tli "+reg+", "+str(AST.get_identifier())+"\n")
 	# 	elif AST.get_var_type() == 'IDENTIFIER':
 	# 		value = AST.get_identifier()
 	# 		if local_vars.has_key(value):

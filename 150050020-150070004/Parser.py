@@ -927,7 +927,7 @@ if __name__ == "__main__":
 
 	with open(sys.argv[1]+'.s','w') as f:
 		f.write('\n')
-		f.write('\t .data\n')
+		f.write('\t.data\n')
 		f.write('\n')
 		print_assembly_code(global_symbol_table,rt,f)
 	# global_symbol_table.print_symbol_table()
