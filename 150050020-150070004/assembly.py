@@ -290,7 +290,7 @@ def break_assembly(AST, g):
 				free_registers.remove(min(free_registers))
 
 
-				f.write('\t'+ get_operation[op] + reg + ',' + reg_used_l + ', ' + reg_used_r+ '\n')
+				f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
 				
 				free_registers.add(reg_used_l)
 				free_registers.add(reg_used_r)
@@ -307,9 +307,9 @@ def break_assembly(AST, g):
 				free_registers.remove(min(free_registers))
 
 				if op=='<':
-					f.write('\t'+ get_operation[op] + reg + ',' + reg_used_l + ', ' + reg_used_r+ '\n')
+					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
 				else:
-					f.write('\t'+ get_operation[op] + reg + ',' + reg_used_r + ', ' + reg_used_l+ '\n')
+					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_r + ', ' + reg_used_l+ '\n')
 
 				free_registers.add(reg_used_l)
 				free_registers.add(reg_used_r)
@@ -326,9 +326,9 @@ def break_assembly(AST, g):
 				free_registers.remove(min(free_registers))
 
 				if op=='<=':
-					f.write('\t'+ get_operation[op] + reg + ',' + reg_used_r + ', ' + reg_used_l+ '\n')
+					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_r + ', ' + reg_used_l+ '\n')
 				else:
-					f.write('\t'+ get_operation[op] + reg + ',' + reg_used_l + ', ' + reg_used_r+ '\n')
+					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
 				free_registers.add(reg_used_l)
 				free_registers.add(reg_used_r)
 
@@ -424,7 +424,7 @@ def handle_identifier(identifier,indirection):
 	if identifier in var_dictionary:
 		offset = var_dictionary[identifier]
 		if indirection == -1:
-			f.write('\taddi ' + reg + ', $sp' + str(offset) + '\n')
+			f.write('\taddi ' + reg + ', $sp, ' + str(offset) + '\n')
 		else:
 			f.write('\tlw '+reg+', '+str(offset)+'($sp)'+'\n')
 
