@@ -175,7 +175,7 @@ free_registers = set()
 free_float_registers = set()
 int_registers = set()
 float_registers = set()
-
+if_cond_label_num = 0
 
 width = {
 	'int' : 4,
@@ -190,6 +190,8 @@ def break_assembly(AST, g):
 	global f
 	global free_registers, var_dictionary, global_vars,free_float_registers
 	global reg_type
+	global if_cond_label_num
+
 	reg_type = AST.get_type()
 	# print("top",traverse(AST), reg_type)
 	f = g
@@ -253,6 +255,7 @@ def break_assembly(AST, g):
 
 			[reg_used_l, type_passed_l, indirection_l] = break_assembly(lchild, f)	
 			[reg_used_r, type_passed_r, indirection_r] = break_assembly(rchild, f)
+
 			if op != '=':	
 				if type_passed_l == 'IDENTIFIER':
 					identifier = reg_used_l
@@ -314,18 +317,21 @@ def break_assembly(AST, g):
 				return [move_reg, 'BINARY', 0]
 
 			
-			elif op == '+' or op == '-' or op == '*' or op == 'AND' or op == 'OR':
-				reg = get_free_register(reg_type)
-				
-				if is_int_register(reg):
+			elif op == '+' or op == '-' or op == '*':
+				if is_int_register(reg_used_l):
+					reg = get_free_register(['int', 0])
 					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
 				else:
-					f.write('\t'+ get_operation[op] + '.s' + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
+					reg = get_free_register(['float', 0])
+					f.write('\t'+ get_operation[op+'f'] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
 
 				add_register(reg_used_l)
 				add_register(reg_used_r)
 
-				move_reg = get_free_register(reg_type)
+				if is_int_register(reg):
+					move_reg = get_free_register(['int', 0])
+				else:
+					move_reg = get_free_register(['float', 0])
 
 				if is_int_register(move_reg):
 					f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
@@ -335,6 +341,18 @@ def break_assembly(AST, g):
 				add_register(reg)	
 				return [move_reg, 'BINARY', 0]
 			
+			elif op=='&&' or op=='||':
+
+				reg = get_free_register(['int', 0])
+				f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
+
+				add_register(reg_used_l)
+				add_register(reg_used_r)
+
+				move_reg = get_free_register(['int', 0])
+				f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
+				add_register(reg)
+				return [move_reg, 'BINARY', 0]
 
 			elif op == '==' or op == '!=':
 				if is_int_register(reg_used_l):
@@ -357,14 +375,14 @@ def break_assembly(AST, g):
 						add_register(reg_used_l)
 						add_register(reg_used_r)
 
-						f.write('\tbc1f L_CondFalse_1\n') 
+						f.write('\tbc1f L_CondFalse_'+str(if_cond_label_num)+'\n') 
 
 						reg = get_free_register(['int', 0])
 						f.write('\tli '+ reg +', 1\n')
-						f.write('\tj L_CondEnd_1\n')
-						f.write('L_CondFalse_1:\n')
+						f.write('\tj L_CondEnd_'+str(if_cond_label_num)+'\n')
+						f.write('L_CondFalse_'+str(if_cond_label_num)+':\n')
 						f.write('\tli '+ reg +', 0\n')
-						f.write('L_CondEnd_1:\n')
+						f.write('L_CondEnd_'+str(if_cond_label_num)+':\n')
 						
 					else:
 						f.write('\t'+ get_operation[op+'f'] + reg_used_l + ', ' + reg_used_r+ '\n')
@@ -372,15 +390,16 @@ def break_assembly(AST, g):
 						add_register(reg_used_l)
 						add_register(reg_used_r)
 
-						f.write('\tbc1f L_CondTrue_1\n') 
+						f.write('\tbc1f L_CondTrue_'+str(if_cond_label_num)+'\n') 
 
 						reg = get_free_register(['int', 0])
 						f.write('\tli '+ reg +', 0\n')
-						f.write('\tj L_CondEnd_1\n')
-						f.write('L_CondFalse_1:\n')
+						f.write('\tj L_CondEnd_'+str(if_cond_label_num)+'\n')
+						f.write('L_CondTrue_'+str(if_cond_label_num)+':\n')
 						f.write('\tli '+ reg +', 1\n')
-						f.write('L_CondEnd_1:\n')
-						
+						f.write('L_CondEnd_'+str(if_cond_label_num)+':\n')
+					
+					if_cond_label_num += 1
 					move_reg = get_free_register(reg_type)
 
 					if is_int_register(move_reg):
@@ -388,14 +407,13 @@ def break_assembly(AST, g):
 					else:
 						f.write('\tmov.s ' + move_reg + ', ' + reg+ '\n')
 					
-					free_registers.add(reg)
+					add_register(reg)
 					return [move_reg, 'BINARY', 0]
 
 
 			elif op == '<' or op == '>':
-				
 				if is_int_register(reg_used_l):
-					reg = get_free_register(reg_type)
+					reg = get_free_register(['int', 0])
 					if op=='<':
 						f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
 					else:
@@ -404,11 +422,10 @@ def break_assembly(AST, g):
 					add_register(reg_used_l)
 					add_register(reg_used_r)
 
-					move_reg = min(free_registers)
-					free_registers.remove(min(free_registers))
+					move_reg = get_free_register(['int', 0])
 
 					f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
-					free_registers.add(reg)
+					add_register(reg)
 					return [move_reg, 'BINARY', 0]
 
 				else:
@@ -420,15 +437,16 @@ def break_assembly(AST, g):
 					add_register(reg_used_l)
 					add_register(reg_used_r)
 
-					f.write('\tbc1f L_CondFalse_0\n') 
+					f.write('\tbc1f L_CondFalse_'+ str(if_cond_label_num)+'\n') 
 
 					reg = get_free_register(['int', 0])
 					f.write('\tli '+ reg +', 1\n')
-					f.write('\tj L_CondEnd_0\n')
-					f.write('L_CondFalse_0:\n')
+					f.write('\tj L_CondEnd_'+ str(if_cond_label_num)+'\n')
+					f.write('L_CondFalse_'+ str(if_cond_label_num)+':\n')
 					f.write('\tli '+ reg +', 0\n')
-					f.write('L_CondEnd_0:\n')
+					f.write('L_CondEnd_'+ str(if_cond_label_num)+':\n')
 					
+					if_cond_label_num += 1
 					move_reg = get_free_register(reg_type)
 
 					if is_int_register(move_reg):
@@ -436,12 +454,13 @@ def break_assembly(AST, g):
 					else:
 						f.write('\tmov.s ' + move_reg + ', ' + reg+ '\n')
 					
-					free_registers.add(reg)
+					add_register(reg)
 					return [move_reg, 'BINARY', 0]
 				
 			elif op=='<=' or op=='>=':
-				if is_int_register(reg_used_l):
 
+				if is_int_register(reg_used_l):
+					reg = get_free_register(['int', 0])
 					if op=='<=':
 						f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
 					else:
@@ -449,11 +468,10 @@ def break_assembly(AST, g):
 					free_registers.add(reg_used_l)
 					free_registers.add(reg_used_r)
 
-					move_reg = min(free_registers)
-					free_registers.remove(min(free_registers))
+					move_reg = get_free_register(['int', 0])
 
 					f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
-					free_registers.add(reg)
+					add_register(reg)
 
 					return [move_reg, 'BINARY', 0]
 
@@ -466,16 +484,17 @@ def break_assembly(AST, g):
 					add_register(reg_used_l)
 					add_register(reg_used_r)
 
-					f.write('\tbc1f L_CondFalse_0\n') 
+					f.write('\tbc1f L_CondFalse_'+ str(if_cond_label_num)+'\n') 
 
 					reg = get_free_register(['int', 0])
 					f.write('\tli '+ reg +', 1\n')
-					f.write('\tj L_CondEnd_0\n')
-					f.write('L_CondFalse_0:\n')
+					f.write('\tj L_CondEnd_'+ str(if_cond_label_num)+'\n')
+					f.write('L_CondFalse_'+ str(if_cond_label_num)+':\n')
 					f.write('\tli '+ reg +', 0\n')
-					f.write('L_CondEnd_0:\n')
+					f.write('L_CondEnd_'+ str(if_cond_label_num)+':\n')
 					
 					move_reg = get_free_register(reg_type)
+					if_cond_label_num += 1
 
 					if is_int_register(move_reg):
 						f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
@@ -488,12 +507,15 @@ def break_assembly(AST, g):
 
 get_operation = {
 	'+':	'add ',	
+	'+f':	'add.s ',	
 	'-':	'sub ',
+	'-f':	'sub.s ',
 	'*':	'mul ',
+	'*f':	'mul.s ',
 	'/':	'div ',
 	'/f':	'div.s ',
-	'AND':	'and ',
-	'OR':	'or ',
+	'&&':	'and ',
+	'||':	'or ',
 	'>':	'slt ',
 	'<':	'slt ',
 	'>f':	'c.lt.s ',

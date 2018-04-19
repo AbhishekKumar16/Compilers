@@ -1,0 +1,30 @@
+
+function main()
+<bb 0>
+t0 = *fx > *fy
+t1 = *fx > *fy
+t2 = t0 && t1
+t3 = *fx <= *fy
+t4 = t2 || t3
+t5 = *gfx >= *gfy
+t6 = *px < *py
+t7 = t5 && t6
+t8 = *px > *py
+t9 = t7 && t8
+t10 = t4 || t9
+t11 = *px >= *py
+t12 = t10 || t11
+t13 = *d <= *d
+t14 = t12 || t13
+if(t14) goto <bb 1>
+else goto <bb 2>
+
+<bb 1>
+fy = &fl
+t15 = *fy * *fy
+t16 = *fx + t15
+*fx = t16
+goto <bb 2>
+
+<bb 2>
+return 
