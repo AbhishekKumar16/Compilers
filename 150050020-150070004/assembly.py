@@ -104,8 +104,6 @@ def print_assembly_code(g_table,root,f):
 			condition = curr_bucket.get_condition()
 			[reg_used, type_passed, indirection] = break_assembly(condition, f)
 
-			print("CONDITIONAL JUMP",reg_used)
-
 			if lchild!='End' and rchild != 'End':
 				f.write('\tbne ' + reg_used + ', $0, label'+ str(lchild.get_index()) + '\n')
 				f.write('\tj label' + str(rchild.get_index()) + '\n')

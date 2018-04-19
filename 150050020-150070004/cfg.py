@@ -306,23 +306,6 @@ def construct_cfg(AST, bucket, curr_bucket, curr_index, create_new):
 
 	# for return statement, a new bucket is always created 
 	elif op =='RETURN':
-		# print("curr_index", curr_index)
-		
-		# curr_index = curr_index + 1
-		# new_bucket = Bucket()
-
-		# # To assign function name to the first bucket of function
-		# if bucket_index_with_name is not None:
-		# 	new_bucket.set_fn_name(name)
-		# 	new_bucket.set_fn_arguments_to_store(fn_arguments_to_store)
-		# 	bucket_index_with_name = None
-
-		# new_bucket.set_index(curr_index)
-		# new_bucket.append_expression(AST)
-		# new_bucket.set_return()
-		# combine_graphs(bucket, new_bucket)
-		# return bucket, new_bucket, curr_index, 1
-
 		if create_new!=2:
 
 			curr_index = curr_index + 1
