@@ -15,6 +15,7 @@ x		|	procedure main	|	int	   |
 ppy		|	procedure main	|	int	   |	**
 ppx		|	procedure main	|	int	   |	**
 fl		|	procedure main	|	float	   |	
+gfz		|	global		|	float	   |	
 gfx		|	global		|	float	   |	*
 gfy		|	global		|	float	   |	*
 d		|	global		|	int	   |	*

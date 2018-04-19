@@ -6,6 +6,7 @@ void main(){
         int x ,y, *px, *py, **ppx, **ppy;
         float *fx, *fy, fl;
 
-        gfx = &fl;
-        gfx = &gfz;
+        if(*fx > *fy && *px > *py){
+        	fy = &fl;
+        }
 }

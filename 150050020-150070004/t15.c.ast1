@@ -1,0 +1,24 @@
+FUNCTION main
+PARAMS ()
+RETURNS void
+	ASGN
+	(
+		VAR(gfx)
+		,
+		ADDR
+		(
+			VAR(fl)
+		)
+	)
+
+	ASGN
+	(
+		VAR(gfx)
+		,
+		ADDR
+		(
+			VAR(gfz)
+		)
+	)
+
+	

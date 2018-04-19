@@ -18,5 +18,6 @@ y 		| 	procedure  main 	|	 int 4 	|
 d 		| 	procedure global 	|	 int 	|	*
 gfx 		| 	procedure global 	|	 float 	|	*
 gfy 		| 	procedure global 	|	 float 	|	*
+gfz 		| 	procedure global 	|	 float 	|	
 -----------------------------------------------------------------
 -----------------------------------------------------------------

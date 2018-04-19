@@ -116,19 +116,18 @@ def print_assembly_code(g_table,root,f):
 			if lchild!='End' and rchild != 'End':
 				f.write('\tbne ' + reg_used + ', $0, label'+ str(lchild.get_index()) + '\n')
 				f.write('\tj label' + str(rchild.get_index()) + '\n')
-				# f.write('if' + condition_var + ' goto <bb ' + str(lchild.get_index()) + '>\nelse goto <bb ' + str(rchild.get_index()) + '>\n')
+
 			elif lchild=='End' and rchild !='End':
 				f.write('\tbne ' + reg_used + ', $0, label'+ str(len(cfg_buckets)+1) + '\n')
 				f.write('\tj label' + str(rchild.get_index()) + '\n')
-				# f.write('if' + condition_var + ' goto <bb ' + str(len(cfg_buckets)+1) + '>\nelse goto <bb ' + str(rchild.get_index()) + '>\n')
+
 			elif lchild!='End' and rchild =='End':
 				f.write('\tbne ' + reg_used + ', $0, label'+ str(lchild.get_index()) + '\n')
 				f.write('\tj label' + str(len(cfg_buckets)+1) + '\n')
-				# f.write('if' + condition_var + ' goto <bb ' + str(lchild.get_index()) + '>\nelse goto <bb ' + str(len(cfg_buckets)+1) + '>\n')
+
 			else:
 				f.write('\tbne ' + reg_used + ', $0, label'+ str(len(cfg_buckets)+1) + '\n')
 				f.write('\tj label' + str(len(cfg_buckets)+1) + '\n')
-				# f.write('if' + condition_var + ' goto <bb ' + str(len(cfg_buckets)+1) + '>\nelse goto <bb ' + str(len(cfg_buckets)+1) + '>\n')
 			free_registers.add(reg_used)
 
 		else:
@@ -288,9 +287,7 @@ def break_assembly(AST, g):
 				add_register(reg_used_r)
 				return [None, 'VOID', 0]
 
-			#handle this I was short on time
-			elif op == '/':
-				
+			elif op == '/':				
 				if is_int_register(reg_used_l):
 					reg = get_free_register(reg_type)
 					f.write('\t'+ get_operation[op] + reg_used_l + ', ' + reg_used_r+ '\n')
@@ -315,7 +312,7 @@ def break_assembly(AST, g):
 
 				add_register(reg)
 				return [move_reg, 'BINARY', 0]
-			
+
 			
 			elif op == '+' or op == '-' or op == '*' or op == 'AND' or op == 'OR':
 				reg = get_free_register(reg_type)
@@ -614,12 +611,13 @@ def handle_identifier(identifier,indirection):
 	
 	current_type = [reg_type[0],reg_type[1]]
 
-	# f.write('type:::' + str(reg_type[0]) + ', ' + str(reg_type[1]) + ':::'+ str(current_type) + '\n')
 	reg = get_free_register(current_type)
 	
 	if identifier in var_dictionary:
 		offset = var_dictionary[identifier]
 		if indirection == -1:
+			add_register(reg)
+			reg = get_free_register(['int', 0])
 			f.write('\taddi ' + reg + ', $sp, ' + str(offset) + '\n')
 		else:
 			if is_int_register(reg): 
@@ -629,6 +627,8 @@ def handle_identifier(identifier,indirection):
 
 	elif identifier in global_vars:
 		if indirection == -1:
+			add_register(reg)
+			reg = get_free_register(['int', 0])
 			f.write('\tla ' + reg + ', global_' + identifier + '\n')
 		else:
 			if is_int_register(reg): 

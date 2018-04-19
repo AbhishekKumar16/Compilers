@@ -1,20 +1,11 @@
 int *d;
-float *gfx, *gfy;
+float *gfx, *gfy, gfz;
 
 void main(){
         
         int x ,y, *px, *py, **ppx, **ppy;
         float *fx, *fy, fl;
 
-        if (!(*fx <= *fy))
-                *px = *py + *px + *px;
-
-        while(*gfx==*gfy){
-                *fx = *fy;
-                **ppx = *px;
-                px = &x;
-                gfx = &fl;
-                *fx = *gfx / *gfy;
-        }
-
+        gfx = &fl;
+        gfx = &gfz;
 }
