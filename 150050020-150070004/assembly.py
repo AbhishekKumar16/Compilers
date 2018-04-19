@@ -192,6 +192,7 @@ def break_assembly(AST, g):
 	global free_registers, var_dictionary, global_vars,free_float_registers
 	global reg_type
 	reg_type = AST.get_type()
+	# print("top",traverse(AST), reg_type)
 	f = g
 
 	if AST.is_leaf():		
@@ -330,45 +331,101 @@ def break_assembly(AST, g):
 				add_register(reg)	
 				return [move_reg, 'BINARY', 0]
 			
-			#handle this I was short on time
 			elif op=='<' or op =='>':
-				reg = min(free_registers)
-				free_registers.remove(min(free_registers))
+				
+				# print(traverse(AST), reg_type)
+				# print(reg_used_l)
+				# print(reg_used_r)
+				if is_int_register(reg_used_l):
+					reg = get_free_register(reg_type)
+					if op=='<':
+						f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
+					else:
+						f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_r + ', ' + reg_used_l+ '\n')
 
-				if op=='<':
-					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
+					add_register(reg_used_l)
+					add_register(reg_used_r)
+
+					move_reg = min(free_registers)
+					free_registers.remove(min(free_registers))
+
+					f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
+					free_registers.add(reg)
+					return [move_reg, 'BINARY', 0]
+
 				else:
-					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_r + ', ' + reg_used_l+ '\n')
+					if op=='<':
+						f.write('\t'+ get_operation[op+'f'] + reg_used_l + ', ' + reg_used_r+ '\n')
+					else:
+						f.write('\t'+ get_operation[op+'f'] + reg_used_r + ', ' + reg_used_l+ '\n')
 
-				free_registers.add(reg_used_l)
-				free_registers.add(reg_used_r)
+					add_register(reg_used_l)
+					add_register(reg_used_r)
 
-				move_reg = min(free_registers)
-				free_registers.remove(min(free_registers))
+					f.write('\tbc1f L_CondFalse_0\n') 
 
-				f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
-				free_registers.add(reg)
-				return [move_reg, 'BINARY', 0]
+					reg = get_free_register(['int', 0])
+					f.write('\tli '+ reg +', 1\n')
+					f.write('\tj L_CondEnd_0\n')
+					f.write('L_CondFalse_0:\n')
+					f.write('\tli '+ reg +', 0\n')
+					f.write('L_CondEnd_0:\n')
+					
+					move_reg = get_free_register(reg_type)
 
-			#handle this I was short on time
+					if is_int_register(move_reg):
+						f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
+					else:
+						f.write('\tmov.s ' + move_reg + ', ' + reg+ '\n')
+					
+					free_registers.add(reg)
+					return [move_reg, 'BINARY', 0]
+				
 			elif op=='<=' or op=='>=':
-				reg = min(free_registers)
-				free_registers.remove(min(free_registers))
+				if is_int_register(reg_used_l):
 
-				if op=='<=':
-					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
+					if op=='<=':
+						f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
+					else:
+						f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_r + ', ' + reg_used_l+ '\n')
+					free_registers.add(reg_used_l)
+					free_registers.add(reg_used_r)
+
+					move_reg = min(free_registers)
+					free_registers.remove(min(free_registers))
+
+					f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
+					free_registers.add(reg)
+
+					return [move_reg, 'BINARY', 0]
+
 				else:
-					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_r + ', ' + reg_used_l+ '\n')
-				free_registers.add(reg_used_l)
-				free_registers.add(reg_used_r)
+					if op=='<=':
+						f.write('\t'+ get_operation[op+'f'] + reg_used_l + ', ' + reg_used_r+ '\n')
+					else:
+						f.write('\t'+ get_operation[op+'f'] + reg_used_r + ', ' + reg_used_l+ '\n')
 
-				move_reg = min(free_registers)
-				free_registers.remove(min(free_registers))
+					add_register(reg_used_l)
+					add_register(reg_used_r)
 
-				f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
-				free_registers.add(reg)
+					f.write('\tbc1f L_CondFalse_0\n') 
 
-				return [move_reg, 'BINARY', 0]
+					reg = get_free_register(['int', 0])
+					f.write('\tli '+ reg +', 1\n')
+					f.write('\tj L_CondEnd_0\n')
+					f.write('L_CondFalse_0:\n')
+					f.write('\tli '+ reg +', 0\n')
+					f.write('L_CondEnd_0:\n')
+					
+					move_reg = get_free_register(reg_type)
+
+					if is_int_register(move_reg):
+						f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
+					else:
+						f.write('\tmov.s ' + move_reg + ', ' + reg+ '\n')
+					
+					free_registers.add(reg)
+					return [move_reg, 'BINARY', 0]	
 
 
 get_operation = {
@@ -380,8 +437,12 @@ get_operation = {
 	'OR':	'or ',
 	'>':	'slt ',
 	'<':	'slt ',
+	'>f':	'c.lt.s ',
+	'<f':	'c.lt.s ',
 	'>=':	'sle ',
 	'<=':	'sle ',
+	'>=f':	'c.le.s ',
+	'<=f':	'c.le.s ',
 	'==':	'seq ',
 	'!=':	'sne '
 }
@@ -417,6 +478,7 @@ def is_int_register(reg):
 
 
 # -----------------------   HOPEFULLY HANDLED THE PART BELOW THIS --------------# 
+# -----------------------   THIS PART WAS NOT HANDLED PROPERLY, SO YOU HAVE LET ME DOWN   -------------------------#
 
 #negation is a unary operator , the value stored in reg is to be negated
 def handle_uminus(reg):
@@ -559,13 +621,10 @@ def handle_function_call(fn_AST,indirection):
 			reg_used = reg_arg
 		if arg_offset_on_stack!=0:
 			if is_int_register(reg_used):
-				# f.write('\tfunction_call\n')
 				f.write("\tsw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")
 			else:
 				f.write("\ts.s " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")				
 		else:
-			# f.write('\tfunction_call again\n')
-
 			if is_int_register(reg_used):
 				f.write("\tsw " + reg_used + ", " + str(arg_offset_on_stack) + "($sp)\n")
 			else:
@@ -608,104 +667,3 @@ def handle_function_call(fn_AST,indirection):
 		return reg
 
 	return
-
-# def parse_exp(exp): #returns [result,operand1,operator,operand2] #operand1 is a tuple (num_stars,& present or not,id/number/fn_call)
-# 					# for unary operators no op 
-# 	l = exp.split('=')
-# 	result = l[0].rsplit()
-# 	for op in binary_operators:
-# 		if op in l[1]:
-# 			l = l[1].split(op)
-# 			operand1 = l[0].rsplit()
-# 			operand2 = l[0].rsplit()
-# 			operator = op
-# 			return [p(result),p(operand1),operator,p(operand2)]
-# 	operand1 = l[1].rsplit()
-# 	return [p(result),p(operand1)]
-
-# #constructs the tuple required in earlier function
-# def p(operand):
-# 	# print(operand)
-# 	num_stars = len([x for x in operand if x=='*'])
-# 	ampersand_present = '&' in operand
-# 	base_id = ''.join([x for x in operand if (x!='*' and x!='&')])
-# 	operand = tuple((num_stars,ampersand_present,base_id))
-
-
-# def three_address_to_assembly(exp,f):
-# 	f.write(exp+'\n')
-	# print(exp)
-	#l = parse_exp(exp)
-	# if len(l)==4:
-
-	# elif len(l)==2:
-			
-
-	# global local_vars,prev_line_offset,prev_identifier
-	# if AST.is_leaf():		
-	# 	# To handle the case of function call (Again this needs to be changed to convert it into the three variable form)
-	# 	reg = free_registers.pop()	
-	# 	if AST.get_var_type() == 'FUNCTION_CALL':
-	# 		#return [AST.get_fn_call_expression(),None,[]]		
-	# 		print('yay')
-	# 	elif AST.get_var_type() == 'CONSTANT':		
-	# 		f.write("\tli "+reg+", "+str(AST.get_identifier())+"\n")
-	# 	elif AST.get_var_type() == 'IDENTIFIER':
-	# 		value = AST.get_identifier()
-	# 		if local_vars.has_key(value):
-	# 			prev_line_offset = f.tell()
-	# 			prev_ = value
-	# 			f.write("\t lw "+reg+", "+str(local_vars[value])+'($sp)'+"\n")
-	# 		elif value in global_vars:
-	# 			f.write("\t lw "+reg+", "+'global_'+value+"\n")
-	# 		else:
-	# 			f.write("ERROR : YOU HAVE MESSED UP"+"\n")				
-	# 	return reg		
-	# else:	
-	# 	[op,op_type] = AST.get_op_details()
-	# 	op = str(op)
-
-	# 	if op_type=='UNARY':
-	# 		[lchild,rchild] = AST.get_children()
-	# 		l_register = break_expression(lchild,f)
-	# 		reg = free_registers.pop()
-	# 		if op == '*':
-	# 			f.write("\t lw "+reg+", "+str(0)+"("+l_register+")")
-	# 		elif op == '&':
-	# 			free_registers.add(l_register)
-	# 			reg = free_registers.pop()
-	# 			f.seek(prev_line_offset)
-	# 			f.write("\t addi "+reg+", "+"$sp"+str(local_vars[prev_identifier]))
-	# 		if op == '-':
-	# 			if idx is None:
-	# 				e1.append('t'+str(index+1)+' = -' + variable)
-	# 				return ['t'+str(index+1),index+1,e1]
-	# 			else:
-	# 				e1.append('t'+str(idx+1)+' = -'+variable)
-	# 				return ['t'+str(idx+1),idx+1,e1]
-	# 		elif op == '!':
-	# 			e1.append('t'+str(idx+1)+' = !'+variable)
-	# 			return ['t'+str(idx+1),idx+1,e1]		
-	# 		else:	
-	# 			return [op + variable,None,e1]
-	# 	elif op_type=='BINARY':
-	# 		[lchild,rchild] = AST.get_children()
-	# 		[variable1,index1,e1] = break_expression(lchild,index)	
-	# 		if index1 is None:
-	# 			idx = index
-	# 		else:
-	# 			idx = index1
-
-	# 		ridx = idx
-	# 		[variable2,index2,e2] = break_expression(rchild,ridx)
-			
-	# 		if index2 is not None:
-	# 			idx = index2
-
-	# 		e1 = e1 + e2
-	# 		if op == '=':
-	# 			e1.append(variable1 + ' = ' + variable2)
-	# 			return [None,idx,e1]
-	# 		else:
-	# 			e1.append('t'+str(idx+1)+ ' = '+ variable1 + ' ' + op + ' ' + variable2)	
-	# 			return ['t'+str(idx+1),idx+1,e1]
