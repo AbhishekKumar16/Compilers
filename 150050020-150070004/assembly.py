@@ -10,7 +10,10 @@ global_vars = set()
 def print_fn_epilogue(fn_name,f, is_return,return_reg):
 	global free_registers
 	if is_return:
-		f.write("\tmove $v1, " + return_reg + " # move return value to $v1\n")
+		if is_int_register(return_reg):
+			f.write("\tmove $v1, " + return_reg + " # move return value to $v1\n")
+		else:
+			f.write("\tmov.s $f0, " + return_reg + " # move return value to $f0\n")
 		free_registers.add(return_reg)
 	f.write("\tj epilogue_" + fn_name+"\n")
 	f.write("\n# Epilogue begins\n")
@@ -145,10 +148,9 @@ def print_assembly_code(g_table,root,f):
 					elif type_passed == 'FUNCTION_CALL':
 						reg = handle_function_call(reg_used,indirection)
 					else:	
-						reg = reg_used
-
+						reg = reg_used					
 					print_fn_epilogue(fn_name,f, True,reg)
-					free_registers.add(reg_used)					
+					add_register(reg_used)
 				else:
 					print_fn_epilogue(fn_name,f, False,None)
 				continue
@@ -162,7 +164,7 @@ def print_assembly_code(g_table,root,f):
 
 				[reg_used, type_passed, indirection] = break_assembly(ASTs, f)
 				if reg_used is not None:
-					free_registers.add(reg_used)
+					add_register(reg_used)
 
 			if lchild == 'End' or rchild == 'End':
 				f.write('\tj label' + str(len(cfg_buckets)+1) + '\n')
@@ -187,7 +189,7 @@ reg_type = None
 # Given an AST for an expression and the start index, it breaks it into three code form
 def break_assembly(AST, g):
 	global f
-	global free_registers, var_dictionary, global_vars
+	global free_registers, var_dictionary, global_vars,free_float_registers
 	global reg_type
 	reg_type = AST.get_type()
 	f = g
@@ -227,8 +229,7 @@ def break_assembly(AST, g):
 					reg = reg_used
 				return handle_uminus(reg_used)
 			elif op == '!':
-				reg = min(free_registers)
-				free_registers.remove(min(free_registers))
+				reg = get_free_register(reg_type)
 
 				f.write('\tnot '+ reg +', '+ reg_used +'\n')
 				free_registers.add(reg_used)
@@ -276,18 +277,28 @@ def break_assembly(AST, g):
 
 			if op == '=':
 				[address,reg_used_l] = handle_assignment_identifier(reg_used_l,indirection_l)
-				f.write('\tsw ' + reg_used_r + ', ' + address + '\n')
+				if is_int_register(reg_used_r):
+					f.write('\tsw ' + reg_used_r + ', ' + address + '\n')
+				else:
+					f.write('\ts.s ' + reg_used_r + ', ' + address + '\n')
+
 				if reg_used_l is not None:
-					free_registers.add(reg_used_l)
-				free_registers.add(reg_used_r)
+					add_register(reg_used_l)
+				add_register(reg_used_r)
 				return [None, 'VOID', 0]
 
+			#handle this I was short on time
 			elif op == '/':
-				f.write('\t'+ get_operation[op] + reg_used_l + ', ' + reg_used_r+ '\n')
-				reg = min(free_registers)
-				free_registers.remove(min(free_registers))
+				if is_int_register(reg_used_l):
+					f.write('\t'+ get_operation[op] + reg_used_l + ', ' + reg_used_r+ '\n')
+				else:
+					f.write('\t'+ get_operation[op] + '.s' + reg_used_l + ', ' + reg_used_r+ '\n')
 
-				f.write('\tmflo ' + reg + '\n')
+				reg = get_free_register(reg_type)
+
+				if is_int_register(reg):					
+					f.write('\tmflo ' + reg + '\n')
+
 				free_registers.add(reg_used_l)
 				free_registers.add(reg_used_r)
 				
@@ -299,22 +310,27 @@ def break_assembly(AST, g):
 				return [move_reg, 'BINARY', 0]
 			
 			elif op == '+' or op == '-' or op == '*' or op == 'AND' or op == 'OR' or op == '==' or op == '!=':
-				reg = min(free_registers)
-				free_registers.remove(min(free_registers))
-
-
-				f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
+				reg = get_free_register(reg_type)
 				
-				free_registers.add(reg_used_l)
-				free_registers.add(reg_used_r)
+				if is_int_register(reg):
+					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
+				else:
+					f.write('\t'+ get_operation[op] + '.s' + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
 
-				move_reg = min(free_registers)
-				free_registers.remove(min(free_registers))
+				add_register(reg_used_l)
+				add_register(reg_used_r)
 
-				f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
-				free_registers.add(reg)
+				move_reg = get_free_register(reg_type)
+
+				if is_int_register(move_reg):
+					f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
+				else:
+					f.write('\tmov.s ' + move_reg + ', ' + reg+ '\n')
+
+				add_register(reg)	
 				return [move_reg, 'BINARY', 0]
-		
+			
+			#handle this I was short on time
 			elif op=='<' or op =='>':
 				reg = min(free_registers)
 				free_registers.remove(min(free_registers))
@@ -334,6 +350,7 @@ def break_assembly(AST, g):
 				free_registers.add(reg)
 				return [move_reg, 'BINARY', 0]
 
+			#handle this I was short on time
 			elif op=='<=' or op=='>=':
 				reg = min(free_registers)
 				free_registers.remove(min(free_registers))
@@ -375,60 +392,6 @@ get_operation = {
 	'!=':	'sne '
 }
 
-#negation is a unary operator , the value stored in reg is to be negated
-def handle_uminus(reg):
-	global free_registers,f
-	new_reg = min(free_registers)
-	free_registers.remove(min(free_registers))
-
-	f.write('\tnegu ' + new_reg + ', ' + reg+ '\n')
-	free_registers.add(reg)
-
-	move_reg = min(free_registers)
-	free_registers.remove(min(free_registers))
-
-	f.write('\tmove ' + move_reg + ', ' + new_reg+ '\n')
-	free_registers.add(new_reg)
-	return [new_reg, 'EXPRESSION', 0]
-
-#the argument number is to be loaded into a register
-#return value is the register used for this purpose
-def handle_constant(number,num_type):
-	global free_registers,f
-	
-	if num_type == 'int':
-		reg_used = min(free_registers)
-		free_registers.remove(reg_used)
-		f.write('\tli '+reg_used+', '+str(number)+'\n')
-	elif num_type == 'float':
-		reg_used = min(free_float_registers)
-		free_float_registers.remove(reg_used)
-		f.write('\tli.s '+reg_used+', '+str(number)+'\n')
-	return reg_used
-
-#case where we have **p = rhs
-def handle_assignment_identifier(identifier,indirection):
-	global free_registers,f
-	if identifier in var_dictionary:
-		address = str(var_dictionary[identifier])+'($sp)'
-	else:
-		address = 'global_'+identifier
-
-	if indirection == 0:
-		return [address,None]
-	else:
-		reg = min(free_registers)
-		free_registers.remove(min(free_registers))
-		f.write('\tlw '+reg+', '+address+'\n')
-		for i in range(indirection-1):
-			new_reg = min(free_registers)
-			free_registers.remove(min(free_registers))
-			f.write('\tlw '+new_reg+', 0('+reg+')\n')
-			free_registers.add(reg)
-			reg = new_reg
-		address = '0('+reg+')'		
-		return [address,reg]
-
 
 #returns if free_register to be used or free_float_registers to be used
 def get_free_register(arg_reg_type):
@@ -458,6 +421,71 @@ def is_int_register(reg):
 		return False
 	return True
 
+
+# -----------------------   HOPEFULLY HANDLED THE PART BELOW THIS --------------# 
+
+#negation is a unary operator , the value stored in reg is to be negated
+def handle_uminus(reg):
+	global reg_type,f
+	new_reg = get_free_register(reg_type)
+	if is_int_register(new_reg):
+		f.write('\tnegu ' + new_reg + ', ' + reg+ '\n')
+	else:
+		f.write('\tneg.s ' + new_reg + ', ' + reg+ '\n')		
+	add_register(reg)
+
+	move_reg = get_free_register(reg_type)
+
+	if is_int_register(new_reg):
+		f.write('\tmove ' + move_reg + ', ' + new_reg+ '\n')
+	else:
+		f.write('\tmov.s ' + move_reg + ', ' + new_reg+ '\n')		
+	add_register(new_reg)
+	return [new_reg, 'EXPRESSION', 0]
+
+#the argument number is to be loaded into a register
+#return value is the register used for this purpose
+def handle_constant(number,num_type):
+	global f
+	
+	if num_type == 'int':
+		reg_used = get_free_register([num_type,0])		
+		f.write('\tli '+reg_used+', '+str(number)+'\n')
+	elif num_type == 'float':
+		reg_used = get_free_register([num_type,0])
+		f.write('\tli.s '+reg_used+', '+str(number)+'\n')
+	return reg_used
+
+#case where we have **p = rhs
+def handle_assignment_identifier(identifier,indirection):
+	global reg_type,f
+	if identifier in var_dictionary:
+		address = str(var_dictionary[identifier])+'($sp)'
+	else:
+		address = 'global_'+identifier
+
+	if indirection == 0:
+		return [address,None]
+	else:
+		current_type = [reg_type[0],reg_type[1]+indirection]
+		reg = get_free_register(current_type)
+		if is_int_register(reg):
+			f.write('\tlw '+reg+', '+address+'\n')
+		else:
+			f.write('\tl.s '+reg+', '+address+'\n')			
+
+		for i in range(indirection-1):
+			current_type = [current_type[0],current_type[1]-1]	
+			new_reg = get_free_register(current_type)		
+
+			if is_int_register(new_reg):
+				f.write('\tlw '+new_reg+', 0('+reg+')\n')
+			else:
+				f.write('\tl.s '+new_reg+', 0('+reg+')\n')				
+			add_register(reg)
+			reg = new_reg
+		address = '0('+reg+')'		
+		return [address,reg]
 
 #the argument **p is to be loaded from stack
 #return value is the final register in which the value **p is stored
@@ -507,7 +535,7 @@ def handle_identifier(identifier,indirection):
 #argument is the AST of the function call
 #so we have ***f(e1,e2,...en) to be handled
 def handle_function_call(fn_AST,indirection):	
-	global free_registers,f,reg_type
+	global f,reg_type
 	[fn_name,_,return_type,_,arg_list] = fn_AST.get_fn_leaf_details() 
 	arg_width = get_width_fn_arguments(fn_name)
 	f.write("\t# setting up activation record for called function\n")
@@ -537,11 +565,17 @@ def handle_function_call(fn_AST,indirection):
 		else:
 			reg_used = reg_arg
 		if arg_offset_on_stack!=0:
-			f.write("\tsw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")
+			if is_int_register(reg_used):
+				f.write("\tsw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")
+			else:
+				f.write("\ts.s " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")				
 		else:
-			f.write("\tsw " + reg_used + ", " + str(arg_offset_on_stack) + "($sp)\n")
+			if is_int_register(reg_used):
+				f.write("\tsw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")
+			else:
+				f.write("\ts.s " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")				
 
-		free_registers.add(reg_used)
+		add_register(reg_used)
 
 	#ARGUMENTS PUSHED ONTO STACK
 	
@@ -555,15 +589,25 @@ def handle_function_call(fn_AST,indirection):
 	f.write("\tadd $sp, $sp, " + str(sum(arg_width)) + " # destroying activation record of called function\n") 
 	
 	if return_type[0] != 'void':
-		reg = min(free_registers)
-		free_registers.remove(reg)
-		f.write("\tmove " + reg + ", $v1 # using the return value of called function\n")
-		for i in range(indirection):
-			new_reg = min(free_registers)
-			free_registers.remove(min(free_registers))
+		reg = get_free_register(return_type)
+		print("hello",return_type, reg_type)
+		
+		current_type = return_type
 
-			f.write('\tlw '+new_reg+', 0('+reg+')\n')
-			free_registers.add(reg)
+		if is_int_register(reg):
+			f.write("\tmove " + reg + ", $v1 # using the return value of called function\n")
+		else:
+			f.write("\tmov.s " + reg + ", $f0 # using the return value of called function\n")
+
+		for i in range(indirection):
+			current_type = [current_type[0],current_type[1]-1]
+			new_reg = get_free_register(current_type)
+
+			if is_int_register(new_reg):
+				f.write('\tlw '+new_reg+', 0('+reg+')\n')
+			else:
+				f.write('\tlw '+new_reg+', 0('+reg+')\n')
+			add_register(reg)				
 			reg = new_reg
 		return reg
 

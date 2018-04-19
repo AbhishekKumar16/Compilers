@@ -1,0 +1,167 @@
+
+
+FUNCTION f
+PARAMS (float a,int b)
+RETURNS float
+	ASGN
+	(
+		VAR(c)
+		,
+		ADDR
+		(
+			VAR(m)
+		)
+	)
+	ASGN
+	(
+		VAR(p)
+		,
+		UMINUS
+		(
+			VAR(p)
+		)
+	)
+RETURN 
+(
+	DEREF
+	(
+		VAR(p)
+	)
+)
+
+
+
+
+
+
+
+Function Main
+PARAMS() 
+RETURNS void
+	ASGN
+	(
+		VAR(px)
+		,
+		ADDR
+		(
+			VAR(x)
+		)
+	)
+	ASGN
+	(
+		VAR(py)
+		,
+		ADDR
+		(
+			VAR(y)
+		)
+	)
+	ASGN
+	(
+		DEREF
+		(
+			DEREF
+			(
+				DEREF
+				(
+					VAR(q)
+				)
+			)
+		)
+		,
+		CONST(2.0)
+	)
+	ASGN
+	(
+		DEREF
+		(
+			VAR(py)
+		)
+		,
+		CONST(3)
+	)
+	ASGN
+	(
+		DEREF
+		(
+			VAR(px)
+		)
+		,
+		PLUS
+		(
+			DEREF
+			(
+				VAR(px)
+			)
+			,
+			DEREF
+			(
+				VAR(py)
+			)
+		)
+	)
+	ASGN
+	(
+		DEREF
+		(
+			DEREF
+			(
+				DEREF
+				(
+					VAR(q)
+				)
+			)
+		)
+		,
+		PLUS
+		(
+			DEREF
+			(
+				VAR(p1)
+			)
+			,
+			DIV
+			(
+				DEREF
+				(
+					VAR(p1)
+				)
+				,
+				DEREF
+				(
+					VAR(p1)
+				)
+			)
+		)
+	)
+	ASGN
+	(
+		DEREF
+		(
+			DEREF
+			(
+				DEREF
+				(
+					VAR(q)
+				)
+			)
+		)
+		,
+		CALL f( 
+			DEREF
+			(
+				DEREF
+				(
+					DEREF
+					(
+						VAR(q)
+					)
+				)
+			)
+			,
+			DEREF
+			(
+				VAR(py)
+			)
+		 )
+	)

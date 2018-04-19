@@ -1,20 +1,25 @@
 int *d;
-
-int* f(int a, int b)
+float *p1;
+float f(float a, int b)
 {
 	int *c,m;
+	float *p;
         c=&m;
-	return c;
+        p = -p;
+	return *p;
 }
 
 
 void main(){
 	
 	int x ,y, *px, *py;
+	float ***q;
         px = &x;
         py= &y;
-        *px= 2;
+        ***q= 2.0;
         *py = 3;
-	d = f(*px,*py);
+    *px = *px + *py;
+   	***q = *p1 + *p1 / *p1;
+	***q = f(***q,*py);
 
 }
