@@ -11,20 +11,21 @@ class variable:
 	def __init__(self,identifier):#,var_type,num_pointer,arg_list):
 		self.name = identifier
 		self.type = None
-		self.pointer_depth = None
-		self.width = 4	
+		self.pointer_depth = 0
+		self.width = 4
 		self.scope = None
 		self.flag = False
 		
 	def set_type(self,var_type):
 		self.type = var_type
-		if self.width!=8:
+		if self.pointer_depth==0:
 			self.width = type_width[var_type]
 		
 	def set_pointer_depth(self,pointer_depth):
 		self.pointer_depth = pointer_depth
 		if pointer_depth!=0:
 			self.width = type_width['pointer']
+
 
 	def set_scope(self,scope):
 		self.scope = scope
@@ -157,8 +158,8 @@ def print_symbol_table(table,f):
 			local_vars = fn_table.get_variables()
 			local_vars.sort(key = lambda x:x.get_identifier())
 			for var in local_vars:#info about parameters and variables local to the function
-				[var_name,var_type,var_pointer_depth,_,_] = var.get_attributes()
-				print(var_name,'\t\t|','\tprocedure ',fn.get_identifier(),'\t|\t',var_type,'\t|\t',end='',file=f)
+				[var_name,var_type,var_pointer_depth,__,_] = var.get_attributes()
+				print(var_name,'\t\t|','\tprocedure ',fn.get_identifier(),'\t|\t',var_type, __, '\t|\t',end='',file=f)
 				print_stars(var_pointer_depth,f)
 				print('',file=f)
 				# print('\n',file=f)

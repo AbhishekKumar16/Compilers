@@ -165,6 +165,7 @@ def print_assembly_code(g_table,root,f):
 
 
 free_registers = set()
+free_float_registers = set()
 
 width = {
 	'int' : 4,
@@ -203,7 +204,7 @@ def break_assembly(AST, g):
 			
 			if op == '-':
 				if type_passed == 'CONSTANT':
-					reg= handle_constant(reg_used,indirection)										
+					reg = handle_constant(reg_used,indirection)										
 				elif type_passed == 'IDENTIFIER':
 					identifier = reg_used
 					reg = handle_identifier(identifier,indirection)										
@@ -211,7 +212,7 @@ def break_assembly(AST, g):
 					reg = handle_function_call(reg_used,indirection)
 				else:	
 					reg = reg_used
-				return handle_negation(reg_used)
+				return handle_uminus(reg_used)
 			elif op == '!':
 				reg = min(free_registers)
 				free_registers.remove(min(free_registers))
@@ -361,7 +362,7 @@ get_operation = {
 }
 
 #negation is a unary operator , the value stored in reg is to be negated
-def handle_negation(reg):
+def handle_uminus(reg):
 	global free_registers,f
 	new_reg = min(free_registers)
 	free_registers.remove(min(free_registers))
@@ -380,12 +381,14 @@ def handle_negation(reg):
 #return value is the register used for this purpose
 def handle_constant(number,num_type):
 	global free_registers,f
-	reg_used = min(free_registers)
-	free_registers.remove(reg_used)
 	
 	if num_type == 'int':
+		reg_used = min(free_registers)
+		free_registers.remove(reg_used)
 		f.write('\tli '+reg_used+', '+str(number)+'\n')
-	elif AST.get_type()[0] == 'float':
+	elif num_type == 'float':
+		reg_used = min(free_float_registers)
+		free_float_registers.remove(reg_used)
 		f.write('\tli.s '+reg_used+', '+str(number)+'\n')
 	return reg_used
 
@@ -451,7 +454,7 @@ def handle_function_call(fn_AST,indirection):
 	global free_registers,f
 	[fn_name,_,return_type,_,arg_list] = fn_AST.get_fn_leaf_details() 
 	arg_width = get_width_fn_arguments(fn_name)
-	f.write("\t# setting up activation record for called function \n")
+	f.write("\t# setting up activation record for called function\n")
 
 	arg_offset_on_stack = sum(arg_width)	
 	i = 0	
@@ -469,17 +472,19 @@ def handle_function_call(fn_AST,indirection):
 		if type_passed_arg == 'CONSTANT':
 			reg_used = handle_constant(reg_arg,arg_type)
 		elif type_passed_arg == 'IDENTIFIER':
-			print(indirection_arg)
-			if indirection_arg==0:
-				reg_used = handle_identifier(arg_reg[1],0)#indirection = 0
-			else:
-				reg_used = handle_identifier(reg_arg,indirection_arg)							
+			reg_used = handle_identifier(reg_arg,indirection_arg)
+			# if indirection_arg==0:
+			# 	reg_used = handle_identifier(reg_arg,0)#indirection = 0
+			# else:
 		elif type_passed_arg == 'FUNCTION_CALL':			
 			reg_used = handle_function_call(reg_arg,indirection_arg)
 		else:
 			reg_used = reg_arg
-		
-		f.write("\tsw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp) \n")
+		if arg_offset_on_stack!=0:
+			f.write("\tsw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")
+		else:
+			f.write("\tsw " + reg_used + ", " + str(arg_offset_on_stack) + "($sp)\n")
+
 		free_registers.add(reg_used)
 
 	#ARGUMENTS PUSHED ONTO STACK
@@ -488,7 +493,7 @@ def handle_function_call(fn_AST,indirection):
 
 	#NOW JUMP TO FUNCTION 
 
-	f.write("\tjal " + fn_name + " # function call \n")
+	f.write("\tjal " + fn_name + " # function call\n")
 
 	#FUNCTION CALL EPILOGUE (CLEARING ARGUMENTS AND USING RETURN VALUE)
 	f.write("\tadd $sp, $sp, " + str(sum(arg_width)) + " # destroying activation record of called function\n") 
@@ -496,7 +501,7 @@ def handle_function_call(fn_AST,indirection):
 	if return_type[0] != 'void':
 		reg = min(free_registers)
 		free_registers.remove(reg)
-		f.write("\tmove " + reg + ", $v1 # using the return value of called function \n")
+		f.write("\tmove " + reg + ", $v1 # using the return value of called function\n")
 		for i in range(indirection):
 			new_reg = min(free_registers)
 			free_registers.remove(min(free_registers))

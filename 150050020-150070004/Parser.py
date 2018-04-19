@@ -928,6 +928,16 @@ if __name__ == "__main__":
 	with open(sys.argv[1]+'.s','w') as f:
 		f.write('\n')
 		f.write('\t.data\n')
+		global_vars = [x for x in global_symbol_table.get_variables() if not x.get_flag()]
+		global_vars.sort(key = lambda x:x.get_identifier())
+		for x in global_vars:
+			if x.get_width()==4:
+				f.write('global_'+x.get_identifier()+':\t.word\t0\n')
+			else:
+				f.write('global_'+x.get_identifier()+':\t.space\t8\n')
+
 		f.write('\n')
+
+
 		print_assembly_code(global_symbol_table,rt,f)
-	# global_symbol_table.print_symbol_table()
+	
