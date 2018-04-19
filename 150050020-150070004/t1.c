@@ -1,5 +1,4 @@
 int d;
-int dd;
 
 int* f(int x, int *y);
 

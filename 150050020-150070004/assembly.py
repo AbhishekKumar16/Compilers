@@ -231,7 +231,7 @@ def break_assembly(AST, g):
 			elif op == '!':
 				reg = get_free_register(reg_type)
 
-				f.write('\tnot '+ reg +', '+ reg_used +'\n')
+				f.write('\txori '+ reg +', '+ reg_used + ', 1' +'\n')
 				free_registers.add(reg_used)
 
 				move_reg = min(free_registers)
@@ -356,24 +356,18 @@ def break_assembly(AST, g):
 				free_registers.remove(min(free_registers))
 
 				if op=='<=':
-					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_r + ', ' + reg_used_l+ '\n')
-				else:
 					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
+				else:
+					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_r + ', ' + reg_used_l+ '\n')
 				free_registers.add(reg_used_l)
 				free_registers.add(reg_used_r)
-
-				not_reg = min(free_registers)
-				free_registers.remove(min(free_registers))
-
-				f.write('\tnot ' + not_reg + ',' + reg + '\n')
-
-				free_registers.add(reg)
 
 				move_reg = min(free_registers)
 				free_registers.remove(min(free_registers))
 
-				f.write('\tmove ' + move_reg + ', ' + not_reg+ '\n')
-				free_registers.add(not_reg)
+				f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
+				free_registers.add(reg)
+
 				return [move_reg, 'BINARY', 0]
 
 
@@ -386,8 +380,8 @@ get_operation = {
 	'OR':	'or ',
 	'>':	'slt ',
 	'<':	'slt ',
-	'>=':	'slt ',
-	'<=':	'slt ',
+	'>=':	'sle ',
+	'<=':	'sle ',
 	'==':	'seq ',
 	'!=':	'sne '
 }
@@ -492,8 +486,9 @@ def handle_assignment_identifier(identifier,indirection):
 def handle_identifier(identifier,indirection):
 	global free_registers,f,reg_type
 	
-	current_type = [reg_type[0],reg_type[1]+indirection]
+	current_type = [reg_type[0],reg_type[1]]
 
+	# f.write('type:::' + str(reg_type[0]) + ', ' + str(reg_type[1]) + ':::'+ str(current_type) + '\n')
 	reg = get_free_register(current_type)
 	
 	if identifier in var_dictionary:
@@ -518,7 +513,7 @@ def handle_identifier(identifier,indirection):
 	if indirection >= 0:
 		for i in range(indirection):
 			current_type = [current_type[0],current_type[1]-1]
-
+			# f.write('Current_type' + str(current_type))
 			new_reg = get_free_register(current_type)
 
 			if is_int_register(new_reg):
@@ -544,7 +539,6 @@ def handle_function_call(fn_AST,indirection):
 	i = 0	
 
 	for arg_AST in arg_list:
-		
 		arg_offset_on_stack -= arg_width[i]
 		if arg_width[i]==4:
 			arg_type = 'int'
@@ -553,27 +547,29 @@ def handle_function_call(fn_AST,indirection):
 		i+=1
 
 		[reg_arg,type_passed_arg,indirection_arg] = break_assembly(arg_AST,f)
+		# f.write(traverse(arg_AST) + str(arg_width) + type_passed_arg +'\n' )
 		if type_passed_arg == 'CONSTANT':
 			reg_used = handle_constant(reg_arg,arg_type)
 		elif type_passed_arg == 'IDENTIFIER':
 			reg_used = handle_identifier(reg_arg,indirection_arg)
-			# if indirection_arg==0:
-			# 	reg_used = handle_identifier(reg_arg,0)#indirection = 0
-			# else:
+
 		elif type_passed_arg == 'FUNCTION_CALL':			
 			reg_used = handle_function_call(reg_arg,indirection_arg)
 		else:
 			reg_used = reg_arg
 		if arg_offset_on_stack!=0:
 			if is_int_register(reg_used):
+				# f.write('\tfunction_call\n')
 				f.write("\tsw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")
 			else:
 				f.write("\ts.s " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")				
 		else:
+			# f.write('\tfunction_call again\n')
+
 			if is_int_register(reg_used):
-				f.write("\tsw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")
+				f.write("\tsw " + reg_used + ", " + str(arg_offset_on_stack) + "($sp)\n")
 			else:
-				f.write("\ts.s " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")				
+				f.write("\ts.s " + reg_used + ", " + str(arg_offset_on_stack) + "($sp)\n")				
 
 		add_register(reg_used)
 
@@ -590,7 +586,7 @@ def handle_function_call(fn_AST,indirection):
 	
 	if return_type[0] != 'void':
 		reg = get_free_register(return_type)
-		print("hello",return_type, reg_type)
+		# print("hello",return_type, reg_type)
 		
 		current_type = return_type
 

@@ -3,7 +3,7 @@ void main(){
 	int p;
 	ptr=&p;
 	*ptr = 5;
-	while(!(*ptr > 4)){
+	while(!(*ptr >= 4)){
 		*t=4;
 	}
 	
