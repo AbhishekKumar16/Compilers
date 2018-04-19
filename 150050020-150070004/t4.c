@@ -1,20 +1,22 @@
 int *d;
 
-int* f(int a, int b)
+float f(int a, int b)
 {
 	int *c,m;
         c=&m;
-	return c;
+	return 2.0;
 }
 
 
 void main(){
 	
 	int x ,y, *px, *py;
+	float *q;
         px = &x;
         py= &y;
         *px= 2;
         *py = 3;
-	d = f(*px,*py);
+
+	*q = f(*px,*py);
 
 }

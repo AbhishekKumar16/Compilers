@@ -58,11 +58,17 @@ def get_fn_locals(fn_name):
 
 
 def initialize():
-	global free_registers
+	global free_registers,free_float_registers,int_registers,float_registers
 	for i in range(8):
 		free_registers.add('$s'+str(i))
+		int_registers.add('$s'+str(i))
 	for i in range(10):
-		free_registers.add('$t'+str(i))		
+		free_registers.add('$t'+str(i))	
+		int_registers.add('$t'+str(i))		
+
+	for i in range(10,20,2):
+		free_float_registers.add('$f'+str(i))
+		float_registers.add('$f'+str(i))
 
 	global global_vars, assembly_symbol_table
 	global_vars = set([x.get_identifier() for x in assembly_symbol_table.get_variables() if not x.get_flag()])
@@ -166,6 +172,9 @@ def print_assembly_code(g_table,root,f):
 
 free_registers = set()
 free_float_registers = set()
+int_registers = set()
+float_registers = set()
+
 
 width = {
 	'int' : 4,
@@ -173,12 +182,16 @@ width = {
 }
 
 f = None
+reg_type = None
 
 # Given an AST for an expression and the start index, it breaks it into three code form
 def break_assembly(AST, g):
 	global f
 	global free_registers, var_dictionary, global_vars
+	global reg_type
+	reg_type = AST.get_type()
 	f = g
+
 	if AST.is_leaf():		
 		# To handle the case of function call (Again this needs to be changed to convert it into the three variable form)
 		if AST.get_var_type() == 'FUNCTION_CALL':
@@ -236,6 +249,7 @@ def break_assembly(AST, g):
 
 		elif op_type=='BINARY':
 			[lchild,rchild] = AST.get_children()
+
 			[reg_used_l, type_passed_l, indirection_l] = break_assembly(lchild, f)	
 			[reg_used_r, type_passed_r, indirection_r] = break_assembly(rchild, f)
 			if op != '=':	
@@ -415,34 +429,76 @@ def handle_assignment_identifier(identifier,indirection):
 		address = '0('+reg+')'		
 		return [address,reg]
 
+
+#returns if free_register to be used or free_float_registers to be used
+def get_free_register(arg_reg_type):
+	int_reg = True
+	if arg_reg_type[0]!='int' and arg_reg_type[1]==0:
+		int_reg = False
+	if int_reg:
+		reg = min(free_registers)
+		free_registers.remove(reg)
+	else:
+		reg = min(free_float_registers)
+		free_float_registers.remove(reg)
+	return reg
+
+#adds register reg to the set of free registers (int/float accordingly)
+def add_register(reg):
+
+	if is_int_register(reg):
+		free_registers.add(reg)
+	else:
+		free_float_registers.add(reg)
+
+
+#checks if register used is 4bytes or 8bytes
+def is_int_register(reg):
+	if reg in float_registers:
+		return False
+	return True
+
+
 #the argument **p is to be loaded from stack
 #return value is the final register in which the value **p is stored
 def handle_identifier(identifier,indirection):
-	global free_registers,f
-	reg = min(free_registers)
-	free_registers.remove(min(free_registers))
+	global free_registers,f,reg_type
+	
+	current_type = [reg_type[0],reg_type[1]+indirection]
+
+	reg = get_free_register(current_type)
 	
 	if identifier in var_dictionary:
 		offset = var_dictionary[identifier]
 		if indirection == -1:
 			f.write('\taddi ' + reg + ', $sp, ' + str(offset) + '\n')
 		else:
-			f.write('\tlw '+reg+', '+str(offset)+'($sp)'+'\n')
+			if is_int_register(reg): 
+				f.write('\tlw '+reg+', '+str(offset)+'($sp)'+'\n')
+			else:
+				f.write('\tl.s '+reg+', '+str(offset)+'($sp)'+'\n')
 
 	elif identifier in global_vars:
 		if indirection == -1:
 			f.write('\tla ' + reg + ', global_' + identifier + '\n')
 		else:
-			f.write('\tlw '+reg+', global_'+identifier+'\n')
+			if is_int_register(reg): 
+				f.write('\tlw '+reg+', global_'+identifier+'\n')
+			else:
+				f.write('\tl.s '+reg+', global_'+identifier+'\n')				
 
 	if indirection >= 0:
 		for i in range(indirection):
-			new_reg = min(free_registers)
-			free_registers.remove(min(free_registers))
+			current_type = [current_type[0],current_type[1]-1]
 
-			f.write('\tlw '+new_reg+', 0('+reg+')\n')
+			new_reg = get_free_register(current_type)
 
-			free_registers.add(reg)
+			if is_int_register(new_reg):
+				f.write('\tlw '+new_reg+', 0('+reg+')\n')
+			else:
+				f.write('\tl.s '+new_reg+', 0('+reg+')\n')				
+
+			add_register(reg)
 			reg = new_reg
 
 	return reg
@@ -451,7 +507,7 @@ def handle_identifier(identifier,indirection):
 #argument is the AST of the function call
 #so we have ***f(e1,e2,...en) to be handled
 def handle_function_call(fn_AST,indirection):	
-	global free_registers,f
+	global free_registers,f,reg_type
 	[fn_name,_,return_type,_,arg_list] = fn_AST.get_fn_leaf_details() 
 	arg_width = get_width_fn_arguments(fn_name)
 	f.write("\t# setting up activation record for called function\n")
