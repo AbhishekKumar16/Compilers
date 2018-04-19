@@ -290,25 +290,32 @@ def break_assembly(AST, g):
 
 			#handle this I was short on time
 			elif op == '/':
-				if is_int_register(reg_used_l):
-					f.write('\t'+ get_operation[op] + reg_used_l + ', ' + reg_used_r+ '\n')
-				else:
-					f.write('\t'+ get_operation[op] + '.s' + reg_used_l + ', ' + reg_used_r+ '\n')
-
-				reg = get_free_register(reg_type)
-
-				if is_int_register(reg):					
-					f.write('\tmflo ' + reg + '\n')
-
-				free_registers.add(reg_used_l)
-				free_registers.add(reg_used_r)
 				
-				move_reg = min(free_registers)
-				free_registers.remove(min(free_registers))
+				if is_int_register(reg_used_l):
+					reg = get_free_register(reg_type)
+					f.write('\t'+ get_operation[op] + reg_used_l + ', ' + reg_used_r+ '\n')
+					f.write('\tmflo ' + reg + '\n')
+				
+					add_register(reg_used_l)
+					add_register(reg_used_r)
+					
+					move_reg = get_free_register(reg_type)
+					f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
 
-				f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
-				free_registers.add(reg)
+				else:
+					reg = get_free_register(['float', 0])
+					f.write('\t'+ get_operation[op+'f'] + reg + ', '+ reg_used_l + ', ' + reg_used_r+ '\n')
+
+					add_register(reg_used_l)
+					add_register(reg_used_r)
+					
+					move_reg = get_free_register(['float', 0])
+
+					f.write('\tmov.s ' + move_reg + ', ' + reg+ '\n')
+
+				add_register(reg)
 				return [move_reg, 'BINARY', 0]
+			
 			
 			elif op == '+' or op == '-' or op == '*' or op == 'AND' or op == 'OR':
 				reg = get_free_register(reg_type)
@@ -487,6 +494,7 @@ get_operation = {
 	'-':	'sub ',
 	'*':	'mul ',
 	'/':	'div ',
+	'/f':	'div.s ',
 	'AND':	'and ',
 	'OR':	'or ',
 	'>':	'slt ',

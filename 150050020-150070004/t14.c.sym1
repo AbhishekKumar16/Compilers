@@ -6,6 +6,7 @@ Variable table :-
 -----------------------------------------------------------------
 Name	|	Scope	|	Base Type	|	Derived Type
 -----------------------------------------------------------------
+fl 		| 	procedure  main 	|	 float 8 	|	
 fx 		| 	procedure  main 	|	 float 4 	|	*
 fy 		| 	procedure  main 	|	 float 4 	|	*
 ppx 		| 	procedure  main 	|	 int 4 	|	**
@@ -15,5 +16,7 @@ py 		| 	procedure  main 	|	 int 4 	|	*
 x 		| 	procedure  main 	|	 int 4 	|	
 y 		| 	procedure  main 	|	 int 4 	|	
 d 		| 	procedure global 	|	 int 	|	*
+gfx 		| 	procedure global 	|	 float 	|	*
+gfy 		| 	procedure global 	|	 float 	|	*
 -----------------------------------------------------------------
 -----------------------------------------------------------------
