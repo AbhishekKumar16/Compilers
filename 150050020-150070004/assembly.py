@@ -91,7 +91,7 @@ def get_width_fn_arguments(f_id):
 def print_assembly_code(g_table,root,f):
 	global assembly_symbol_table
 	global cfg_buckets
-	global free_registers
+	global free_registers, int_registers, float_registers
 	assembly_symbol_table = g_table
 	create_dictionary(root)
 	initialize()
@@ -149,7 +149,11 @@ def print_assembly_code(g_table,root,f):
 					else:	
 						reg = reg_used					
 					print_fn_epilogue(fn_name,f, True,reg)
-					add_register(reg_used)
+					if reg_used in int_registers:
+						add_register(reg_used)
+					elif reg_used in float_registers:
+						add_register(reg_used)
+
 				else:
 					print_fn_epilogue(fn_name,f, False,None)
 				continue
@@ -215,7 +219,6 @@ def break_assembly(AST, g):
 		op = str(op)
 
 		if op_type=='UNARY':
-
 			[lchild,rchild] = AST.get_children()
 			[reg_used, type_passed, indirection] = break_assembly(lchild, f)
 			
@@ -229,7 +232,7 @@ def break_assembly(AST, g):
 					reg = handle_function_call(reg_used,indirection)
 				else:	
 					reg = reg_used
-				return handle_uminus(reg_used)
+				return handle_uminus(reg)
 			elif op == '!':
 				reg = get_free_register(reg_type)
 
@@ -580,7 +583,7 @@ def handle_uminus(reg):
 	else:
 		f.write('\tmov.s ' + move_reg + ', ' + new_reg+ '\n')		
 	add_register(new_reg)
-	return [new_reg, 'EXPRESSION', 0]
+	return [move_reg, 'EXPRESSION', 0]
 
 #the argument number is to be loaded into a register
 #return value is the register used for this purpose
@@ -633,8 +636,8 @@ def handle_identifier(identifier,indirection):
 	
 	current_type = [reg_type[0],reg_type[1]]
 
+	# print("identifier ", reg_type, identifier, free_registers)
 	reg = get_free_register(current_type)
-	
 	if identifier in var_dictionary:
 		offset = var_dictionary[identifier]
 		if indirection == -1:
@@ -694,6 +697,7 @@ def handle_function_call(fn_AST,indirection):
 			arg_type = 'float'
 		i+=1
 
+		# print("handle", reg_type)
 		[reg_arg,type_passed_arg,indirection_arg] = break_assembly(arg_AST,f)
 		# f.write(traverse(arg_AST) + str(arg_width) + type_passed_arg +'\n' )
 		if type_passed_arg == 'CONSTANT':
