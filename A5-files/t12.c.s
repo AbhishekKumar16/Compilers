@@ -48,11 +48,11 @@ label2:
 	lw $s0, 8($sp)
 	l.s $f12, 0($s0)
 	c.eq.s $f10, $f12
-	bc1f L_CondTrue_1
-	li $s0, 0
-	j L_CondEnd_1
-L_CondTrue_1:
+	bc1f L_CondFalse_1
 	li $s0, 1
+	j L_CondEnd_1
+L_CondFalse_1:
+	li $s0, 0
 L_CondEnd_1:
 	move $s1, $s0
 	bne $s1, $0, label3

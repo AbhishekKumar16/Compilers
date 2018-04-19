@@ -47,7 +47,13 @@ label2:
 	l.s $f10, 0($s0)
 	lw $s0, 8($sp)
 	l.s $f12, 0($s0)
-	sne $s0, $f10, $f12
+	c.eq.s $f10, $f12
+	bc1f L_CondFalse_1
+	li $s0, 1
+	j L_CondEnd_1
+L_CondFalse_1:
+	li $s0, 0
+L_CondEnd_1:
 	move $s1, $s0
 	bne $s1, $0, label3
 	j label4

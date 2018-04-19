@@ -310,7 +310,7 @@ def break_assembly(AST, g):
 				free_registers.add(reg)
 				return [move_reg, 'BINARY', 0]
 			
-			elif op == '+' or op == '-' or op == '*' or op == 'AND' or op == 'OR' or op == '==' or op == '!=':
+			elif op == '+' or op == '-' or op == '*' or op == 'AND' or op == 'OR':
 				reg = get_free_register(reg_type)
 				
 				if is_int_register(reg):
@@ -331,11 +331,65 @@ def break_assembly(AST, g):
 				add_register(reg)	
 				return [move_reg, 'BINARY', 0]
 			
-			elif op=='<' or op =='>':
+
+			elif op == '==' or op == '!=':
+				if is_int_register(reg_used_l):
+					reg = get_free_register(reg_type)
+					
+					f.write('\t'+ get_operation[op] + reg + ', ' + reg_used_l + ', ' + reg_used_r+ '\n')
+					
+					add_register(reg_used_l)
+					add_register(reg_used_r)
+
+					move_reg = get_free_register(reg_type)
+					f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
+
+					add_register(reg)
+					return [move_reg, 'BINARY', 0]
+				else:
+					if op=='==':
+						f.write('\t'+ get_operation[op+'f'] + reg_used_l + ', ' + reg_used_r+ '\n')
+
+						add_register(reg_used_l)
+						add_register(reg_used_r)
+
+						f.write('\tbc1f L_CondFalse_1\n') 
+
+						reg = get_free_register(['int', 0])
+						f.write('\tli '+ reg +', 1\n')
+						f.write('\tj L_CondEnd_1\n')
+						f.write('L_CondFalse_1:\n')
+						f.write('\tli '+ reg +', 0\n')
+						f.write('L_CondEnd_1:\n')
+						
+					else:
+						f.write('\t'+ get_operation[op+'f'] + reg_used_l + ', ' + reg_used_r+ '\n')
+
+						add_register(reg_used_l)
+						add_register(reg_used_r)
+
+						f.write('\tbc1f L_CondTrue_1\n') 
+
+						reg = get_free_register(['int', 0])
+						f.write('\tli '+ reg +', 0\n')
+						f.write('\tj L_CondEnd_1\n')
+						f.write('L_CondFalse_1:\n')
+						f.write('\tli '+ reg +', 1\n')
+						f.write('L_CondEnd_1:\n')
+						
+					move_reg = get_free_register(reg_type)
+
+					if is_int_register(move_reg):
+						f.write('\tmove ' + move_reg + ', ' + reg+ '\n')
+					else:
+						f.write('\tmov.s ' + move_reg + ', ' + reg+ '\n')
+					
+					free_registers.add(reg)
+					return [move_reg, 'BINARY', 0]
+
+
+			elif op == '<' or op == '>':
 				
-				# print(traverse(AST), reg_type)
-				# print(reg_used_l)
-				# print(reg_used_r)
 				if is_int_register(reg_used_l):
 					reg = get_free_register(reg_type)
 					if op=='<':
@@ -444,7 +498,9 @@ get_operation = {
 	'>=f':	'c.le.s ',
 	'<=f':	'c.le.s ',
 	'==':	'seq ',
-	'!=':	'sne '
+	'!=':	'sne ',
+	'==f':	'c.eq.s ',
+	'!=f':	'c.eq.s '
 }
 
 

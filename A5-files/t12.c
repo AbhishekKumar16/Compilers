@@ -8,7 +8,7 @@ void main(){
         if (!(*fx <= *fy))
                 *px = *py + *px + *px;
 
-        while(*fx!=*fy){
+        while(*fx==*fy){
                 *fx = *fy;
                 **ppx = *px;
                 px = &x;
