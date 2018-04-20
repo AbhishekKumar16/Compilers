@@ -1,0 +1,38 @@
+Procedure table :-
+-----------------------------------------------------------------
+Name		|	Return Type  |  Parameter List
+f		|	int*		|	int a, int b, int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, int a16
+-----------------------------------------------------------------
+Variable table :- 
+-----------------------------------------------------------------
+Name	|	Scope		|	Base Type  |  Derived Type
+-----------------------------------------------------------------
+ppx		|	procedure main	|	int	   |	**
+y		|	procedure main	|	int	   |	
+x		|	procedure main	|	int	   |	
+px		|	procedure main	|	int	   |	*
+py		|	procedure main	|	int	   |	*
+ppy		|	procedure main	|	int	   |	**
+d		|	global		|	int	   |	*
+a15		|	procedure f	|	int	   |	
+a14		|	procedure f	|	int	   |	
+a16		|	procedure f	|	int	   |	
+a11		|	procedure f	|	int	   |	
+a10		|	procedure f	|	int	   |	
+a13		|	procedure f	|	int	   |	
+a12		|	procedure f	|	int	   |	
+a1		|	procedure f	|	int	   |	
+a3		|	procedure f	|	int	   |	
+a2		|	procedure f	|	int	   |	
+a5		|	procedure f	|	int	   |	
+a4		|	procedure f	|	int	   |	
+a7		|	procedure f	|	int	   |	
+a6		|	procedure f	|	int	   |	
+a9		|	procedure f	|	int	   |	
+a8		|	procedure f	|	int	   |	
+a		|	procedure f	|	int	   |	
+c		|	procedure f	|	int	   |	*
+b		|	procedure f	|	int	   |	
+m		|	procedure f	|	int	   |	
+-----------------------------------------------------------------
+-----------------------------------------------------------------

@@ -343,6 +343,23 @@ def break_expression(AST,start_index):
 		
 		# To handle the case of function call (Again this needs to be changed to convert it into the three variable form)
 		if AST.get_var_type() == 'FUNCTION_CALL':
+			[function_name,_,_,_,arg_list] = AST.get_fn_leaf_details()
+			var_list = []
+			exp_list = []
+			current_index = start_index
+			for arg in arg_list:
+				[var,idx,e] = break_expression(arg,current_index)
+				if idx is not None:
+					current_index = idx
+				var_list.append(var)
+				exp_list = exp_list + e
+			s = function_name+"("
+			for var in var_list:
+				s+=var+","
+			s = s[:-1]
+			s+=')'	
+			#exp_list.append(s)	
+			return [s,None,exp_list]
 			return [AST.get_fn_call_expression(),None,[]]		
 		
 		value = AST.get_identifier()
