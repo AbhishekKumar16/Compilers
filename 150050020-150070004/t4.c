@@ -2,21 +2,29 @@ int *d;
 
 int f(int a, int b)
 {
-	int *c,m;
+        int *c,m;
         c=&m;
-	return *c+*c;
+        return *c;
+}
+
+
+int* g(int a, int b)
+{
+        int *c,m;
+        c=&m;
+        return c;
 }
 
 
 void main(){
-	
-	int x ,y, *px, *py;
+        
+        int x ,y, *px, *py;
         px = &x;
         py= &y;
         *px= 2;
         *py = 3;
         if (*px != *py)
-        	*px = *px;
-	*d = *py + f(*px+*py,*py)**px;
+                *px = *px;
+        *d = f(*px+*py,f(*px,*py**px));
 
 }

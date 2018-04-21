@@ -76,6 +76,7 @@ def initialize():
 	global global_vars, assembly_symbol_table
 	global_vars = set([x.get_identifier() for x in assembly_symbol_table.get_variables() if not x.get_flag()])
 
+#returns width and type for each argument 
 def get_width_fn_arguments(f_id):
 	global assembly_symbol_table
 	table_entry = [x for x in assembly_symbol_table.get_variables() if x.get_identifier() == f_id]
@@ -86,7 +87,7 @@ def get_width_fn_arguments(f_id):
 			arg_width.append(type_width['pointer'])
 		else:
 			arg_width.append(type_width[x[0]])
-	return arg_width
+	return [arg_width,fn_var.get_arg_list()]
 
 def print_assembly_code(g_table,root,f):
 	global assembly_symbol_table
@@ -140,12 +141,12 @@ def print_assembly_code(g_table,root,f):
 					[reg_used, type_passed, indirection] = break_assembly(lchild, f)
 					
 					if type_passed == 'CONSTANT':
-						reg= handle_constant(reg_used,indirection)										
+						reg= handle_constant(reg_used,indirection,lchild.get_type())										
 					elif type_passed == 'IDENTIFIER':
 						identifier = reg_used
-						reg = handle_identifier(identifier,indirection)										
+						reg = handle_identifier(identifier,indirection,lchild.get_type())										
 					elif type_passed == 'FUNCTION_CALL':
-						reg = handle_function_call(reg_used,indirection)
+						reg = handle_function_call(reg_used,indirection,lchild.get_type())
 					else:	
 						reg = reg_used					
 					print_fn_epilogue(fn_name,f, True,reg)
@@ -187,16 +188,15 @@ width = {
 }
 
 f = None
-reg_type = None
+#reg_type = None
 
 # Given an AST for an expression and the start index, it breaks it into three code form
 def break_assembly(AST, g):
 	global f
 	global free_registers, var_dictionary, global_vars,free_float_registers
-	global reg_type
+	#global reg_type
 	global if_cond_label_num
 
-	reg_type = AST.get_type()
 	# print("top",traverse(AST), reg_type)
 	f = g
 
@@ -219,20 +219,21 @@ def break_assembly(AST, g):
 		op = str(op)
 
 		if op_type=='UNARY':
+			reg_type = AST.get_type()
 			[lchild,rchild] = AST.get_children()
 			[reg_used, type_passed, indirection] = break_assembly(lchild, f)
 			
 			if op == '-':
 				if type_passed == 'CONSTANT':
-					reg = handle_constant(reg_used,indirection)										
+					reg = handle_constant(reg_used,indirection,reg_type)										
 				elif type_passed == 'IDENTIFIER':
 					identifier = reg_used
-					reg = handle_identifier(identifier,indirection)										
+					reg = handle_identifier(identifier,indirection,reg_type)										
 				elif type_passed == 'FUNCTION_CALL':
-					reg = handle_function_call(reg_used,indirection)
+					reg = handle_function_call(reg_used,indirection,reg_type)
 				else:	
 					reg = reg_used
-				return handle_uminus(reg)
+				return handle_uminus(reg,reg_type)
 			elif op == '!':
 				reg = get_free_register(reg_type)
 
@@ -259,30 +260,32 @@ def break_assembly(AST, g):
 			[reg_used_l, type_passed_l, indirection_l] = break_assembly(lchild, f)	
 			[reg_used_r, type_passed_r, indirection_r] = break_assembly(rchild, f)
 
+			reg_type = AST.get_type()
+
 			if op != '=':	
 				if type_passed_l == 'IDENTIFIER':
 					identifier = reg_used_l
-					reg_used_l = handle_identifier(identifier,indirection_l)		
+					reg_used_l = handle_identifier(identifier,indirection_l,lchild.get_type())		
 
 				elif type_passed_l == 'CONSTANT':
-					reg_used_l = handle_constant(reg_used_l,indirection_l)				
+					reg_used_l = handle_constant(reg_used_l,indirection_l,lchild.get_type())				
 				
 				elif type_passed_l == 'FUNCTION_CALL': #handle the case where left node is of type ***f(e1,e2,...en)
-					reg_used_l = handle_function_call(reg_used_l,indirection_l)	
+					reg_used_l = handle_function_call(reg_used_l,indirection_l,lchild.get_type())	
 								
 
 			if type_passed_r == 'IDENTIFIER':
 				identifier = reg_used_r
-				reg_used_r = handle_identifier(identifier,indirection_r)									
+				reg_used_r = handle_identifier(identifier,indirection_r,rchild.get_type())									
 			elif type_passed_r == 'CONSTANT':
 				number = reg_used_r
-				reg_used_r = handle_constant(number,indirection_r)				
+				reg_used_r = handle_constant(number,indirection_r,rchild.get_type())				
 
 			elif type_passed_r == 'FUNCTION_CALL':
-				reg_used_r = handle_function_call(reg_used_r,indirection_r)
+				reg_used_r = handle_function_call(reg_used_r,indirection_r,rchild.get_type())
 
 			if op == '=':
-				[address,reg_used_l] = handle_assignment_identifier(reg_used_l,indirection_l)
+				[address,reg_used_l] = handle_assignment_identifier(reg_used_l,indirection_l,rchild.get_type())
 				if is_int_register(reg_used_r):
 					f.write('\tsw ' + reg_used_r + ', ' + address + '\n')
 				else:
@@ -567,8 +570,8 @@ def is_int_register(reg):
 # -----------------------   THIS PART WAS NOT HANDLED PROPERLY, SO YOU HAVE LET ME DOWN   -------------------------#
 
 #negation is a unary operator , the value stored in reg is to be negated
-def handle_uminus(reg):
-	global reg_type,f
+def handle_uminus(reg,reg_type):
+	global f
 	new_reg = get_free_register(reg_type)
 	if is_int_register(new_reg):
 		f.write('\tnegu ' + new_reg + ', ' + reg+ '\n')
@@ -587,7 +590,7 @@ def handle_uminus(reg):
 
 #the argument number is to be loaded into a register
 #return value is the register used for this purpose
-def handle_constant(number,num_type):
+def handle_constant(number,num_type,reg_type):
 	global f
 	
 	if num_type == 'int':
@@ -599,8 +602,8 @@ def handle_constant(number,num_type):
 	return reg_used
 
 #case where we have **p = rhs
-def handle_assignment_identifier(identifier,indirection):
-	global reg_type,f
+def handle_assignment_identifier(identifier,indirection,reg_type):
+	global f
 	if identifier in var_dictionary:
 		address = str(var_dictionary[identifier])+'($sp)'
 	else:
@@ -631,12 +634,10 @@ def handle_assignment_identifier(identifier,indirection):
 
 #the argument **p is to be loaded from stack
 #return value is the final register in which the value **p is stored
-def handle_identifier(identifier,indirection):
-	global free_registers,f,reg_type
-	
-	current_type = [reg_type[0],reg_type[1]]
+def handle_identifier(identifier,indirection,reg_type):
+	global free_registers,f
+	current_type = [reg_type[0],reg_type[1]+indirection]
 
-	# print("identifier ", reg_type, identifier, free_registers)
 	reg = get_free_register(current_type)
 	if identifier in var_dictionary:
 		offset = var_dictionary[identifier]
@@ -680,35 +681,50 @@ def handle_identifier(identifier,indirection):
 
 #argument is the AST of the function call
 #so we have ***f(e1,e2,...en) to be handled
-def handle_function_call(fn_AST,indirection):	
-	global f,reg_type
+def handle_function_call(fn_AST,indirection,reg_type):	
+	global f
 	[fn_name,_,return_type,_,arg_list] = fn_AST.get_fn_leaf_details() 
-	arg_width = get_width_fn_arguments(fn_name)
-	f.write("\t# setting up activation record for called function\n")
-
-	arg_offset_on_stack = sum(arg_width)	
-	i = 0	
-
+	[arg_width,arg_types] = get_width_fn_arguments(fn_name)
+	stack_argument_registers = []
+	i = 0
 	for arg_AST in arg_list:
-		arg_offset_on_stack -= arg_width[i]
 		if arg_width[i]==4:
 			arg_type = 'int'
 		else:
 			arg_type = 'float'
+
+		[reg_arg,type_passed_arg,indirection_arg] = break_assembly(arg_AST,f)
+
+		if type_passed_arg == 'CONSTANT':
+			reg_used = [reg_arg,arg_type,type_passed_arg,arg_types[i]]
+		elif type_passed_arg == 'IDENTIFIER':
+			reg_used = [reg_arg,indirection_arg,type_passed_arg,arg_types[i]]
+		elif type_passed_arg == 'FUNCTION_CALL':			
+			reg_used = [reg_arg,indirection_arg,type_passed_arg,arg_types[i]]
+		else:
+			reg_used = [reg_arg,None,type_passed_arg,arg_types[i]]
+
+		stack_argument_registers.append(reg_used)	
+
 		i+=1
 
-		# print("handle", reg_type)
-		[reg_arg,type_passed_arg,indirection_arg] = break_assembly(arg_AST,f)
-		# f.write(traverse(arg_AST) + str(arg_width) + type_passed_arg +'\n' )
-		if type_passed_arg == 'CONSTANT':
-			reg_used = handle_constant(reg_arg,arg_type)
-		elif type_passed_arg == 'IDENTIFIER':
-			reg_used = handle_identifier(reg_arg,indirection_arg)
+	f.write("\t# setting up activation record for called function\n")
 
-		elif type_passed_arg == 'FUNCTION_CALL':			
-			reg_used = handle_function_call(reg_arg,indirection_arg)
+	arg_offset_on_stack = sum(arg_width)	
+
+	for i in range(len(stack_argument_registers)):
+		arg_offset_on_stack -= arg_width[i]
+		[param1,param2,param3,param4] = stack_argument_registers[i]
+		
+		if param3 == 'CONSTANT':
+			reg_used = handle_constant(param1,param2,param4)
+		elif param3 == 'IDENTIFIER':
+			reg_used = handle_identifier(param1,param2,param4)
+		elif param3 == 'FUNCTION_CALL':			
+			reg_used = handle_function_call(param1,param2,param4)
 		else:
-			reg_used = reg_arg
+			reg_used = param1
+
 		if arg_offset_on_stack!=0:
 			if is_int_register(reg_used):
 				f.write("\tsw " + reg_used + ", -" + str(arg_offset_on_stack) + "($sp)\n")
@@ -735,7 +751,6 @@ def handle_function_call(fn_AST,indirection):
 	
 	if return_type[0] != 'void':
 		reg = get_free_register(return_type)
-		# print("hello",return_type, reg_type)
 		
 		current_type = return_type
 

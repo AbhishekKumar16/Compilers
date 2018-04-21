@@ -8,6 +8,14 @@ int f(int a, int b)
 }
 
 
+int* g(int a, int b)
+{
+        int *c,m;
+        c=&m;
+        return c;
+}
+
+
 void main(){
         
         int x ,y, *px, *py;
@@ -17,6 +25,6 @@ void main(){
         *py = 3;
         if (*px != *py)
                 *px = *px;
-        *d = f(*px,*py);
+        *d = f(*px+*py,3+4*7);
 
 }
