@@ -1,0 +1,70 @@
+
+FUNCTION f
+PARAMS (int a,int c)
+RETURNS *int
+	ASGN
+	(
+		VAR(b)
+		,
+		ADDR
+		(
+			VAR(l)
+		)
+	)
+RETURN
+(
+	VAR(b)
+)
+
+
+Function Main
+PARAMS() 
+RETURNS void
+	ASGN
+	(
+		VAR(y)
+		,
+		ADDR
+		(
+			VAR(x)
+		)
+	)
+	ASGN
+	(
+		DEREF
+		(
+			VAR(y)
+		)
+		,
+		CONST(9)
+	)
+	IF
+	(
+		GT
+		(
+			DEREF
+			(
+				VAR(y)
+			)
+			,
+			CONST(8)
+		)
+		,
+		ASGN
+		(
+			VAR(g)
+			,
+			CALL f(
+				CONST(3)
+				,
+				DEREF
+				(
+					VAR(y)
+				)
+			)
+		)
+
+	)
+
+
+

@@ -1,0 +1,19 @@
+FUNCTION f
+PARAMS (int x,int b)
+RETURNS *int
+	ASGN
+	(
+		VAR(p)
+		,
+		ADDR
+		(
+			VAR(a)
+		)
+	)
+RETURN
+(
+	VAR(p)
+)
+
+
+

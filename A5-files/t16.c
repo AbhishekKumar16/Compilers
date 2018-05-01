@@ -8,7 +8,7 @@ void main(){
 
         if(*px < *py && *px > *py || *px >= *py || *d <= *d){
         	fy = &fl;
-        	*fx = *fx + *fy * *fy;
+        	*fx = *fx * *fy * *fy;
         }
 
         if(*fx > *fy && *fx > *fy || *fx <= *fy || *gfx >= *gfy ){

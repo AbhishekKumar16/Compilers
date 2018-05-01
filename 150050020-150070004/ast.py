@@ -307,7 +307,11 @@ def print_AST_fn(tree, f, tabs):
 	func_var = tree[0]
 	[name, arg_list, return_type] = func_var
 
-	f.write("FUNCTION "+ name + '\n')
+	if name=='main':
+		fn_is_main = True
+		f.write("Function Main" + '\n')
+	else:
+		f.write("FUNCTION "+ name + '\n')
 	f.write("PARAMS ")
 	f.write(str(arg_list))
 	f.write('\n')
@@ -315,8 +319,6 @@ def print_AST_fn(tree, f, tabs):
 	tabs = tabs + 1
 
 	
-	if name=='main':
-		fn_is_main = True
 	
 	for t in tree[1]:
 		print_AST(t, f, tabs)

@@ -7,6 +7,10 @@ rm *.cfg *.ast *.sym *.s
 ./test.sh t$1.c
 # subl t$1.c.cfg t$1.c.s 
 echo "cfg"
-diff -wB t$1.c.cfg ../150050020-150070004/t$1.c.cfg1
+diff -wB t$1.c.cfg ../150050020-150070004/t$1.c.cfg
 echo "assembly"
 diff -wB t$1.c.s ../150050020-150070004/t$1.c.s
+echo "ast"
+diff -wB t$1.c.ast ../150050020-150070004/t$1.c.ast
+# echo "symbol_table"
+# diff -wB t$1.c.sym ../150050020-150070004/t$1.c.sym

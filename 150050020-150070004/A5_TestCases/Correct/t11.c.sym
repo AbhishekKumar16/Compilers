@@ -1,0 +1,33 @@
+Procedure table :-
+-----------------------------------------------------------------
+Name		|	Return Type  |  Parameter List
+f		|	int*		|	int a, int b, int k11, int k12, int k13, int k14, int k15, int k16, int k17, int k18, int k1, int k2, int k3, int k4, int k5, int k6, int k7, int k8, int zzz
+-----------------------------------------------------------------
+Variable table :- 
+-----------------------------------------------------------------
+Name |   Scope       |   Base Type  |  Derived Type 
+-----------------------------------------------------------------
+a		|	procedure f	|	int	   |	
+b		|	procedure f	|	int	   |	
+c		|	procedure f	|	int	   |	*
+k1		|	procedure f	|	int	   |	
+k11		|	procedure f	|	int	   |	
+k12		|	procedure f	|	int	   |	
+k13		|	procedure f	|	int	   |	
+k14		|	procedure f	|	int	   |	
+k15		|	procedure f	|	int	   |	
+k16		|	procedure f	|	int	   |	
+k17		|	procedure f	|	int	   |	
+k18		|	procedure f	|	int	   |	
+k2		|	procedure f	|	int	   |	
+k3		|	procedure f	|	int	   |	
+k4		|	procedure f	|	int	   |	
+k5		|	procedure f	|	int	   |	
+k6		|	procedure f	|	int	   |	
+k7		|	procedure f	|	int	   |	
+k8		|	procedure f	|	int	   |	
+zzz		|	procedure f	|	int	   |	
+px		|	procedure main	|	int	   |	*
+x		|	procedure main	|	int	   |	
+-----------------------------------------------------------------
+-----------------------------------------------------------------

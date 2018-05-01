@@ -1,0 +1,31 @@
+FUNCTION func
+PARAMS (int y)
+RETURNS int
+
+	ASGN
+	(
+		DEREF
+		(
+			VAR(c)
+		)
+		,
+		UMINUS
+		(
+			PLUS
+			(
+				CONST(9.0)
+				,
+				CONST(9.0)
+			)
+		)
+	)
+RETURN
+(
+	DEREF
+	(
+		VAR(t)
+	)
+)
+
+
+

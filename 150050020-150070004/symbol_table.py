@@ -149,7 +149,7 @@ def print_symbol_table(table,f):
 	print('-----------------------------------------------------------------',file=f)
 	print('Variable table :- ',file=f)
 	print('-----------------------------------------------------------------',file=f)
-	print('Name\t|\tScope\t|\tBase Type\t|\tDerived Type',file=f)
+	print('Name\t|\tScope\t\t|\tBase Type\t|\tDerived Type',file=f)
 	print('-----------------------------------------------------------------',file=f)
 
 	for fn in fn_vars:
@@ -159,7 +159,7 @@ def print_symbol_table(table,f):
 			local_vars.sort(key = lambda x:x.get_identifier())
 			for var in local_vars:#info about parameters and variables local to the function
 				[var_name,var_type,var_pointer_depth,__,_] = var.get_attributes()
-				print(var_name,'\t\t|','\tprocedure ',fn.get_identifier(),'\t|\t',var_type, __, '\t|\t',end='',file=f)
+				print(var_name,' \t\t|','\tprocedure',fn.get_identifier(),'\t|\t',var_type, '\t|\t',end='',file=f)
 				print_stars(var_pointer_depth,f)
 				print('',file=f)
 				# print('\n',file=f)
@@ -168,7 +168,7 @@ def print_symbol_table(table,f):
 	global_vars = [x for x in table.get_variables() if not x.get_flag()]
 	for var in global_vars:#info about parameters and variables local to the function
 		[var_name,var_type,var_pointer_depth,_,_] = var.get_attributes()
-		print(var_name,'\t\t|','\tprocedure global','\t|\t',var_type,'\t|\t',end='',file=f)
+		print(var_name,'\t\t|','\tglobal','\t\t|\t',var_type,'\t|\t',end='',file=f)
 		print_stars(var_pointer_depth,f)
 		print('',file=f)
 	print('-----------------------------------------------------------------',file=f)

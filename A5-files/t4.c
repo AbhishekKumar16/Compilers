@@ -25,6 +25,6 @@ void main(){
         *py = 3;
         if (*px != *py)
                 *px = *px;
-        *d = f(*px+*py,3+4*7);
+        *d = f(*px,3+4*7);
 
 }

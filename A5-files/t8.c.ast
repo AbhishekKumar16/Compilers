@@ -1,0 +1,51 @@
+
+
+
+Function Main
+PARAMS() 
+RETURNS void
+	ASGN
+	(
+		VAR(ptr)
+		,
+		ADDR
+		(
+			VAR(p)
+		)
+	)
+	ASGN
+	(
+		DEREF
+		(
+			VAR(ptr)
+		)
+		,
+		CONST(5)
+	)
+	WHILE
+	(
+		NOT
+		(
+			GE
+			(
+				DEREF
+				(
+					VAR(ptr)
+				)
+				,
+				CONST(4)
+			)
+			,
+		)
+		,
+		ASGN
+		(
+			DEREF
+			(
+				VAR(t)
+			)
+			,
+			CONST(4)
+		)
+
+	)

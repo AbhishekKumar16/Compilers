@@ -915,14 +915,14 @@ if __name__ == "__main__":
 
 	rt = full_cfg(AST_list, 0)
 	# print("\n",end='')
-	with open(sys.argv[1]+'.cfg1', 'w') as f:
+	with open(sys.argv[1]+'.cfg', 'w') as f:
 		print_cfg(rt,f)
 
-	with open(sys.argv[1]+'.ast1', 'w') as f:
+	with open(sys.argv[1]+'.ast', 'w') as f:
 		for tree in AST_list:
 			print_AST_fn(tree, f, 0)
 
-	with open(sys.argv[1]+'.sym1','w') as f:
+	with open(sys.argv[1]+'.sym','w') as f:
 		print_symbol_table(global_symbol_table,f)
 
 	with open(sys.argv[1]+'.s','w') as f:

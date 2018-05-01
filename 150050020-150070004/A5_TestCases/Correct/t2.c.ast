@@ -1,0 +1,270 @@
+
+
+
+FUNCTION func1
+PARAMS (int p,int q)
+RETURNS *int
+
+
+	ASGN
+	(
+		DEREF
+		(
+			VAR(a)
+		)
+		,
+		PLUS
+		(
+			DEREF
+			(
+				VAR(a)
+			)
+			,
+			DEREF
+			(
+				VAR(b)
+			)
+		)
+	)
+	ASGN
+	(
+		DEREF
+		(
+			VAR(a)
+		)
+		,
+		DEREF
+		(
+			VAR(b)
+		)
+	)
+	ASGN
+	(
+		DEREF
+		(
+			VAR(c)
+		)
+		,
+		PLUS
+		(
+			CONST(3.2)
+			,
+			CONST(5.2)
+		)
+	)
+	IF
+	(
+		NOT
+		(
+			EQ
+			(
+				DEREF
+				(
+					VAR(f)
+				)
+				,
+				DEREF
+				(
+					VAR(g)
+				)
+			)
+		)
+		,
+		ASGN
+		(
+			DEREF
+			(
+				VAR(a)
+			)
+			,
+			MINUS
+			(
+				MINUS
+				(
+					PLUS
+					(
+						DEREF
+						(
+							VAR(a)
+						)
+						,
+						DEREF
+						(
+							VAR(b)
+						)
+					)
+					,
+					DEREF
+					(
+						VAR(f)
+					)
+				)
+				,
+				DEREF
+				(
+					VAR(g)
+				)
+			)
+		)
+
+	)
+RETURN
+(
+	VAR(f)
+)
+
+
+FUNCTION func2
+PARAMS (int q,int *r,int ***s,float *****p)
+RETURNS **float
+
+
+	ASGN
+	(
+		DEREF
+		(
+			VAR(a)
+		)
+		,
+		CONST(5)
+	)
+	ASGN
+	(
+		VAR(e)
+		,
+		CALL func2(
+			PLUS
+			(
+				DEREF
+				(
+					VAR(a)
+				)
+				,
+				DEREF
+				(
+					VAR(r)
+				)
+			)
+			,
+			DEREF
+			(
+				DEREF
+				(
+					VAR(b)
+				)
+			)
+			,
+			VAR(b)
+			,
+			VAR(p)
+		)
+	)
+RETURN
+(
+	VAR(e)
+)
+
+
+Function Main
+PARAMS() 
+RETURNS void
+
+
+
+
+	ASGN
+	(
+		DEREF
+		(
+			VAR(d)
+		)
+		,
+		ADDR
+		(
+			VAR(p1)
+		)
+	)
+	IF
+	(
+		GT
+		(
+			DEREF
+			(
+				VAR(f)
+			)
+			,
+			DEREF
+			(
+				VAR(g)
+			)
+		)
+		,
+		ASGN
+		(
+			DEREF
+			(
+				VAR(a)
+			)
+			,
+			MINUS
+			(
+				MINUS
+				(
+					PLUS
+					(
+						DEREF
+						(
+							VAR(a)
+						)
+						,
+						DEREF
+						(
+							VAR(b)
+						)
+					)
+					,
+					DEREF
+					(
+						VAR(f)
+					)
+				)
+				,
+				DEREF
+				(
+					VAR(g)
+				)
+			)
+		)
+
+	)
+	ASGN
+	(
+		DEREF
+		(
+			VAR(b)
+		)
+		,
+		DIV
+		(
+			MUL
+			(
+				DEREF
+				(
+					VAR(f)
+				)
+				,
+				DEREF
+				(
+					VAR(g)
+				)
+			)
+			,
+			DEREF
+			(
+				VAR(h)
+			)
+		)
+	)
+
+
+

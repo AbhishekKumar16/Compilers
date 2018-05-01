@@ -163,7 +163,7 @@ def print_assembly_code(g_table,root,f):
 				# To handle the case when a statement is of the form of only func(...) 
 				if ASTs.is_leaf():
 					if ASTs.get_var_type() == 'FUNCTION_CALL':
-						handle_function_call(ASTs,0)						
+						handle_function_call(ASTs,0,None)						
 						continue
 
 				[reg_used, type_passed, indirection] = break_assembly(ASTs, f)
